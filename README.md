@@ -27,8 +27,8 @@ Les statistiques mesurent donc des passages vers WhatsApp, pas des commandes
 confirmées.
 
 Les visuels culinaires vérifiés sont optimisés localement en WebP. Les preuves
-de provenance, les licences et les décisions d’audit restent documentées dans
-les fichiers internes `IMAGE_SOURCES.md` et `MENU_IMAGE_AUDIT.md`.
+de provenance, les licences et les décisions d’audit sont conservées dans les
+documents internes du projet source ; elles ne sont pas affichées aux clients.
 
 ## Confidentialité des statistiques
 
