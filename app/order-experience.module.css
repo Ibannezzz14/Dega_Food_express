@@ -2,265 +2,6 @@
   background: var(--forest-900);
 }
 
-.hero {
-  position: relative;
-  min-height: 650px;
-  overflow: hidden;
-  background: var(--forest-900);
-  color: var(--cassava-50);
-}
-
-.heroGrid {
-  display: grid;
-  grid-template-columns: minmax(240px, 0.86fr) minmax(360px, 1.18fr) minmax(300px, 0.9fr);
-  align-items: center;
-  gap: clamp(28px, 3.5vw, 58px);
-  width: min(1320px, calc(100% - 64px));
-  min-height: 650px;
-  margin: 0 auto;
-  padding: 56px 0 64px;
-}
-
-.heroCopy {
-  align-self: center;
-}
-
-.brandLine {
-  margin: 0 0 22px;
-  color: var(--plantain-300);
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.heroCopy h1 {
-  max-width: 10ch;
-  margin: 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(3.4rem, 5.2vw, 5.15rem);
-  font-weight: 560;
-  letter-spacing: -0.025em;
-  line-height: 0.92;
-  text-wrap: balance;
-}
-
-.heroCopy h1 span {
-  display: block;
-  margin-top: 0.09em;
-  color: var(--plantain-300);
-}
-
-.heroText {
-  max-width: 33ch;
-  margin: 26px 0 0;
-  color: #d8e5df;
-  font-size: 1.08rem;
-}
-
-.heroLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  min-height: 50px;
-  margin-top: 28px;
-  padding: 11px 15px;
-  border: 1px solid var(--plantain-300);
-  border-radius: 6px;
-  color: var(--cassava-50);
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    background 160ms ease-out,
-    color 160ms ease-out,
-    transform 160ms ease-out;
-}
-
-.heroLink:hover {
-  background: var(--plantain-400);
-  color: var(--forest-950);
-  transform: translateY(-1px);
-}
-
-.heroLink svg,
-.routeAction svg {
-  width: 20px;
-  height: 20px;
-}
-
-.plateFrame {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  width: min(31vw, 455px);
-  justify-self: center;
-  overflow: hidden;
-  border-radius: 16px;
-  background: var(--forest-950);
-  box-shadow: 16px 28px 56px rgb(0 20 15 / 24%);
-  animation: plate-reveal 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.plateImage {
-  object-fit: cover;
-  object-position: 60% 52%;
-}
-
-.plateCaption {
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: auto;
-  max-width: none;
-  padding: 64px 20px 18px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgb(7 31 26 / 72%) 62%,
-    rgb(7 31 26 / 94%) 100%
-  );
-  color: #ecf2ef;
-  font-size: 0.86rem;
-  font-weight: 560;
-  text-shadow: 0 1px 12px rgb(0 16 12 / 38%);
-}
-
-.routePanel {
-  align-self: center;
-  padding: 25px;
-  border: 1px solid rgb(245 245 240 / 18%);
-  border-radius: 14px;
-  background: rgb(7 31 26 / 24%);
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 0 0 30px;
-  padding: 0;
-  list-style: none;
-}
-
-.steps li {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: 7px;
-  color: #acc3ba;
-  font-size: 0.78rem;
-  text-align: center;
-}
-
-.steps li:not(:last-child)::after {
-  position: absolute;
-  top: 14px;
-  left: calc(50% + 20px);
-  width: calc(100% - 30px);
-  height: 1px;
-  background: rgb(245 245 240 / 25%);
-  content: "";
-}
-
-.steps span {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #789188;
-  border-radius: 50%;
-  color: var(--cassava-50);
-  font-family: var(--font-display);
-  font-size: 0.84rem;
-  font-weight: 600;
-}
-
-.steps .currentStep {
-  color: var(--plantain-300);
-}
-
-.steps .currentStep span {
-  border-color: var(--plantain-300);
-  background: var(--plantain-400);
-  color: var(--forest-950);
-}
-
-.regionFieldset {
-  display: grid;
-  gap: 9px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.regionFieldset legend {
-  margin-bottom: 13px;
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 560;
-  letter-spacing: -0.025em;
-}
-
-.regionFieldset button {
-  display: grid;
-  grid-template-columns: 22px 1fr 20px;
-  align-items: center;
-  gap: 11px;
-  min-height: 54px;
-  padding: 11px 14px;
-  border: 1px solid #86a098;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--cassava-50);
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background 150ms ease-out,
-    border-color 150ms ease-out,
-    color 150ms ease-out;
-}
-
-.regionFieldset button:hover {
-  border-color: var(--plantain-300);
-  background: rgb(245 245 240 / 5%);
-}
-
-.regionFieldset button svg {
-  width: 20px;
-  height: 20px;
-}
-
-.regionFieldset button svg:last-child {
-  grid-column: 3;
-}
-
-.regionFieldset .regionActive {
-  border-color: var(--plantain-300);
-  background: var(--plantain-400);
-  color: var(--forest-950);
-}
-
-.routeAction {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 52px;
-  margin-top: 10px;
-  padding: 11px 14px;
-  border-radius: 8px;
-  background: var(--cassava-50);
-  color: var(--forest-950);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.routeAction:hover {
-  background: var(--cassava-100);
-}
-
 .presentation {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
@@ -286,14 +27,6 @@
 
 .presentationCopy {
   max-width: 650px;
-}
-
-.presentationLabel {
-  margin: 0 0 18px;
-  color: var(--chili-500);
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 600;
 }
 
 .presentationCopy h1,
@@ -352,6 +85,7 @@
 .menuPageCopy {
   grid-row: 1 / span 2;
   align-self: center;
+  min-width: 0;
   max-width: 650px;
 }
 
@@ -1266,107 +1000,23 @@
   }
 }
 
-@keyframes plate-reveal {
-  from {
-    transform: translateY(12px);
-    opacity: 0.5;
+@media (max-width: 900px) {
+  .presentation {
+    grid-template-columns: 1fr;
+    gap: 44px;
+    padding: 92px 24px 102px;
   }
 
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 1120px) {
-  .heroGrid {
-    grid-template-columns: minmax(230px, 0.8fr) minmax(340px, 1.2fr);
-    min-height: 0;
-    padding: 64px 0 76px;
+  .presentationVisual {
+    aspect-ratio: 16 / 10;
   }
 
-  .plateFrame {
-    width: min(48vw, 480px);
-  }
-
-  .routePanel {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: minmax(280px, 0.85fr) minmax(340px, 1.15fr);
-    column-gap: 42px;
-  }
-
-  .routePanel .steps {
-    grid-row: 1 / span 2;
-    align-self: center;
-    margin: 0;
-  }
-
-  .routePanel .regionFieldset,
-  .routePanel .routeAction {
-    grid-column: 2;
+  .presentationCopy {
+    max-width: 720px;
   }
 }
 
 @media (max-width: 760px) {
-  .hero {
-    min-height: auto;
-  }
-
-  .heroGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    width: min(100% - 28px, 620px);
-    padding: 54px 0 68px;
-  }
-
-  .heroCopy {
-    align-self: stretch;
-  }
-
-  .brandLine {
-    margin-bottom: 16px;
-  }
-
-  .heroCopy h1 {
-    max-width: 10ch;
-    font-size: clamp(3rem, 14vw, 4.25rem);
-  }
-
-  .heroText {
-    margin-top: 22px;
-  }
-
-  .heroLink {
-    width: 100%;
-  }
-
-  .plateFrame {
-    order: 2;
-    aspect-ratio: 3 / 2;
-    width: 100%;
-  }
-
-  .plateImage {
-    object-position: 50% 50%;
-  }
-
-  .plateCaption {
-    padding: 48px 16px 14px;
-  }
-
-  .routePanel {
-    display: block;
-    order: 3;
-    width: 100%;
-    padding: 20px;
-  }
-
-  .steps {
-    margin-bottom: 26px;
-  }
-
   .presentation {
     grid-template-columns: 1fr;
     gap: 46px;
@@ -1401,7 +1051,7 @@
   }
 
   .menuPageCopy h1 {
-    font-size: clamp(3rem, 14vw, 4.35rem);
+    font-size: clamp(2rem, 14vw, 4.35rem);
   }
 
   .menuRegionFieldset {
@@ -1434,7 +1084,7 @@
     min-width: 0;
     min-height: 56px;
     padding: 9px 6px;
-    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    font-size: clamp(0.58rem, 3.5vw, 0.95rem);
   }
 
   .categoryRail button small {
@@ -1535,14 +1185,6 @@
 }
 
 @media (max-width: 420px) {
-  .heroGrid {
-    width: min(100% - 22px, 620px);
-  }
-
-  .heroCopy h1 {
-    font-size: 3rem;
-  }
-
   .presentation {
     padding-right: 11px;
     padding-left: 11px;
@@ -1575,6 +1217,11 @@
     grid-column: 2;
   }
 
+  .quantityControlEmpty .addButtonLabel {
+    min-width: 0;
+    font-size: clamp(0.58rem, 3.5vw, 1rem);
+  }
+
   .submitButton {
     padding: 9px 11px;
   }
@@ -1601,5 +1248,28 @@
     width: 100%;
     padding-right: 8px;
     padding-left: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .addressPanel,
+  .addressSuggestionStatus > span,
+  .deliveryZoneChecking .deliveryZoneIndicator {
+    animation: none;
+  }
+
+  .menuRegionFieldset button,
+  .fulfillmentOptions label,
+  .categoryRail button,
+  .menuItem,
+  .quantityControl button,
+  .orderDock {
+    transition: none;
+  }
+
+  .menuRegionFieldset button:hover,
+  .fulfillmentOptions label:hover,
+  .menuItem:hover {
+    transform: none;
   }
 }

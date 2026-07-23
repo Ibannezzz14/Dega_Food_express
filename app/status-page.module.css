@@ -117,3 +117,14 @@
     width: 100%;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .secondaryAction {
+    transition: none;
+  }
+
+  .primaryAction:hover {
+    transform: none;
+  }
+}

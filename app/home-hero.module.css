@@ -1,0 +1,347 @@
+.hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(680px, calc(100svh - 78px), 900px);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 83% 20%,
+      rgb(221 191 132 / 15%),
+      transparent 34rem
+    ),
+    linear-gradient(135deg, var(--forest-950), #0b453a 72%, #123f37);
+  color: var(--cassava-50);
+  isolation: isolate;
+}
+
+.hero::after {
+  position: absolute;
+  right: clamp(32px, 8vw, 120px);
+  bottom: -19rem;
+  width: min(42vw, 620px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(221 191 132 / 18%);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.heroInner {
+  display: flex;
+  align-items: end;
+  width: min(1180px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: clamp(120px, 16vh, 180px) 0 clamp(88px, 12vh, 128px);
+}
+
+.heroCopy {
+  max-width: 790px;
+  animation: hero-copy-reveal 700ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.eyebrow {
+  margin: 0 0 24px;
+  color: var(--plantain-300);
+  font-size: 0.84rem;
+  font-weight: 720;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  max-width: 12.5ch;
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(4.25rem, 7vw, 7rem);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  line-height: 0.86;
+  text-wrap: balance;
+}
+
+.heroCopy h1 span {
+  display: block;
+  margin-top: 0.12em;
+  color: #fff8eb;
+}
+
+.heroText {
+  max-width: 51ch;
+  margin: 30px 0 0;
+  color: #e4ece8;
+  font-size: clamp(1.04rem, 1.5vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.primaryAction,
+.secondaryAction,
+.continueAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  border-radius: 7px;
+  font-weight: 720;
+  text-decoration: none;
+  transition:
+    background 170ms ease-out,
+    border-color 170ms ease-out,
+    color 170ms ease-out,
+    transform 170ms ease-out;
+}
+
+.primaryAction {
+  justify-content: space-between;
+  gap: 28px;
+  min-width: 232px;
+  padding: 11px 16px;
+  border: 1px solid var(--plantain-300);
+  background: var(--plantain-400);
+  color: var(--forest-950);
+}
+
+.secondaryAction {
+  padding: 11px 19px;
+  border: 1px solid rgb(245 245 240 / 58%);
+  background: rgb(7 31 26 / 28%);
+  color: var(--cassava-50);
+  backdrop-filter: blur(8px);
+}
+
+.primaryAction:hover,
+.continueAction:hover {
+  background: var(--plantain-300);
+  transform: translateY(-1px);
+}
+
+.secondaryAction:hover {
+  border-color: var(--plantain-300);
+  background: rgb(7 31 26 / 56%);
+  transform: translateY(-1px);
+}
+
+.primaryAction svg,
+.continueAction svg {
+  width: 20px;
+  height: 20px;
+}
+
+.quickOrder {
+  padding: 42px 32px;
+  border-bottom: 1px solid #cbd3cf;
+  background: #fbfcf9;
+  color: var(--forest-950);
+}
+
+.quickOrderInner {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.05fr) minmax(420px, 1.35fr) auto;
+  align-items: end;
+  gap: clamp(28px, 4vw, 58px);
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.quickOrderCopy h2 {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 580;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.quickOrderCopy > span {
+  display: block;
+  max-width: 43ch;
+  margin-top: 11px;
+  color: #536a63;
+  font-size: 0.91rem;
+}
+
+.regionFieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.regionFieldset legend {
+  margin-bottom: 9px;
+  color: #526861;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.regionOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.regionOptions button {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 10px 13px;
+  border: 1px solid #8da49b;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--forest-950);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 160ms ease-out,
+    border-color 160ms ease-out,
+    transform 160ms ease-out;
+}
+
+.regionOptions button:hover {
+  border-color: var(--forest-800);
+  background: #eef2ee;
+}
+
+.regionOptions button svg {
+  width: 19px;
+  height: 19px;
+}
+
+.regionOptions button svg:last-child {
+  grid-column: 3;
+}
+
+.regionOptions .regionActive {
+  border-color: var(--forest-800);
+  background: var(--forest-900);
+  color: var(--cassava-50);
+  transform: translateY(-1px);
+}
+
+.continueAction {
+  gap: 26px;
+  min-width: 160px;
+  padding: 11px 15px;
+  border: 1px solid var(--forest-900);
+  background: var(--forest-900);
+  color: var(--cassava-50);
+  white-space: nowrap;
+}
+
+@keyframes hero-copy-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1040px) {
+  .quickOrderInner {
+    grid-template-columns: 1fr minmax(420px, 1.25fr);
+  }
+
+  .continueAction {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: max(680px, calc(100svh - 68px));
+  }
+
+  .heroInner {
+    width: calc(100% - 40px);
+    padding: 110px 0 72px;
+  }
+
+  .eyebrow {
+    margin-bottom: 18px;
+    font-size: 0.74rem;
+  }
+
+  .heroCopy h1 {
+    max-width: 11.5ch;
+    font-size: clamp(3.7rem, 17vw, 5.1rem);
+    line-height: 0.88;
+  }
+
+  .heroText {
+    max-width: 37ch;
+    margin-top: 24px;
+  }
+
+  .quickOrder {
+    padding: 52px 20px;
+  }
+
+  .quickOrderInner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .continueAction {
+    grid-column: auto;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 460px) {
+  .hero {
+    min-height: max(650px, calc(100svh - 68px));
+  }
+
+  .heroInner {
+    width: calc(100% - 28px);
+    padding-bottom: 54px;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(3.4rem, 16.5vw, 4.5rem);
+  }
+
+  .heroActions {
+    display: grid;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+
+  .regionOptions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCopy {
+    animation: none;
+  }
+
+  .primaryAction,
+  .secondaryAction,
+  .continueAction {
+    transition: none;
+  }
+
+  .primaryAction:hover,
+  .secondaryAction:hover,
+  .continueAction:hover {
+    transform: none;
+  }
+}

@@ -385,8 +385,15 @@
 
   .footerLegal {
     width: 100%;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 18px;
+  }
+
+  .backToTop {
+    max-width: 100%;
+    line-height: 1.35;
+    white-space: normal;
   }
 }
 
@@ -410,5 +417,24 @@
 
   .footerNavigation ul {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .footerNavigation a,
+  .footerNavigation a::before,
+  .contactCard,
+  .contactArrow,
+  .backToTop svg {
+    transition: none;
+  }
+
+  .primaryAction:hover,
+  .footerNavigation a:hover,
+  .contactCard:hover,
+  .contactCard:hover .contactArrow,
+  .backToTop:hover svg {
+    transform: none;
   }
 }

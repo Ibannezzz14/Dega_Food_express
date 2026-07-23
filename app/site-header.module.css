@@ -267,3 +267,16 @@
     display: none;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .mainNav a::after,
+  .orderNavLink,
+  .menuGlyph i,
+  .mobileNav {
+    transition: none;
+  }
+
+  .orderNavLink:hover {
+    transform: none;
+  }
+}
