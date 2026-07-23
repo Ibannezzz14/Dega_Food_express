@@ -1,13 +1,7 @@
 import Image from "next/image";
 import styles from "./order-experience.module.css";
 
-type PresentationSectionProps = {
-  asPage?: boolean;
-};
-
-export default function PresentationSection({
-  asPage = false,
-}: PresentationSectionProps) {
+export default function PresentationSection() {
   return (
     <section
       className={styles.presentation}
@@ -16,26 +10,17 @@ export default function PresentationSection({
     >
       <div className={styles.presentationVisual}>
         <Image
-          src="/images/gallery-feast.webp"
-          alt="Table garnie de plats ivoiriens à partager"
+          src="/images/menu/beignets-africains.webp"
+          alt="Beignets africains dorés présentés sans accompagnement"
           fill
-          priority={asPage}
           sizes="(max-width: 760px) 100vw, 44vw"
         />
       </div>
       <div className={styles.presentationCopy}>
-        <p className={styles.presentationLabel}>
-          {asPage ? "Présentation" : "La maison Dega"}
-        </p>
-        {asPage ? (
-          <h1 id="presentation-title">
-            Une cuisine de partage, préparée sur commande.
-          </h1>
-        ) : (
-          <h2 id="presentation-title">
-            Une cuisine de partage, préparée sur commande.
-          </h2>
-        )}
+        <p className={styles.presentationLabel}>La maison Dega</p>
+        <h2 id="presentation-title">
+          Une cuisine de partage, préparée sur commande.
+        </h2>
         <p className={styles.presentationIntro}>
           Dega Food Express propose des spécialités ivoiriennes à Lausanne,
           Lucens et alentours, pour les commandes individuelles comme pour les

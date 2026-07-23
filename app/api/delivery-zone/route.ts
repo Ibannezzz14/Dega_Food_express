@@ -3,6 +3,7 @@ import {
   DELIVERY_ZONES,
   type RegionId,
 } from "@/data/delivery-zones";
+import { readJsonObject } from "@/lib/read-json-object";
 import { validateDeliveryZone } from "@/lib/validate-delivery-zone";
 
 type DeliveryZoneRequest = {
@@ -12,13 +13,27 @@ type DeliveryZoneRequest = {
   city?: unknown;
 };
 
+function noStoreJson(
+  body: { status: "not_found" },
+  status: 400 | 413,
+) {
+  return NextResponse.json(body, {
+    status,
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
 export async function POST(request: Request) {
-  let payload: DeliveryZoneRequest;
-  try {
-    payload = (await request.json()) as DeliveryZoneRequest;
-  } catch {
-    return NextResponse.json({ status: "not_found" }, { status: 400 });
+  const body = await readJsonObject(request);
+  if (!body.ok) {
+    return noStoreJson(
+      { status: "not_found" },
+      body.error === "too_large" ? 413 : 400,
+    );
   }
+  const payload: DeliveryZoneRequest = body.value;
 
   const region = typeof payload.region === "string" ? payload.region : "";
   const streetAddress =
@@ -37,7 +52,7 @@ export async function POST(request: Request) {
     city.length < 2 ||
     city.length > 80
   ) {
-    return NextResponse.json({ status: "not_found" }, { status: 400 });
+    return noStoreJson({ status: "not_found" }, 400);
   }
 
   const result = await validateDeliveryZone(

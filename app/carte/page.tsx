@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { createPageMetadata } from "@/lib/page-metadata";
 import OrderExperience from "../order-experience";
+import CarteContent from "./carte-content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "La carte | Dega Food Express",
   description:
     "Choisissez vos plats ivoiriens, votre zone et préparez votre commande WhatsApp.",
-};
+  path: "/carte",
+  image: {
+    url: "/images/editorial/alloco-tilapia-ivoirien.webp",
+    width: 1600,
+    height: 1100,
+    alt: "Tilapia braisé servi avec de l’alloco et une sauce tomate",
+  },
+});
 
-type CartePageProps = {
-  searchParams: Promise<{
-    zone?: string | string[];
-  }>;
-};
-
-export default async function CartePage({ searchParams }: CartePageProps) {
-  const params = await searchParams;
-  const zone = Array.isArray(params.zone) ? params.zone[0] : params.zone;
-  const initialRegion =
-    zone === "lausanne" || zone === "lucens" ? zone : null;
-
+export default function CartePage() {
   return (
     <main id="contenu">
-      <OrderExperience view="menu" initialRegion={initialRegion} />
+      <Suspense fallback={<OrderExperience />}>
+        <CarteContent />
+      </Suspense>
     </main>
   );
 }

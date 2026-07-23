@@ -30,9 +30,6 @@ CREATE TABLE IF NOT EXISTS whatsapp_handoff_daily (
   )
 );
 
-ALTER TABLE whatsapp_handoff_daily
-DROP COLUMN IF EXISTS updated_at;
-
 CREATE INDEX IF NOT EXISTS whatsapp_handoff_daily_date_idx
 ON whatsapp_handoff_daily (stat_date DESC);
 

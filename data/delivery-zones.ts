@@ -2,6 +2,9 @@ export const DELIVERY_ZONES = {
   lausanne: {
     label: "Lausanne",
     selectionLabel: "Lausanne",
+    contactArea: "Lausanne",
+    displayPhone: "078 265 40 81",
+    phoneHref: "tel:+41782654081",
     phone: "41782654081",
     radiusKm: 10,
     center: {
@@ -12,6 +15,9 @@ export const DELIVERY_ZONES = {
   lucens: {
     label: "Lucens",
     selectionLabel: "Lucens & alentours",
+    contactArea: "Lucens et alentours",
+    displayPhone: "076 603 60 11",
+    phoneHref: "tel:+41766036011",
     phone: "41766036011",
     radiusKm: 25,
     center: {

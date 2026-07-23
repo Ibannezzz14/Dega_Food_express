@@ -279,7 +279,12 @@ export default async function StatisticsPage({
                 </div>
 
                 {snapshot.locations.length > 0 ? (
-                  <div className={styles.tableViewport}>
+                  <div
+                    className={styles.tableViewport}
+                    role="region"
+                    aria-label="Classement des localités livrées"
+                    tabIndex={0}
+                  >
                     <table className={styles.locationsTable}>
                       <caption className="sr-only">
                         Localités de livraison classées par nombre de passages
@@ -319,7 +324,7 @@ export default async function StatisticsPage({
               </section>
 
               <section
-                className={`${styles.panel} ${styles.breakdownPanel}`}
+                className={styles.panel}
                 aria-labelledby="breakdown-title"
               >
                 <div className={styles.panelHeading}>
@@ -349,12 +354,7 @@ export default async function StatisticsPage({
                       </div>
                       <div
                         className={styles.barTrack}
-                        role="img"
-                        aria-label={`${regionLabels[entry.region]}, ${
-                          fulfillmentLabels[entry.fulfillment]
-                        } : ${formatPassageLabel(entry.handoffs)}, ${
-                          entry.share
-                        } % du total`}
+                        aria-hidden="true"
                       >
                         <span
                           className={styles.barFill}

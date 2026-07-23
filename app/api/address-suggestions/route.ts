@@ -8,6 +8,7 @@ import {
   type AddressLookupSuggestion,
   type GeoAdminAddressResult,
 } from "@/lib/address-suggestions";
+import { readJsonObject } from "@/lib/read-json-object";
 
 type AddressSearchField = "streetAddress" | "postalCode" | "city";
 
@@ -44,12 +45,14 @@ function isAddressSearchField(value: unknown): value is AddressSearchField {
 }
 
 export async function POST(request: Request) {
-  let payload: AddressSuggestionRequest;
-  try {
-    payload = (await request.json()) as AddressSuggestionRequest;
-  } catch {
-    return noStoreJson({ suggestions: [] }, 400);
+  const body = await readJsonObject(request);
+  if (!body.ok) {
+    return noStoreJson(
+      { suggestions: [] },
+      body.error === "too_large" ? 413 : 400,
+    );
   }
+  const payload: AddressSuggestionRequest = body.value;
 
   if (payload.field !== undefined && !isAddressSearchField(payload.field)) {
     return noStoreJson({ suggestions: [] }, 400);

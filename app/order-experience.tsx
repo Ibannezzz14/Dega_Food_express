@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { prepareWhatsAppOrder, type OrderActionState } from "./actions";
 import {
   DELIVERY_ZONES,
@@ -19,7 +18,6 @@ import {
   type AddressLookupSuggestion,
 } from "@/lib/address-suggestions";
 import {
-  ArrowRightIcon,
   CheckIcon,
   DeliveryIcon,
   MapPinIcon,
@@ -29,16 +27,17 @@ import {
   PlusIcon,
 } from "@/components/icons";
 import AddressAutocomplete from "./address-autocomplete";
+import {
+  useOrderSession,
+  type FulfillmentMethod,
+} from "./order-session";
 import styles from "./order-experience.module.css";
 
-type FulfillmentMethod = "pickup" | "delivery";
-type Quantities = Record<string, number>;
 type ZoneCheckState =
   | { status: "idle" | "checking" }
   | DeliveryZoneResult;
 
 type OrderExperienceProps = {
-  view: "home" | "menu";
   initialRegion?: RegionId | null;
 };
 
@@ -61,17 +60,22 @@ function formatPrice(value: number) {
 }
 
 function itemDetail(item: MenuItem) {
-  return [item.volume, item.packaging].filter(Boolean).join(" · ");
+  return [item.packaging, item.volume].filter(Boolean).join(" · ");
 }
 
 export default function OrderExperience({
-  view,
   initialRegion = null,
 }: OrderExperienceProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("plats");
-  const [region, setRegion] = useState<RegionId | null>(initialRegion);
-  const [fulfillmentMethod, setFulfillmentMethod] =
-    useState<FulfillmentMethod | null>(null);
+  const {
+    fulfillmentMethod,
+    quantities,
+    region: storedRegion,
+    setFulfillmentMethod,
+    setQuantities,
+    setRegion,
+  } = useOrderSession();
+  const region = storedRegion ?? initialRegion;
   const [streetAddress, setStreetAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
@@ -80,7 +84,10 @@ export default function OrderExperience({
     status: "idle",
   });
   const [zoneCheckAttempt, setZoneCheckAttempt] = useState(0);
-  const [quantities, setQuantities] = useState<Quantities>({});
+  const formErrorRef = useRef<HTMLParagraphElement>(null);
+  const incrementButtonRefs = useRef(
+    new Map<string, HTMLButtonElement>(),
+  );
   const [actionState, formAction, isPending] = useActionState(
     prepareWhatsAppOrder,
     initialActionState,
@@ -91,20 +98,15 @@ export default function OrderExperience({
     .map((item) => ({ item, quantity: quantities[item.id] ?? 0 }))
     .filter((line) => line.quantity > 0);
   const selectedCount = selectedLines.reduce((sum, line) => sum + line.quantity, 0);
-  const itemsKnownTotal = selectedLines.reduce(
-    (sum, line) =>
-      line.item.price === null ? sum : sum + line.item.price * line.quantity,
+  const itemsSubtotal = selectedLines.reduce(
+    (sum, line) => sum + line.item.price * line.quantity,
     0,
   );
-  const deliveryFee = calculateDeliveryFee(itemsKnownTotal);
+  const deliveryFee = calculateDeliveryFee(itemsSubtotal);
   const appliedDeliveryFee =
     fulfillmentMethod === "delivery" ? deliveryFee : 0;
-  const knownTotal = itemsKnownTotal + appliedDeliveryFee;
+  const orderTotal = itemsSubtotal + appliedDeliveryFee;
   const isFreeDelivery = deliveryFee === 0;
-  const hasUnknownPrice = selectedLines.some((line) => line.item.price === null);
-  const hasKnownAmount =
-    selectedLines.some((line) => line.item.price !== null) ||
-    appliedDeliveryFee > 0;
   const hasValidDeliveryAddress =
     fulfillmentMethod !== "delivery" ||
     (streetAddress.trim().length >= 5 &&
@@ -123,7 +125,20 @@ export default function OrderExperience({
       ? "Retrait ou livraison"
       : !hasValidDeliveryAddress
         ? "Compléter l’adresse"
-        : "Finaliser l’adresse";
+        : zoneCheck.status === "checking"
+          ? "Vérification…"
+          : "Finaliser l’adresse";
+  const setupActionShortLabel = !region
+    ? "Zone"
+    : !fulfillmentMethod
+      ? "Mode"
+      : zoneCheck.status === "checking"
+        ? "Vérification…"
+        : "Adresse";
+  const orderStatusMessage =
+    selectedCount === 0
+      ? "Votre commande est vide."
+      : `${selectedCount} ${selectedCount > 1 ? "articles" : "article"} dans votre commande. Total ${formatPrice(orderTotal)} francs.`;
   const serializedOrder = JSON.stringify(
     selectedLines.map(({ item, quantity }) => ({ id: item.id, quantity })),
   );
@@ -135,7 +150,6 @@ export default function OrderExperience({
       !/^\d{4}$/.test(postalCode) ||
       city.trim().length < 2
     ) {
-      setZoneCheck({ status: "idle" });
       return;
     }
 
@@ -193,8 +207,27 @@ export default function OrderExperience({
     zoneCheckAttempt,
   ]);
 
+  useEffect(() => {
+    if (actionState.status === "error") {
+      formErrorRef.current?.focus();
+    }
+  }, [actionState.message, actionState.status]);
+
   function changeStreetAddress(value: string) {
     setStreetAddress(value);
+    setZoneCheck({ status: "idle" });
+  }
+
+  function changeRegion(value: RegionId) {
+    setRegion(value);
+    setZoneCheck({ status: "idle" });
+  }
+
+  function changeFulfillmentMethod(value: FulfillmentMethod) {
+    if (!storedRegion && initialRegion) {
+      setRegion(initialRegion);
+    }
+    setFulfillmentMethod(value);
     setZoneCheck({ status: "idle" });
   }
 
@@ -247,96 +280,18 @@ export default function OrderExperience({
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ? "auto"
       : "smooth";
-    document
-      .getElementById(view === "menu" ? "menu-intro" : "accueil")
-      ?.scrollIntoView({ behavior });
-  }
+    const target = !region
+      ? document.getElementById("menu-region-lausanne")
+      : !fulfillmentMethod
+        ? document.getElementById("fulfillment-pickup")
+        : document.getElementById("streetAddress");
 
-  if (view === "home") {
-    return (
-      <section className={styles.hero} id="accueil" aria-labelledby="hero-title">
-        <div className={styles.heroGrid}>
-          <div className={styles.heroCopy}>
-            <p className={styles.brandLine}>Dega Food Express</p>
-            <h1 id="hero-title">
-              La cuisine ivoirienne,
-              <span>à votre table.</span>
-            </h1>
-            <p className={styles.heroText}>
-              Des plats préparés sur commande pour une assiette, un repas de
-              famille ou un événement.
-            </p>
-            <Link className={styles.heroLink} href="/carte">
-              Composer ma commande
-              <ArrowRightIcon />
-            </Link>
-          </div>
+    if (!target) {
+      return;
+    }
 
-          <div className={styles.plateFrame}>
-            <Image
-              className={styles.plateImage}
-              src="/images/hero-attieke.webp"
-              alt="Attiéké servi avec poisson braisé, alloco et crudités"
-              fill
-              priority
-              sizes="(max-width: 760px) 90vw, (max-width: 1100px) 55vw, 620px"
-            />
-            <div className={styles.plateCaption}>
-              <span>Attiéké · poisson braisé · alloco</span>
-            </div>
-          </div>
-
-          <div className={styles.routePanel}>
-            <ol className={styles.steps} aria-label="Étapes de la commande">
-              <li className={styles.currentStep}>
-                <span>1</span>
-                Votre zone
-              </li>
-              <li>
-                <span>2</span>
-                Vos plats
-              </li>
-              <li>
-                <span>3</span>
-                WhatsApp
-              </li>
-            </ol>
-
-            <fieldset className={styles.regionFieldset}>
-              <legend>Votre zone</legend>
-              <button
-                type="button"
-                className={region === "lausanne" ? styles.regionActive : ""}
-                aria-pressed={region === "lausanne"}
-                onClick={() => setRegion("lausanne")}
-              >
-                <MapPinIcon />
-                <span>{DELIVERY_ZONES.lausanne.selectionLabel}</span>
-                {region === "lausanne" && <CheckIcon />}
-              </button>
-              <button
-                type="button"
-                className={region === "lucens" ? styles.regionActive : ""}
-                aria-pressed={region === "lucens"}
-                onClick={() => setRegion("lucens")}
-              >
-                <MapPinIcon />
-                <span>{DELIVERY_ZONES.lucens.selectionLabel}</span>
-                {region === "lucens" && <CheckIcon />}
-              </button>
-            </fieldset>
-
-            <Link
-              className={styles.routeAction}
-              href={region ? `/carte?zone=${region}` : "/carte"}
-            >
-              Continuer vers les plats
-              <ArrowRightIcon />
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior, block: "center" });
   }
 
   return (
@@ -359,12 +314,15 @@ export default function OrderExperience({
         </div>
 
         <fieldset className={styles.menuRegionFieldset}>
-          <legend>Votre zone</legend>
+          <legend>
+            Votre zone <span className="sr-only">(obligatoire)</span>
+          </legend>
           <button
+            id="menu-region-lausanne"
             type="button"
             className={region === "lausanne" ? styles.menuRegionActive : ""}
             aria-pressed={region === "lausanne"}
-            onClick={() => setRegion("lausanne")}
+            onClick={() => changeRegion("lausanne")}
           >
             <MapPinIcon />
             <span>{DELIVERY_ZONES.lausanne.selectionLabel}</span>
@@ -374,7 +332,7 @@ export default function OrderExperience({
             type="button"
             className={region === "lucens" ? styles.menuRegionActive : ""}
             aria-pressed={region === "lucens"}
-            onClick={() => setRegion("lucens")}
+            onClick={() => changeRegion("lucens")}
           >
             <MapPinIcon />
             <span>{DELIVERY_ZONES.lucens.selectionLabel}</span>
@@ -393,10 +351,12 @@ export default function OrderExperience({
               <input
                 className={styles.fulfillmentInput}
                 type="radio"
+                id="fulfillment-pickup"
                 name="fulfillment"
                 value="pickup"
                 checked={fulfillmentMethod === "pickup"}
-                onChange={() => setFulfillmentMethod("pickup")}
+                onChange={() => changeFulfillmentMethod("pickup")}
+                required
               />
               <span className={styles.fulfillmentIcon}>
                 <PickupIcon />
@@ -420,7 +380,8 @@ export default function OrderExperience({
                 name="fulfillment"
                 value="delivery"
                 checked={fulfillmentMethod === "delivery"}
-                onChange={() => setFulfillmentMethod("delivery")}
+                onChange={() => changeFulfillmentMethod("delivery")}
+                required
               />
               <span className={styles.fulfillmentIcon}>
                 <DeliveryIcon />
@@ -438,7 +399,10 @@ export default function OrderExperience({
           </div>
 
           {fulfillmentMethod === "delivery" && (
-            <div className={styles.addressPanel}>
+            <div
+              className={styles.addressPanel}
+              aria-busy={zoneCheck.status === "checking"}
+            >
               <div className={styles.addressPanelHeader}>
                 <span className={styles.addressIcon}>
                   <MapPinIcon />
@@ -458,6 +422,11 @@ export default function OrderExperience({
                   onPostalCodeChange={changePostalCode}
                   onCityChange={changeCity}
                   onAddressSelect={selectAddressSuggestion}
+                  errorId="delivery-zone-error"
+                  invalid={
+                    zoneCheck.status === "outside" ||
+                    zoneCheck.status === "not_found"
+                  }
                 />
 
                 <label className={`${styles.addressField} ${styles.extraField}`}>
@@ -486,7 +455,7 @@ export default function OrderExperience({
                     className={styles.deliveryZoneIndicator}
                     aria-hidden="true"
                   />
-                  <span role="alert">
+                  <span id="delivery-zone-error" role="alert">
                     {zoneCheck.status === "outside" &&
                       "La livraison n’est pas disponible à cette adresse."}
                     {zoneCheck.status === "not_found" &&
@@ -503,6 +472,29 @@ export default function OrderExperience({
                       Réessayer
                     </button>
                   )}
+                </div>
+              )}
+
+              {zoneCheck.status === "checking" && (
+                <div
+                  className={`${styles.deliveryZoneStatus} ${styles.deliveryZoneChecking}`}
+                  role="status"
+                >
+                  <span
+                    className={styles.deliveryZoneIndicator}
+                    aria-hidden="true"
+                  />
+                  <span>Vérification de l’adresse…</span>
+                </div>
+              )}
+
+              {zoneCheck.status === "eligible" && (
+                <div className={styles.deliveryZoneStatus} role="status">
+                  <span
+                    className={styles.deliveryZoneSuccessIndicator}
+                    aria-hidden="true"
+                  />
+                  <span>Adresse de livraison vérifiée.</span>
                 </div>
               )}
 
@@ -547,11 +539,13 @@ export default function OrderExperience({
           <div
             className={styles.itemList}
             id={`panel-${activeCategory}`}
-            aria-live="polite"
           >
             {visibleItems.map((item, index) => {
               const quantity = quantities[item.id] ?? 0;
               const detail = itemDetail(item);
+              const accessibleItemName = detail
+                ? `${item.name}, ${detail}`
+                : item.name;
               const previousItem = visibleItems[index - 1];
               const showSection =
                 item.section &&
@@ -560,57 +554,93 @@ export default function OrderExperience({
               return (
                 <div key={item.id}>
                   {showSection && (
-                    <h3 className={styles.sectionLabel}>
+                    <p className={styles.sectionLabel}>
                       {sectionLabels[item.section!]}
-                    </h3>
+                    </p>
                   )}
                   <article
                     className={`${styles.menuItem} ${
                       quantity > 0 ? styles.menuItemSelected : ""
                     }`}
                   >
+                    {item.imageStatus === "pending" ? (
+                      <div
+                        className={`${styles.itemImage} ${styles.itemImagePending}`}
+                        aria-hidden="true"
+                      >
+                        <span>Dega Food</span>
+                      </div>
+                    ) : (
+                      <div
+                        className={`${styles.itemImage} ${
+                          item.imageFit === "contain"
+                            ? styles.itemImageContain
+                            : ""
+                        }`}
+                      >
+                        <Image
+                          src={item.image}
+                          alt={item.imageAlt}
+                          fill
+                          sizes="(max-width: 420px) 80px, (max-width: 760px) 88px, 116px"
+                        />
+                      </div>
+                    )}
                     <div className={styles.itemName}>
                       <h3>{item.name}</h3>
                       {detail && <p>{detail}</p>}
                     </div>
                     <p className={styles.price}>
-                      {item.price === null
-                        ? "Prix à confirmer"
-                        : `${formatPrice(item.price)} CHF`}
+                      {formatPrice(item.price)} CHF
                     </p>
 
-                    {quantity === 0 ? (
+                    <div
+                      className={`${styles.quantityControl} ${
+                        quantity === 0 ? styles.quantityControlEmpty : ""
+                      }`}
+                    >
                       <button
                         type="button"
-                        className={styles.addButton}
+                        hidden={quantity === 0}
+                        onClick={() => {
+                          changeQuantity(item.id, -1);
+                          if (quantity === 1) {
+                            window.requestAnimationFrame(() => {
+                              incrementButtonRefs.current.get(item.id)?.focus();
+                            });
+                          }
+                        }}
+                        aria-label={`Retirer un ${accessibleItemName}`}
+                      >
+                        <MinusIcon />
+                      </button>
+                      <output
+                        hidden={quantity === 0}
+                        aria-label={`Quantité de ${accessibleItemName}`}
+                      >
+                        {quantity}
+                      </output>
+                      <button
+                        ref={(node) => {
+                          if (node) {
+                            incrementButtonRefs.current.set(item.id, node);
+                          } else {
+                            incrementButtonRefs.current.delete(item.id);
+                          }
+                        }}
+                        type="button"
                         onClick={() => changeQuantity(item.id, 1)}
-                        aria-label={`Ajouter ${item.name}`}
+                        aria-label={
+                          quantity === 0
+                            ? `Ajouter ${accessibleItemName}`
+                            : `Ajouter un ${accessibleItemName}`
+                        }
+                        disabled={quantity >= 20}
                       >
                         <PlusIcon />
-                        <span>Ajouter</span>
+                        <span className={styles.addButtonLabel}>Ajouter</span>
                       </button>
-                    ) : (
-                      <div className={styles.quantityControl}>
-                        <button
-                          type="button"
-                          onClick={() => changeQuantity(item.id, -1)}
-                          aria-label={`Retirer un ${item.name}`}
-                        >
-                          <MinusIcon />
-                        </button>
-                        <output aria-label={`Quantité de ${item.name}`}>
-                          {quantity}
-                        </output>
-                        <button
-                          type="button"
-                          onClick={() => changeQuantity(item.id, 1)}
-                          aria-label={`Ajouter un ${item.name}`}
-                          disabled={quantity >= 20}
-                        >
-                          <PlusIcon />
-                        </button>
-                      </div>
-                    )}
+                    </div>
                   </article>
                 </div>
               );
@@ -619,7 +649,7 @@ export default function OrderExperience({
         </div>
 
         {selectedCount > 0 && (
-          <div className={`${styles.orderDock} ${styles.orderDockVisible}`} aria-live="polite">
+          <div className={`${styles.orderDock} ${styles.orderDockVisible}`}>
             <div className={styles.orderCount}>
               <span>Votre commande</span>
               <strong>
@@ -628,19 +658,9 @@ export default function OrderExperience({
             </div>
             <div className={styles.orderTotal}>
               <span>
-                {!hasKnownAmount && hasUnknownPrice
-                  ? "Prix"
-                  : hasUnknownPrice
-                    ? "Total connu"
-                    : fulfillmentMethod === "delivery"
-                      ? "Total livré"
-                      : "Total"}
+                {fulfillmentMethod === "delivery" ? "Total livré" : "Total"}
               </span>
-              <strong>
-                {!hasKnownAmount && hasUnknownPrice
-                  ? "À confirmer"
-                  : `${formatPrice(knownTotal)} CHF`}
-              </strong>
+              <strong>{formatPrice(orderTotal)} CHF</strong>
             </div>
             {isOrderReady ? (
               <button
@@ -665,16 +685,32 @@ export default function OrderExperience({
                 onClick={returnToSetup}
               >
                 <MapPinIcon />
-                {setupActionLabel}
+                <span className={styles.submitLong}>{setupActionLabel}</span>
+                <span className={styles.submitShort}>
+                  {setupActionShortLabel}
+                </span>
               </button>
             )}
             {actionState.status === "error" && (
-              <p className={styles.formError} role="alert">
+              <p
+                ref={formErrorRef}
+                className={styles.formError}
+                role="alert"
+                tabIndex={-1}
+              >
                 {actionState.message}
               </p>
             )}
           </div>
         )}
+        <span
+          className="sr-only"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {orderStatusMessage}
+        </span>
       </section>
     </form>
   );

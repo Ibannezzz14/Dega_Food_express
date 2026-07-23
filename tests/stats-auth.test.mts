@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  isStatsAuthorizationValid,
+  validateStatsAuthorization,
   type StatsCredentials,
-} from "../lib/stats-auth.ts";
+} from "../lib/stats-auth-core.ts";
 
 const credentials: StatsCredentials = {
   username: "dega",
@@ -16,21 +16,21 @@ function basic(username: string, password: string) {
 
 test("autorise uniquement les identifiants statistiques exacts", () => {
   assert.equal(
-    isStatsAuthorizationValid(
+    validateStatsAuthorization(
       basic(credentials.username, credentials.password),
       credentials,
     ),
     true,
   );
   assert.equal(
-    isStatsAuthorizationValid(
+    validateStatsAuthorization(
       basic(credentials.username, "mauvais-mot-de-passe"),
       credentials,
     ),
     false,
   );
   assert.equal(
-    isStatsAuthorizationValid(
+    validateStatsAuthorization(
       basic("autre-compte", credentials.password),
       credentials,
     ),
@@ -39,8 +39,14 @@ test("autorise uniquement les identifiants statistiques exacts", () => {
 });
 
 test("refuse les en-têtes Basic absents ou malformés", () => {
-  assert.equal(isStatsAuthorizationValid(null, credentials), false);
-  assert.equal(isStatsAuthorizationValid("Bearer jeton", credentials), false);
-  assert.equal(isStatsAuthorizationValid("Basic !!!", credentials), false);
-  assert.equal(isStatsAuthorizationValid("Basic ZGVnYQ==", credentials), false);
+  assert.equal(validateStatsAuthorization(null, credentials), false);
+  assert.equal(
+    validateStatsAuthorization("Bearer jeton", credentials),
+    false,
+  );
+  assert.equal(validateStatsAuthorization("Basic !!!", credentials), false);
+  assert.equal(
+    validateStatsAuthorization("Basic ZGVnYQ==", credentials),
+    false,
+  );
 });

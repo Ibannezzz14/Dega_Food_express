@@ -1,17 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon, PhoneIcon } from "@/components/icons";
+import {
+  ArrowRightIcon,
+  InstagramIcon,
+  PhoneIcon,
+} from "@/components/icons";
+import { CONTACTS, INSTAGRAM } from "@/data/contact";
 import styles from "./site-footer.module.css";
 
 type FooterNavigationItem = {
-  href: "/" | "/carte" | "/presentation" | "/evenements";
+  href: "/" | "/carte" | "/presentation" | "/evenements" | "/contact";
   label: string;
-};
-
-type PhoneContact = {
-  area: string;
-  displayPhone: string;
-  href: `tel:${string}`;
 };
 
 const footerNavigation = [
@@ -19,20 +18,8 @@ const footerNavigation = [
   { href: "/carte", label: "La carte" },
   { href: "/presentation", label: "Notre histoire" },
   { href: "/evenements", label: "Service traiteur" },
+  { href: "/contact", label: "Contact" },
 ] as const satisfies readonly FooterNavigationItem[];
-
-const phoneContacts = [
-  {
-    area: "Lausanne",
-    displayPhone: "078 265 40 81",
-    href: "tel:+41782654081",
-  },
-  {
-    area: "Lucens et alentours",
-    displayPhone: "076 603 60 11",
-    href: "tel:+41766036011",
-  },
-] as const satisfies readonly PhoneContact[];
 
 export default function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -87,15 +74,15 @@ export default function SiteFooter() {
             aria-labelledby="footer-contact-title"
           >
             <div className={styles.contactHeading}>
-              <p className={styles.sectionLabel}>Commande directe</p>
+              <p className={styles.sectionLabel}>Commandes à la carte</p>
               <h2 id="footer-contact-title">Par téléphone</h2>
             </div>
             <address className={styles.contactCards}>
-              {phoneContacts.map((contact) => (
+              {CONTACTS.map((contact) => (
                 <a
                   className={styles.contactCard}
-                  href={contact.href}
-                  key={contact.href}
+                  href={contact.phoneHref}
+                  key={contact.phoneHref}
                   aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
                 >
                   <span className={styles.phoneIcon}>
@@ -116,10 +103,25 @@ export default function SiteFooter() {
 
         <div className={styles.footerBottom}>
           <p>© {currentYear} Dega Food Express</p>
-          <a className={styles.backToTop} href="#top">
-            Retour en haut
-            <ArrowRightIcon />
-          </a>
+          <div className={styles.footerLegal}>
+            <a
+              className={styles.instagramLink}
+              href={INSTAGRAM.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon />
+              {INSTAGRAM.handle}
+              <span className="sr-only">
+                {" "}
+                (s’ouvre dans un nouvel onglet)
+              </span>
+            </a>
+            <a className={styles.backToTop} href="#top">
+              Retour en haut
+              <ArrowRightIcon />
+            </a>
+          </div>
         </div>
       </div>
     </footer>

@@ -3,27 +3,55 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { ArrowRightIcon } from "@/components/icons";
-import styles from "./page.module.css";
+import styles from "./site-header.module.css";
 
 const navigation = [
   { href: "/", label: "Accueil" },
   { href: "/presentation", label: "Présentation" },
   { href: "/carte", label: "La carte" },
   { href: "/evenements", label: "Traiteur" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export default function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 1021px)");
+
+    function closeMenuOnDesktop(event: MediaQueryListEvent) {
+      if (event.matches) {
+        setIsOpen(false);
+      }
+    }
+
+    desktopQuery.addEventListener("change", closeMenuOnDesktop);
+
+    return () => {
+      desktopQuery.removeEventListener("change", closeMenuOnDesktop);
+    };
+  }, []);
 
   function closeMenu() {
     setIsOpen(false);
   }
 
+  function handleMenuKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (event.key !== "Escape" || !isOpen) {
+      return;
+    }
+
+    event.preventDefault();
+    closeMenu();
+    menuButtonRef.current?.focus();
+  }
+
   return (
-    <header className={styles.siteHeader}>
+    <header className={styles.siteHeader} onKeyDown={handleMenuKeyDown}>
       <div className={styles.headerInner}>
         <Link
           className={styles.brand}
@@ -59,6 +87,7 @@ export default function SiteHeader() {
             <ArrowRightIcon />
           </Link>
           <button
+            ref={menuButtonRef}
             type="button"
             className={styles.menuToggle}
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
@@ -92,10 +121,6 @@ export default function SiteHeader() {
             <ArrowRightIcon />
           </Link>
         ))}
-        <Link className={styles.mobileContact} href="/#contact" onClick={closeMenu}>
-          Contact
-          <ArrowRightIcon />
-        </Link>
       </nav>
     </header>
   );

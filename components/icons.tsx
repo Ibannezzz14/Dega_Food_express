@@ -107,3 +107,92 @@ export function PhoneIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function HeartIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
+    </IconBase>
+  );
+}
+
+export function PeopleIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+      <circle cx="17" cy="9" r="2.3" />
+      <path d="M15.5 14.5A4.5 4.5 0 0 1 21 19" />
+    </IconBase>
+  );
+}
+
+export function SunIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="3.5" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </IconBase>
+  );
+}
+
+export function LeafIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20.5 3.5C12 3.7 6.5 6.8 5.2 12.2c-.8 3.2 1 6.7 4.3 7.6 5.4 1.5 9.2-4 11-16.3Z" />
+      <path d="M4 21c2.2-5.3 6.3-9.1 12.5-11.5" />
+    </IconBase>
+  );
+}
+
+export function CakeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 10h16v10H4V10Z" />
+      <path d="M4 14c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2" />
+      <path d="M12 4v3" />
+      <path d="M10.5 4c0-1 1.5-2 1.5-2s1.5 1 1.5 2A1.5 1.5 0 0 1 12 5.5 1.5 1.5 0 0 1 10.5 4Z" />
+    </IconBase>
+  );
+}
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m3 11 9-8 9 8" />
+      <path d="M5 10v10h14V10" />
+      <path d="M9 20v-6h6v6" />
+    </IconBase>
+  );
+}
+
+export function BriefcaseIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <path d="M3 12h18M10 12v2h4v-2" />
+    </IconBase>
+  );
+}
+
+export function ServingTrayIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 16h16" />
+      <path d="M6 16a6 6 0 0 1 12 0" />
+      <path d="M3 20h18" />
+      <path d="M12 7V4" />
+      <path d="M10 4h4" />
+    </IconBase>
+  );
+}
+
+export function UtensilsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M7 3v7M4 3v4a3 3 0 0 0 6 0V3M7 10v11" />
+      <path d="M17 3c-2 2-3 5-3 8h4V3h-1ZM18 11v10" />
+    </IconBase>
+  );
+}

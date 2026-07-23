@@ -6,10 +6,7 @@ import {
   type FulfillmentMethod,
   type StatisticsPeriod,
 } from "@/lib/order-statistics-model";
-import {
-  ensureAnalyticsSchema,
-  getAnalyticsDatabase,
-} from "@/lib/postgres";
+import { getAnalyticsDatabase } from "@/lib/postgres";
 
 export type OrderHandoffInput = {
   region: RegionId;
@@ -98,7 +95,6 @@ export async function trackOrderHandoff(input: OrderHandoffInput) {
   }
 
   try {
-    await ensureAnalyticsSchema(database);
     await database`
       WITH expired_rows AS (
         DELETE FROM whatsapp_handoff_daily
@@ -153,7 +149,6 @@ export async function getOrderStatistics(
   const trendDays = Math.min(periodDays, 14);
 
   try {
-    await ensureAnalyticsSchema(database);
     const [summaryRows, locationRows, regionRows, trendRows] =
       await Promise.all([
         database<SummaryQueryRow[]>`

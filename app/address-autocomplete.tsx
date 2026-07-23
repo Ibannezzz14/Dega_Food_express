@@ -19,6 +19,8 @@ type AddressAutocompleteProps = {
   streetAddress: string;
   postalCode: string;
   city: string;
+  errorId?: string;
+  invalid?: boolean;
   onStreetAddressChange: (value: string) => void;
   onPostalCodeChange: (value: string) => void;
   onCityChange: (value: string) => void;
@@ -62,6 +64,8 @@ export default function AddressAutocomplete({
   streetAddress,
   postalCode,
   city,
+  errorId,
+  invalid = false,
   onStreetAddressChange,
   onPostalCodeChange,
   onCityChange,
@@ -89,17 +93,11 @@ export default function AddressAutocomplete({
 
   useEffect(() => {
     if (!activeField) {
-      setSuggestions([]);
-      setStatus("idle");
-      setActiveIndex(-1);
       return;
     }
 
     const query = activeQuery.trim();
     if (query.length < minimumQueryLength[activeField]) {
-      setSuggestions([]);
-      setStatus("idle");
-      setActiveIndex(-1);
       return;
     }
 
@@ -405,6 +403,8 @@ export default function AddressAutocomplete({
             aria-busy={
               activeField === "streetAddress" && status === "loading"
             }
+            aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? errorId : undefined}
             required
           />
           {renderSuggestionPanel("streetAddress")}
@@ -438,6 +438,8 @@ export default function AddressAutocomplete({
             }
             aria-activedescendant={activeSuggestionId("postalCode")}
             aria-busy={activeField === "postalCode" && status === "loading"}
+            aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? errorId : undefined}
             required
           />
           {renderSuggestionPanel("postalCode")}
@@ -468,6 +470,8 @@ export default function AddressAutocomplete({
             }
             aria-activedescendant={activeSuggestionId("city")}
             aria-busy={activeField === "city" && status === "loading"}
+            aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? errorId : undefined}
             required
           />
           {renderSuggestionPanel("city")}

@@ -1,0 +1,119 @@
+.page {
+  display: grid;
+  min-height: calc(100vh - 78px);
+  place-items: center;
+  padding: clamp(72px, 9vw, 132px) 24px;
+  background:
+    linear-gradient(135deg, rgb(201 163 93 / 9%), transparent 42%),
+    var(--forest-900);
+  color: var(--cassava-50);
+}
+
+.card {
+  width: min(720px, 100%);
+  padding: clamp(30px, 6vw, 64px);
+  border: 1px solid rgb(245 245 240 / 22%);
+  border-radius: 16px;
+  background: rgb(7 31 26 / 42%);
+}
+
+.code,
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--plantain-300);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.card h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(3rem, 8vw, 5.8rem);
+  font-weight: 560;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.card > p:not(.code, .eyebrow) {
+  max-width: 58ch;
+  margin: 28px 0 0;
+  color: #d8e5df;
+  font-size: 1.05rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 50px;
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primaryAction {
+  border: 1px solid var(--plantain-300);
+  background: var(--plantain-400);
+  color: var(--forest-950);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease-out,
+    transform 160ms ease-out;
+}
+
+.primaryAction:hover {
+  background: var(--plantain-300);
+  transform: translateY(-1px);
+}
+
+.primaryAction svg {
+  width: 19px;
+  height: 19px;
+}
+
+.secondaryAction {
+  border: 1px solid rgb(245 245 240 / 38%);
+  color: var(--cassava-50);
+  transition:
+    background-color 160ms ease-out,
+    border-color 160ms ease-out;
+}
+
+.secondaryAction:hover {
+  border-color: var(--plantain-300);
+  background: rgb(245 245 240 / 7%);
+}
+
+@media (max-width: 720px) {
+  .page {
+    min-height: calc(100vh - 68px);
+    padding: 54px 14px 72px;
+  }
+
+  .card {
+    padding: 28px 22px;
+  }
+
+  .actions {
+    display: grid;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+}

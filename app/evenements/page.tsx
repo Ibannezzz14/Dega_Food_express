@@ -1,67 +1,120 @@
-/**
- * THESIS: La page transforme l’intérêt pour un événement en brief de devis,
- * sans reprendre le parcours de commande individuelle.
- * OWN-WORLD: Vert minéral, ivoire et laiton structurent de grands champs,
- * des photographies réelles et des lignes éditoriales sobres.
- * STORY: Comprendre le service traiteur, préparer les informations utiles,
- * puis contacter directement l’un des deux numéros traiteur.
- * FIRST VIEWPORT: Offre et mention « devis sur demande » à gauche, réception
- * réelle en grand format à droite, action visible sans faire défiler.
- * FORM: « Le devis comme parcours », structure 4, seed c286d901.
- */
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowRightIcon } from "@/components/icons";
-import GallerySection from "../gallery-section";
+import Link from "next/link";
+import {
+  ArrowRightIcon,
+  BriefcaseIcon,
+  CheckIcon,
+  HeartIcon,
+  HomeIcon,
+  MessageIcon,
+  PeopleIcon,
+} from "@/components/icons";
+import { CONTACTS } from "@/data/contact";
+import { createPageMetadata } from "@/lib/page-metadata";
+import CateringFaq from "./catering-faq";
 import styles from "./evenements.module.css";
 
-export const metadata: Metadata = {
-  title: "Service traiteur | Dega Food Express",
+export const metadata: Metadata = createPageMetadata({
+  title: "Service traiteur ivoirien | Dega Food Express",
   description:
-    "Service traiteur ivoirien pour repas de famille, associations et événements. Devis sur demande.",
+    "Présentez votre événement à Dega Food Express et demandez un devis traiteur établi selon les informations communiquées.",
+  path: "/evenements",
+  image: {
+    url: "/images/editorial/alloco-tilapia-ivoirien.webp",
+    width: 1600,
+    height: 1100,
+    alt: "Tilapia braisé accompagné d’alloco et de sauce tomate",
+  },
+});
+
+const eventTypes = [
+  {
+    title: "Fêtes & cérémonies",
+    description:
+      "Présentez l’occasion, la date souhaitée et le format de repas que vous imaginez.",
+    icon: HeartIcon,
+  },
+  {
+    title: "Repas de famille",
+    description:
+      "Indiquez le nombre de convives et les plats que vous souhaitez partager.",
+    icon: HomeIcon,
+  },
+  {
+    title: "Associations & communautés",
+    description:
+      "Expliquez le contexte de votre rencontre afin que la demande puisse être étudiée.",
+    icon: PeopleIcon,
+  },
+  {
+    title: "Événements professionnels",
+    description:
+      "Communiquez les informations utiles sur votre réception et son organisation.",
+    icon: BriefcaseIcon,
+  },
+] as const;
+
+const processSteps = [
+  {
+    title: "Présentez votre événement",
+    description:
+      "Précisez l’occasion, la date, la localité et le nombre estimé de convives.",
+  },
+  {
+    title: "Partagez vos envies",
+    description:
+      "Mentionnez les plats envisagés, le format souhaité et les informations alimentaires utiles.",
+  },
+  {
+    title: "Échangez avec l’équipe",
+    description:
+      "Marie-José et Geneviève vous indiquent les possibilités après étude de votre demande.",
+  },
+  {
+    title: "Recevez votre devis",
+    description:
+      "Le montant et les modalités vous sont communiqués avant toute confirmation.",
+  },
+] as const;
+
+type SectionHeadingProps = {
+  label: string;
+  title: string;
+  description?: string;
+  titleId: string;
 };
 
-const cateringContacts = [
-  {
-    phone: "41782654081",
-    displayPhone: "078 265 40 81",
-  },
-  {
-    phone: "41766036011",
-    displayPhone: "076 603 60 11",
-  },
-] as const;
-
-const quoteDetails = [
-  {
-    label: "Votre événement",
-    text: "Le type de réception et la date souhaitée.",
-  },
-  {
-    label: "Le nombre de personnes",
-    text: "Une estimation du nombre de convives.",
-  },
-  {
-    label: "Le lieu",
-    text: "La localité et les informations utiles pour la prestation.",
-  },
-  {
-    label: "Vos préférences",
-    text: "Les plats envisagés et les précisions importantes.",
-  },
-] as const;
+function SectionHeading({
+  label,
+  title,
+  description,
+  titleId,
+}: SectionHeadingProps) {
+  return (
+    <header className={styles.sectionHeading}>
+      <div>
+        <p className={styles.sectionLabel}>{label}</p>
+        <h2 id={titleId}>{title}</h2>
+      </div>
+      {description ? <p>{description}</p> : null}
+    </header>
+  );
+}
 
 function quoteUrl(phone: string) {
   const message = [
     "Bonjour Dega Food Express,",
     "",
-    "Je souhaite demander un devis pour le service traiteur.",
+    "Je souhaite demander un devis pour une prestation traiteur.",
     "",
     "Type d’événement :",
-    "Date :",
-    "Nombre de personnes :",
-    "Lieu :",
-    "Plats souhaités :",
+    "Date souhaitée :",
+    "Nombre de convives :",
+    "Localité :",
+    "Plats envisagés :",
+    "Format souhaité :",
+    "Allergies ou contraintes à signaler :",
   ].join("\n");
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
@@ -69,118 +122,206 @@ function quoteUrl(phone: string) {
 
 export default function EventsPage() {
   return (
-    <main id="contenu">
-      <section
-        className={styles.cateringHero}
-        aria-labelledby="catering-title"
-      >
+    <main id="contenu" className={styles.page}>
+      <section className={styles.hero} aria-labelledby="catering-title">
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <p className={styles.eyebrow}>Service traiteur</p>
             <h1 id="catering-title">
-              Une table ivoirienne pensée pour votre événement.
+              Vos événements autour d’une cuisine ivoirienne généreuse.
             </h1>
             <p className={styles.heroText}>
-              Repas de famille, anniversaires, associations ou événements :
-              présentez-nous votre projet pour recevoir une proposition adaptée
-              à votre demande.
+              Marie-José et Geneviève étudient chaque demande à partir de votre
+              occasion, du nombre de convives et des plats souhaités.
             </p>
-            <div className={styles.quoteNotice}>
-              <span>Tarification</span>
-              <strong>Devis sur demande</strong>
+            <div className={styles.heroActions}>
+              <a className={styles.primaryButton} href="#devis-traiteur">
+                Demander un devis
+                <ArrowRightIcon />
+              </a>
+              <Link className={styles.secondaryButton} href="/carte">
+                Voir les spécialités
+              </Link>
             </div>
-            <a className={styles.heroAction} href="#devis">
-              Demander un devis
-              <ArrowRightIcon />
-            </a>
-          </div>
-
-          <div className={styles.heroVisual} aria-label="Service traiteur Dega Food">
-            <div className={styles.heroMainImage}>
-              <Image
-                src="/images/gallery-event.webp"
-                alt="Réception avec un repas organisé par Dega Food Express"
-                fill
-                priority
-                sizes="(max-width: 760px) 92vw, 48vw"
-              />
-            </div>
-            <div className={styles.heroDetailImage}>
-              <Image
-                src="/images/gallery-sharing.webp"
-                alt="Plat ivoirien préparé pour être partagé"
-                fill
-                sizes="(max-width: 760px) 42vw, 240px"
-              />
-            </div>
-            <p className={styles.imageCaption}>
-              Repas privés · associations · événements
+            <p className={styles.heroNote}>
+              <CheckIcon />
+              Devis établi sur demande après échange avec l’équipe.
             </p>
           </div>
-        </div>
-      </section>
 
-      <section className={styles.briefSection} aria-labelledby="brief-title">
-        <div className={styles.briefHeading}>
-          <div>
-            <p className={styles.sectionLabel}>Préparer votre demande</p>
-            <h2 id="brief-title">
-              Les informations utiles pour établir le devis.
-            </h2>
-          </div>
-          <p>
-            Aucun tarif standard n’est appliqué à cette prestation. Le devis
-            est préparé après réception des informations concernant votre
-            événement.
-          </p>
+          <figure className={styles.heroVisual}>
+            <Image
+              src="/images/editorial/alloco-tilapia-ivoirien.webp"
+              alt="Tilapia braisé accompagné d’alloco, de sauce tomate et de crudités"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 52vw"
+            />
+            <figcaption>
+              <span>Spécialité ivoirienne</span>
+              Tilapia braisé & alloco
+            </figcaption>
+          </figure>
         </div>
-
-        <dl className={styles.briefList}>
-          {quoteDetails.map((detail) => (
-            <div key={detail.label}>
-              <dt>{detail.label}</dt>
-              <dd>{detail.text}</dd>
-            </div>
-          ))}
-        </dl>
       </section>
 
       <section
-        className={styles.quoteSection}
-        id="devis"
-        aria-labelledby="quote-title"
+        className={styles.approach}
+        aria-labelledby="catering-approach-title"
       >
-        <div className={styles.quoteIntro}>
-          <p className={styles.sectionLabel}>Demande de devis</p>
-          <h2 id="quote-title">Parlons de votre événement.</h2>
-          <p>
-            Envoyez votre demande à l’un des deux contacts. Un message prérempli
-            vous aidera à transmettre les premières informations.
-          </p>
-        </div>
-
-        <div className={styles.quoteContacts}>
-          {cateringContacts.map((contact) => (
-            <a
-              key={contact.phone}
-              href={quoteUrl(contact.phone)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>
-                <small>WhatsApp</small>
-                <strong>{contact.displayPhone}</strong>
-              </span>
-              <ArrowRightIcon />
-            </a>
-          ))}
-          <p>
-            Le montant du devis est communiqué après étude de votre demande.
-          </p>
+        <div className={styles.approachInner}>
+          <SectionHeading
+            label="Notre approche"
+            title="Une demande étudiée avec vous."
+            titleId="catering-approach-title"
+          />
+          <div className={styles.approachCopy}>
+            <p>
+              Le service traiteur ne repose pas sur une formule unique. Vous
+              présentez votre événement et l’équipe échange avec vous pour
+              préciser ce qui peut être proposé.
+            </p>
+            <ul>
+              <li>
+                <CheckIcon />
+                Sélection des plats et quantités à définir
+              </li>
+              <li>
+                <CheckIcon />
+                Informations pratiques discutées avant confirmation
+              </li>
+              <li>
+                <CheckIcon />
+                Devis communiqué après étude de la demande
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <GallerySection />
+      <section
+        className={styles.eventTypes}
+        aria-labelledby="event-types-title"
+      >
+        <div className={styles.sectionShell}>
+          <SectionHeading
+            label="Vos occasions"
+            title="Parlez-nous du moment que vous préparez."
+            description="Ces exemples vous aident à présenter votre demande. Les possibilités restent à confirmer avec l’équipe."
+            titleId="event-types-title"
+          />
+          <div className={styles.eventGrid}>
+            {eventTypes.map((event) => {
+              const Icon = event.icon;
+
+              return (
+                <article className={styles.eventCard} key={event.title}>
+                  <span className={styles.cardIcon} aria-hidden="true">
+                    <Icon />
+                  </span>
+                  <h3>{event.title}</h3>
+                  <p>{event.description}</p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.process} aria-labelledby="process-title">
+        <div className={styles.sectionShell}>
+          <SectionHeading
+            label="Comment ça se passe ?"
+            title="Quatre étapes avant confirmation."
+            description="Une prise de contact ne confirme pas encore la prestation."
+            titleId="process-title"
+          />
+          <ol className={styles.processList}>
+            {processSteps.map((step, index) => (
+              <li key={step.title}>
+                <span className={styles.stepNumber} aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className={styles.faq} aria-labelledby="faq-title">
+        <div className={styles.faqInner}>
+          <div className={styles.faqIntro}>
+            <SectionHeading
+              label="À savoir"
+              title="Les réponses utiles avant de nous écrire."
+              titleId="faq-title"
+            />
+            <aside
+              className={styles.allergenNote}
+              aria-labelledby="allergen-title"
+            >
+              <h3 id="allergen-title">Allergies et contraintes alimentaires</h3>
+              <p>
+                Signalez-les dès le premier échange. L’équipe vous indiquera
+                les possibilités, sans pouvoir garantir une absence totale de
+                contamination croisée.
+              </p>
+            </aside>
+          </div>
+          <CateringFaq />
+        </div>
+      </section>
+
+      <section
+        className={styles.finalCta}
+        id="devis-traiteur"
+        aria-labelledby="devis-traiteur-title"
+      >
+        <div className={styles.finalCtaInner}>
+          <div className={styles.finalCtaCopy}>
+            <p className={styles.sectionLabel}>Devis sur demande</p>
+            <h2 id="devis-traiteur-title">
+              Présentez-nous votre événement sur WhatsApp.
+            </h2>
+            <p>
+              Choisissez l’un des deux contacts. Un message prérempli vous aide
+              à transmettre les informations nécessaires.
+            </p>
+          </div>
+
+          <div
+            className={styles.contactOptions}
+            role="group"
+            aria-label="Contacts WhatsApp du service traiteur"
+          >
+            {CONTACTS.map((contact, index) => (
+              <a
+                key={contact.whatsAppPhone}
+                href={quoteUrl(contact.whatsAppPhone)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Préparer une demande de devis traiteur sur WhatsApp au ${contact.displayPhone} (s’ouvre dans un nouvel onglet)`}
+              >
+                <span className={styles.contactIcon} aria-hidden="true">
+                  <MessageIcon />
+                </span>
+                <span>
+                  <small>WhatsApp · contact {index + 1}</small>
+                  <strong>{contact.displayPhone}</strong>
+                </span>
+                <ArrowRightIcon aria-hidden="true" />
+              </a>
+            ))}
+            <p>
+              Les deux contacts reçoivent les demandes de service traiteur.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

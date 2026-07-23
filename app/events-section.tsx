@@ -13,16 +13,16 @@ export default function EventsSection() {
       <div className={styles.eventsImages}>
         <div className={styles.eventMainImage}>
           <Image
-            src="/images/gallery-event.webp"
-            alt="Repas ivoirien organisé pour un événement"
+            src="/images/editorial/alloco-tilapia-ivoirien.webp"
+            alt="Tilapia braisé et alloco dressés dans une grande assiette"
             fill
             sizes="(max-width: 760px) 100vw, 48vw"
           />
         </div>
         <div className={styles.eventDetailImage}>
           <Image
-            src="/images/gallery-sharing.webp"
-            alt="Plat ivoirien présenté autour d’une table"
+            src="/images/menu/placali-sauce-kope.webp"
+            alt="Placali ivoirien servi avec une sauce kopé"
             fill
             sizes="(max-width: 760px) 42vw, 220px"
           />

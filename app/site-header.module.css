@@ -1,0 +1,269 @@
+.siteHeader {
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  height: 78px;
+  border-bottom: 1px solid rgb(245 245 240 / 14%);
+  background: rgb(7 31 26 / 94%);
+  color: var(--cassava-50);
+  backdrop-filter: blur(16px);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  width: min(1320px, calc(100% - 48px));
+  height: 100%;
+  margin: 0 auto;
+}
+
+.brand {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+}
+
+.brand img {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgb(245 245 240 / 35%);
+  border-radius: 50%;
+}
+
+.mainNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 2.3vw, 36px);
+  height: 100%;
+}
+
+.mainNav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #dce7e2;
+  font-size: 0.94rem;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.mainNav a::after {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  left: 0;
+  height: 1px;
+  background: var(--plantain-300);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 180ms ease-out;
+}
+
+.mainNav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.mainNav a[aria-current="page"] {
+  color: var(--cassava-50);
+}
+
+.mainNav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.headerActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.orderNavLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 1px solid var(--plantain-300);
+  border-radius: 6px;
+  background: var(--plantain-400);
+  color: var(--forest-950);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    transform 160ms ease-out;
+}
+
+.orderNavLink:hover {
+  background: var(--plantain-300);
+  transform: translateY(-1px);
+}
+
+.orderNavLink svg {
+  width: 18px;
+  height: 18px;
+}
+
+.menuToggle {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid rgb(245 245 240 / 30%);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--cassava-50);
+  cursor: pointer;
+}
+
+.menuGlyph {
+  display: grid;
+  gap: 5px;
+  width: 18px;
+}
+
+.menuGlyph i {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: transform 160ms ease-out;
+}
+
+.mobileNav {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: none;
+  padding: 16px max(20px, calc((100vw - 1320px) / 2));
+  border-top: 1px solid rgb(245 245 240 / 12%);
+  border-bottom: 1px solid rgb(245 245 240 / 18%);
+  background: var(--forest-950);
+  color: var(--cassava-50);
+  box-shadow: 0 20px 46px rgb(0 19 15 / 30%);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition:
+    opacity 160ms ease-out,
+    transform 160ms ease-out,
+    visibility 160ms;
+}
+
+.mobileNavOpen {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobileNav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  border-bottom: 1px solid rgb(245 245 240 / 14%);
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.mobileNav a:last-child {
+  border-bottom: 0;
+}
+
+.mobileNav a[aria-current="page"] {
+  color: var(--plantain-300);
+}
+
+.mobileNav svg {
+  width: 19px;
+  height: 19px;
+}
+
+@media (max-width: 1020px) {
+  .mainNav {
+    display: none;
+  }
+
+  .menuToggle {
+    display: inline-flex;
+  }
+
+  .mobileNav {
+    display: grid;
+  }
+}
+
+@media (max-width: 720px) {
+  .siteHeader {
+    height: 68px;
+  }
+
+  .headerInner {
+    width: calc(100% - 24px);
+    gap: 10px;
+  }
+
+  .brand {
+    gap: 8px;
+    font-size: 0.96rem;
+  }
+
+  .brand img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .headerActions {
+    gap: 7px;
+  }
+
+  .orderNavLink {
+    gap: 8px;
+    min-height: 44px;
+    padding: 7px 10px;
+  }
+
+  .orderNavLink svg {
+    display: none;
+  }
+
+  .menuToggle {
+    min-height: 44px;
+    padding: 7px 10px;
+  }
+}
+
+@media (max-width: 460px) {
+  .brand span {
+    display: none;
+  }
+
+  .orderNavLink {
+    font-size: 0.86rem;
+  }
+
+  .menuToggle > span:first-child {
+    display: none;
+  }
+}

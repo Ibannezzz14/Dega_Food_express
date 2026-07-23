@@ -181,8 +181,7 @@ export async function prepareWhatsAppOrder(
   }
 
   const lines: string[] = [];
-  let itemsKnownTotal = 0;
-  let unknownPriceCount = 0;
+  let itemsSubtotal = 0;
 
   for (const orderLine of rawOrder) {
     const item = menuById.get(orderLine.id);
@@ -193,26 +192,19 @@ export async function prepareWhatsAppOrder(
       };
     }
 
-    const details = [item.volume, item.packaging].filter(Boolean).join(" · ");
-    const itemPrice =
-      item.price === null
-        ? "prix à confirmer"
-        : `${formatPrice(item.price * orderLine.quantity)} CHF`;
+    const details = [item.packaging, item.volume].filter(Boolean).join(" · ");
+    const itemPrice = `${formatPrice(item.price * orderLine.quantity)} CHF`;
 
     lines.push(
       `• ${orderLine.quantity} × ${item.name}${details ? ` (${details})` : ""} — ${itemPrice}`,
     );
 
-    if (item.price === null) {
-      unknownPriceCount += 1;
-    } else {
-      itemsKnownTotal += item.price * orderLine.quantity;
-    }
+    itemsSubtotal += item.price * orderLine.quantity;
   }
 
   const deliveryFee =
-    fulfillment === "delivery" ? calculateDeliveryFee(itemsKnownTotal) : 0;
-  const knownTotal = itemsKnownTotal + deliveryFee;
+    fulfillment === "delivery" ? calculateDeliveryFee(itemsSubtotal) : 0;
+  const orderTotal = itemsSubtotal + deliveryFee;
   const deliveryAddressLines =
     fulfillment === "delivery"
       ? [
@@ -233,18 +225,15 @@ export async function prepareWhatsAppOrder(
     "",
     ...lines,
     "",
-    fulfillment === "delivery" && itemsKnownTotal > 0
-      ? `Sous-total connu : ${formatPrice(itemsKnownTotal)} CHF`
+    fulfillment === "delivery" && itemsSubtotal > 0
+      ? `Sous-total : ${formatPrice(itemsSubtotal)} CHF`
       : "",
     fulfillment === "delivery"
       ? deliveryFee === 0
         ? `Livraison : offerte (commande supérieure à ${formatPrice(FREE_DELIVERY_THRESHOLD)} CHF)`
         : `Livraison : ${formatPrice(deliveryFee)} CHF`
       : "",
-    knownTotal > 0 ? `Total connu : ${formatPrice(knownTotal)} CHF` : "",
-    unknownPriceCount > 0
-      ? `${unknownPriceCount} prix ${unknownPriceCount > 1 ? "restent" : "reste"} à confirmer.`
-      : "",
+    orderTotal > 0 ? `Total : ${formatPrice(orderTotal)} CHF` : "",
     "Merci de me confirmer les disponibilités et les détails.",
   ]
     .filter(Boolean)

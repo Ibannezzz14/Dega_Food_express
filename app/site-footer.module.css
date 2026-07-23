@@ -36,6 +36,10 @@
   max-width: 430px;
 }
 
+.contactColumn {
+  min-width: 0;
+}
+
 .brandIdentity {
   display: flex;
   align-items: center;
@@ -271,6 +275,32 @@
   margin: 0;
 }
 
+.footerLegal {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.instagramLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #c8d7d2;
+  line-height: 44px;
+  text-underline-offset: 4px;
+}
+
+.instagramLink:hover {
+  color: var(--cassava-50);
+}
+
+.instagramLink svg {
+  width: 18px;
+  height: 18px;
+  color: var(--plantain-300);
+}
+
 .backToTop {
   display: inline-flex;
   align-items: center;
@@ -296,6 +326,7 @@
 .primaryAction:focus-visible,
 .contactCard:focus-visible,
 .footerNavigation a:focus-visible,
+.instagramLink:focus-visible,
 .backToTop:focus-visible {
   outline: 3px solid var(--plantain-300);
   outline-offset: 4px;
@@ -350,6 +381,12 @@
     flex-direction: column;
     gap: 8px;
     margin-top: 50px;
+  }
+
+  .footerLegal {
+    width: 100%;
+    justify-content: space-between;
+    gap: 18px;
   }
 }
 

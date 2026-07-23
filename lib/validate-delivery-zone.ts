@@ -80,11 +80,9 @@ export async function validateDeliveryZone(
 
   try {
     const response = await fetch(searchUrl, {
+      cache: "no-store",
       headers: {
         Accept: "application/json",
-      },
-      next: {
-        revalidate: 604800,
       },
       signal: AbortSignal.timeout(5000),
     });
