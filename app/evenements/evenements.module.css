@@ -1,0 +1,424 @@
+.cateringHero {
+  overflow: hidden;
+  background: var(--forest-900);
+  color: var(--cassava-50);
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.88fr) minmax(520px, 1.12fr);
+  gap: clamp(54px, 7vw, 112px);
+  align-items: center;
+  width: min(1320px, calc(100% - 80px));
+  min-height: 760px;
+  margin: 0 auto;
+  padding: 72px 0 84px;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow,
+.sectionLabel {
+  margin: 0;
+  color: var(--plantain-300);
+  font-size: 0.82rem;
+  font-weight: 680;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroCopy h1,
+.briefHeading h2,
+.quoteIntro h2 {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-weight: 560;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.heroCopy h1 {
+  max-width: 10.5ch;
+  margin-top: 17px;
+  font-size: clamp(3.8rem, 5.8vw, 5.9rem);
+  line-height: 0.9;
+}
+
+.heroText {
+  max-width: 48ch;
+  margin: 28px 0 0;
+  color: #d2e0da;
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.quoteNotice {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.55fr) minmax(150px, 1fr);
+  gap: 18px;
+  align-items: baseline;
+  max-width: 430px;
+  margin-top: 31px;
+  padding: 15px 0;
+  border-top: 1px solid rgb(245 245 240 / 28%);
+  border-bottom: 1px solid rgb(245 245 240 / 28%);
+}
+
+.quoteNotice span {
+  color: #a9beb6;
+  font-size: 0.82rem;
+}
+
+.quoteNotice strong {
+  color: var(--plantain-300);
+  font-size: 1.06rem;
+  font-weight: 680;
+}
+
+.heroAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  min-height: 52px;
+  margin-top: 30px;
+  padding: 10px 16px;
+  border: 1px solid var(--plantain-300);
+  border-radius: 6px;
+  background: var(--plantain-400);
+  color: var(--forest-950);
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    transform 160ms ease-out;
+}
+
+.heroAction:hover {
+  background: var(--plantain-300);
+  transform: translateY(-1px);
+}
+
+.heroAction svg,
+.quoteContacts svg {
+  width: 20px;
+  height: 20px;
+}
+
+.heroVisual {
+  position: relative;
+  min-height: 620px;
+}
+
+.heroMainImage {
+  position: absolute;
+  inset: 0 10% 0 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--forest-950);
+}
+
+.heroMainImage::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 68%, rgb(7 31 26 / 28%));
+  content: "";
+}
+
+.heroMainImage img {
+  object-fit: cover;
+  object-position: 50% 72%;
+}
+
+.heroDetailImage {
+  position: absolute;
+  right: 0;
+  bottom: 8%;
+  width: min(36%, 250px);
+  aspect-ratio: 0.95;
+  overflow: hidden;
+  border: 3px solid var(--plantain-300);
+  border-radius: 12px;
+  background: var(--forest-950);
+  box-shadow: 12px 18px 40px rgb(2 18 14 / 34%);
+}
+
+.heroDetailImage img {
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.imageCaption {
+  position: absolute;
+  z-index: 2;
+  bottom: 22px;
+  left: 20px;
+  max-width: calc(64% - 36px);
+  margin: 0;
+  color: #dbe8e3;
+  font-size: 0.8rem;
+}
+
+.briefSection {
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(90px, 10vw, 144px)
+    max(24px, calc((100vw - 1180px) / 2));
+  background: var(--cassava-50);
+}
+
+.briefHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.65fr);
+  gap: clamp(44px, 8vw, 120px);
+  align-items: end;
+}
+
+.briefHeading .sectionLabel {
+  color: #b34e3b;
+}
+
+.briefHeading h2,
+.quoteIntro h2 {
+  margin-top: 12px;
+  font-size: clamp(3rem, 5.2vw, 5rem);
+  line-height: 0.94;
+}
+
+.briefHeading > p,
+.quoteIntro > p {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--indigo-600);
+  font-size: 1.02rem;
+}
+
+.briefList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 64px 0 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.briefList > div {
+  min-height: 148px;
+  padding: 25px 27px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.briefList dt {
+  color: var(--forest-900);
+  font-size: 1.05rem;
+  font-weight: 680;
+}
+
+.briefList dd {
+  max-width: 42ch;
+  margin: 9px 0 0;
+  color: var(--indigo-600);
+}
+
+.quoteSection {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(460px, 1.1fr);
+  gap: clamp(54px, 9vw, 140px);
+  padding: clamp(84px, 9vw, 132px) max(32px, calc((100vw - 1180px) / 2));
+  background: var(--indigo-700);
+  color: var(--cassava-50);
+}
+
+.quoteIntro {
+  align-self: center;
+}
+
+.quoteIntro h2 {
+  max-width: 9ch;
+}
+
+.quoteIntro > p {
+  margin-top: 24px;
+  color: #d2e0da;
+}
+
+.quoteContacts {
+  display: grid;
+  align-content: center;
+}
+
+.quoteContacts > a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  min-height: 92px;
+  padding: 18px 20px;
+  border-top: 1px solid rgb(245 245 240 / 28%);
+  color: var(--cassava-50);
+  text-decoration: none;
+  transition:
+    background 160ms ease-out,
+    color 160ms ease-out;
+}
+
+.quoteContacts > a:nth-of-type(2) {
+  border-bottom: 1px solid rgb(245 245 240 / 28%);
+}
+
+.quoteContacts > a:hover {
+  background: var(--cassava-50);
+  color: var(--forest-950);
+}
+
+.quoteContacts span,
+.quoteContacts small,
+.quoteContacts strong {
+  display: block;
+}
+
+.quoteContacts small {
+  margin-bottom: 4px;
+  color: var(--plantain-300);
+  font-size: 0.78rem;
+  font-weight: 680;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quoteContacts > a:hover small {
+  color: var(--chili-500);
+}
+
+.quoteContacts strong {
+  font-size: 1.18rem;
+  font-weight: 650;
+}
+
+.quoteContacts > p {
+  margin: 18px 0 0;
+  color: #abc0b8;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 1024px) {
+  .heroInner {
+    grid-template-columns: minmax(280px, 0.8fr) minmax(420px, 1.2fr);
+    width: min(100% - 48px, 1100px);
+  }
+
+  .briefHeading,
+  .quoteSection {
+    grid-template-columns: 1fr;
+  }
+
+  .briefHeading {
+    align-items: start;
+  }
+
+  .quoteIntro h2 {
+    max-width: 12ch;
+  }
+}
+
+@media (max-width: 840px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    width: min(100% - 28px, 620px);
+    min-height: 0;
+    padding: 64px 0 72px;
+  }
+
+  .heroCopy h1 {
+    max-width: 10ch;
+    font-size: clamp(3.35rem, 15vw, 4.5rem);
+  }
+
+  .heroText {
+    margin-top: 22px;
+  }
+
+  .heroAction {
+    width: 100%;
+  }
+
+  .heroVisual {
+    min-height: 430px;
+  }
+
+  .heroMainImage {
+    inset: 0 7% 0 0;
+    border-radius: 14px;
+  }
+
+  .heroDetailImage {
+    right: 0;
+    bottom: 7%;
+    width: 38%;
+    border-width: 2px;
+  }
+
+  .imageCaption {
+    bottom: 16px;
+    left: 14px;
+    max-width: 55%;
+  }
+
+  .briefSection {
+    width: 100%;
+    padding: 84px max(14px, calc((100vw - 620px) / 2));
+  }
+
+  .briefHeading {
+    gap: 26px;
+  }
+
+  .briefHeading h2,
+  .quoteIntro h2 {
+    font-size: clamp(2.8rem, 13vw, 4rem);
+  }
+
+  .briefList {
+    grid-template-columns: 1fr;
+    margin-top: 46px;
+  }
+
+  .briefList > div {
+    min-height: 0;
+    padding: 22px 20px;
+  }
+
+  .quoteSection {
+    gap: 48px;
+    padding: 80px 16px 92px;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroInner {
+    width: calc(100% - 22px);
+  }
+
+  .heroCopy h1 {
+    font-size: 3.35rem;
+  }
+
+  .heroVisual {
+    min-height: 350px;
+  }
+
+  .quoteNotice {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .briefSection {
+    width: 100%;
+    padding-right: 11px;
+    padding-left: 11px;
+  }
+}
