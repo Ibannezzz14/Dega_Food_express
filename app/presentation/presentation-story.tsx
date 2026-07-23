@@ -52,13 +52,12 @@ export default function PresentationStory() {
 
           <figure className={styles.heroVisual}>
             <Image
-              src="/images/editorial/alloco-tilapia-ivoirien.webp"
-              alt="Tilapia braisé servi avec de l’alloco doré et une sauce"
+              src="/images/menu/attieke-tilapia-proprietaire.webp"
+              alt="Tilapia braisé entier servi avec de l’attiéké et des condiments"
               fill
               priority
               sizes="(max-width: 900px) 100vw, 52vw"
             />
-            <figcaption>Cuisine ivoirienne · partage · générosité</figcaption>
           </figure>
         </div>
       </section>
@@ -92,8 +91,8 @@ export default function PresentationStory() {
       <section className={styles.mission} aria-labelledby="mission-title">
         <div className={styles.missionVisual}>
           <Image
-            src="/images/menu/placali-sauce-kope.webp"
-            alt="Placali ivoirien servi avec une sauce kopé"
+            src="/images/menu/placali-sauce-kope-proprietaire.webp"
+            alt="Deux portions de placali servies avec une sauce kopé"
             fill
             sizes="(max-width: 900px) 100vw, 46vw"
           />

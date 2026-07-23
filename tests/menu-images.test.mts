@@ -7,11 +7,14 @@ import { menuItems } from "../data/menu.ts";
 const projectRoot = resolve(import.meta.dirname, "..");
 const editorialImages = [
   "/images/editorial/alloco-tilapia-ivoirien.webp",
+  "/images/editorial/tilapia-frais-glace-pexels.webp",
 ] as const;
 const pendingImageIds = [] as const;
 
 const evianImage = "/images/menu/drinks/eau-evian-33cl-officiel.webp";
 const beignetsImage = "/images/menu/beignets-puff-puff-pexels.webp";
+const suppliedAttiekeTilapiaImage =
+  "/images/menu/attieke-tilapia-proprietaire.webp";
 const suppliedAllocoPoissonImage =
   "/images/menu/alloco-poisson-braise-proprietaire.webp";
 const suppliedDessertImage = "/images/menu/deguee-proprietaire.webp";
@@ -149,13 +152,24 @@ test("les beignets utilisent le nouveau cadrage puff-puff sans modifier le prix"
   assert.equal(item.category, "entrees");
 });
 
+test("l’attiéké tilapia utilise le nouveau visuel fourni", () => {
+  const item = menuItems.find(
+    (candidate) => candidate.id === "attieke-tilapia",
+  );
+
+  assert.ok(item);
+  assert.equal(item.image, suppliedAttiekeTilapiaImage);
+  assert.equal(item.price, 25);
+  assert.equal(item.category, "plats");
+});
+
 test("l’alloco poisson braisé utilise la photographie fournie", () => {
   const item = menuItems.find((candidate) => candidate.id === "alloco-tilapia");
 
   assert.ok(item);
   assert.equal(item.name, "Alloco poisson braisé");
   assert.equal(item.image, suppliedAllocoPoissonImage);
-  assert.equal(item.price, 5);
+  assert.equal(item.price, 25);
   assert.equal(item.category, "plats");
 });
 
@@ -213,11 +227,11 @@ test("l’eau Evian utilise la bouteille officielle de 33 cl", () => {
   assert.equal(item.imageFit, "contain");
 });
 
-test("le déguée utilise le visuel fourni pour le dessert", () => {
+test("le dégué utilise le visuel fourni pour le dessert", () => {
   const item = menuItems.find((candidate) => candidate.id === "deguee");
 
   assert.ok(item);
-  assert.equal(item.name, "Déguée");
+  assert.equal(item.name, "Dégué");
   assert.notEqual(item.imageStatus, "pending");
   assert.equal(item.image, suppliedDessertImage);
   assert.equal(item.price, 6);
@@ -252,9 +266,15 @@ test("les sources externes et les visuels fournis sont documentés", () => {
   );
   assert.ok(registry.includes("https://www.pexels.com/license/"));
   assert.ok(registry.includes(evianImage));
+  assert.ok(registry.includes(suppliedAttiekeTilapiaImage));
   assert.ok(registry.includes(suppliedAllocoPoissonImage));
   assert.ok(registry.includes(suppliedDessertImage));
   assert.ok(registry.includes(suppliedPlacaliImage));
+  assert.ok(
+    registry.includes(
+      "https://www.pexels.com/photo/displayed-raw-tilapia-on-a-row-8352786/",
+    ),
+  );
   assert.ok(
     registry.includes(
       "https://www.evian.com/fr_ch/produits/bouteilles-en-verre/33cl/",

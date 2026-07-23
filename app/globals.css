@@ -46,21 +46,30 @@ body {
 }
 
 .page-transition {
+  position: relative;
   min-height: calc(100vh - 78px);
+}
+
+.page-transition::after {
+  position: fixed;
+  z-index: 40;
+  inset: 78px 0 0;
+  background: rgb(245 245 240 / 5%);
+  backdrop-filter: blur(2px);
+  content: "";
+  pointer-events: none;
   animation: page-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes page-enter {
   from {
-    clip-path: inset(0 0 14px);
-    filter: blur(2px);
-    opacity: 0.86;
+    backdrop-filter: blur(2px);
+    opacity: 1;
   }
 
   to {
-    clip-path: inset(0);
-    filter: none;
-    opacity: 1;
+    backdrop-filter: blur(0);
+    opacity: 0;
   }
 }
 
@@ -132,15 +141,10 @@ img {
   }
 
   .page-transition {
-    animation: none;
+    min-height: calc(100vh - 78px);
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
+  .page-transition::after {
+    display: none;
   }
 }

@@ -203,14 +203,6 @@
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.28);
 }
 
-.heroVisual::after {
-  position: absolute;
-  inset: 42% 0 0;
-  background: linear-gradient(to bottom, transparent, rgba(5, 23, 19, 0.88));
-  content: "";
-  pointer-events: none;
-}
-
 .heroVisual > img {
   object-fit: cover;
   object-position: 50% 51%;
@@ -219,33 +211,6 @@
 
 .heroVisual:hover > img {
   transform: scale(1.018);
-}
-
-.heroVisual figcaption {
-  position: absolute;
-  z-index: 1;
-  right: 1.5rem;
-  bottom: 1.35rem;
-  left: 1.5rem;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  color: var(--cassava-50);
-  font-family: var(--font-editorial);
-  font-size: clamp(1.35rem, 2.3vw, 2rem);
-  font-weight: 600;
-  line-height: 1.05;
-}
-
-.heroVisual figcaption span {
-  color: var(--plantain-300);
-  font-family: var(--font-ui);
-  font-size: 0.69rem;
-  font-weight: 750;
-  letter-spacing: 0.13em;
-  line-height: 1.4;
-  text-transform: uppercase;
 }
 
 .approach,
@@ -660,7 +625,7 @@
   }
 
   .heroVisual {
-    min-height: 23rem;
+    min-height: 0;
   }
 
   .eventGrid {
@@ -735,15 +700,6 @@
   .heroVisual {
     min-height: 0;
     margin-top: 0.5rem;
-  }
-
-  .heroVisual figcaption {
-    right: 1rem;
-    bottom: 1rem;
-    left: 1rem;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.4rem;
   }
 
   .approach,

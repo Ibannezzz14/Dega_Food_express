@@ -13,10 +13,10 @@ type PageMetadataOptions = {
 };
 
 const defaultImage = {
-  url: "/images/editorial/alloco-tilapia-ivoirien.webp",
-  width: 1600,
-  height: 1100,
-  alt: "Tilapia braisé servi avec de l’alloco et une sauce tomate",
+  url: "/images/menu/attieke-tilapia-proprietaire.webp",
+  width: 720,
+  height: 720,
+  alt: "Tilapia braisé entier servi avec de l’attiéké et des condiments",
 } as const;
 
 export function createPageMetadata({

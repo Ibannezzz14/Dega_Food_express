@@ -47,8 +47,9 @@ export const menuItems: readonly MenuItem[] = [
     name: "Attiéké tilapia",
     price: 25,
     category: "plats",
-    image: "/images/menu/attieke-tilapia.webp",
-    imageAlt: "Tilapia servi avec de l’attiéké et une sauce légère",
+    image: "/images/menu/attieke-tilapia-proprietaire.webp",
+    imageAlt:
+      "Tilapia braisé entier servi avec de l’attiéké et des condiments",
   },
   {
     id: "attieke-poulet-choukouya",
@@ -71,7 +72,7 @@ export const menuItems: readonly MenuItem[] = [
   {
     id: "alloco-tilapia",
     name: "Alloco poisson braisé",
-    price: 5,
+    price: 25,
     category: "plats",
     image: "/images/menu/alloco-poisson-braise-proprietaire.webp",
     imageAlt: "Poisson braisé servi avec de l’alloco et des crudités",
@@ -105,11 +106,11 @@ export const menuItems: readonly MenuItem[] = [
   },
   {
     id: "deguee",
-    name: "Déguée",
+    name: "Dégué",
     price: 6,
     category: "desserts",
     image: "/images/menu/deguee-proprietaire.webp",
-    imageAlt: "Coupe de déguée au lait fermenté et aux grains de mil",
+    imageAlt: "Coupe de dégué au lait fermenté et aux grains de mil",
   },
   {
     id: "eau-plate",

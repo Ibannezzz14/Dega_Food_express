@@ -21,10 +21,10 @@ export const metadata: Metadata = createPageMetadata({
     "Présentez votre événement à Dega Food Express et demandez un devis traiteur établi selon les informations communiquées.",
   path: "/evenements",
   image: {
-    url: "/images/editorial/alloco-tilapia-ivoirien.webp",
-    width: 1600,
-    height: 1100,
-    alt: "Tilapia braisé accompagné d’alloco et de sauce tomate",
+    url: "/images/menu/alloco-poisson-braise-proprietaire.webp",
+    width: 720,
+    height: 720,
+    alt: "Poisson braisé servi avec de l’alloco et des crudités",
   },
 });
 
@@ -151,16 +151,12 @@ export default function EventsPage() {
 
           <figure className={styles.heroVisual}>
             <Image
-              src="/images/editorial/alloco-tilapia-ivoirien.webp"
-              alt="Tilapia braisé accompagné d’alloco, de sauce tomate et de crudités"
+              src="/images/menu/alloco-poisson-braise-proprietaire.webp"
+              alt="Poisson braisé servi avec de l’alloco et des crudités"
               fill
               priority
               sizes="(max-width: 900px) 100vw, 52vw"
             />
-            <figcaption>
-              <span>Spécialité ivoirienne</span>
-              Tilapia braisé & alloco
-            </figcaption>
           </figure>
         </div>
       </section>

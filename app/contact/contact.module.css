@@ -1,145 +1,223 @@
 .page {
+  --contact-surface: #fffef9;
+  --contact-muted: #52635d;
+  --contact-dark-muted: #c9d3cf;
   overflow: clip;
-  background: var(--cassava-50);
+  background: var(--contact-surface);
   color: var(--ink);
 }
 
 .contactHero {
   position: relative;
-  min-height: calc(100vh - 78px);
+  isolation: isolate;
   overflow: hidden;
-  padding: clamp(72px, 8vw, 116px) 0 clamp(82px, 10vw, 148px);
-  background: var(--forest-900);
+  padding: clamp(3.5rem, 8vw, 7.5rem) 0;
+  background:
+    radial-gradient(
+      circle at 5% 10%,
+      rgb(201 163 93 / 16%),
+      transparent 31rem
+    ),
+    var(--forest-950);
   color: var(--cassava-50);
 }
 
+.contactHero::after {
+  position: absolute;
+  z-index: -1;
+  right: -8rem;
+  bottom: -12rem;
+  width: 31rem;
+  height: 31rem;
+  border: 1px solid rgb(221 191 132 / 15%);
+  border-radius: 50%;
+  content: "";
+}
+
+.contactHeroInner,
 .contactLayout {
+  width: min(100% - 3rem, 76rem);
+  margin-inline: auto;
+}
+
+.contactHeroInner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(25rem, 1.14fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: center;
+}
+
+.contactHeroCopy {
   position: relative;
   z-index: 1;
+  min-width: 0;
+}
+
+.contactHeroCopy h1 {
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(3.2rem, 6.1vw, 5.75rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.contactHeroCopy h1 em {
+  display: block;
+  color: var(--plantain-300);
+  font-weight: 560;
+}
+
+.contactVisual {
+  position: relative;
+  min-height: 27rem;
+  aspect-ratio: 16 / 11;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgb(245 245 240 / 15%);
+  border-radius: 0.4rem;
+  background: var(--forest-950);
+  box-shadow: 0 2rem 5rem rgb(0 0 0 / 28%);
+}
+
+.contactVisual img {
+  object-fit: cover;
+  object-position: 50% 48%;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contactVisual:hover img {
+  transform: scale(1.018);
+}
+
+.contactBody {
+  padding: clamp(4.5rem, 8vw, 7.5rem) 0;
+  background: var(--contact-surface);
+}
+
+.contactLayout {
   display: grid;
-  grid-template-columns: minmax(330px, 0.78fr) minmax(560px, 1.22fr);
-  gap: clamp(52px, 7vw, 112px);
+  grid-template-columns: minmax(17rem, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(3rem, 8vw, 7rem);
   align-items: start;
-  width: min(1200px, calc(100% - 64px));
-  margin: 0 auto;
 }
 
 .contactIntro {
-  position: sticky;
-  top: 112px;
-  padding-top: 26px;
+  min-width: 0;
 }
 
 .eyebrow,
 .sectionLabel {
   margin: 0;
-  color: var(--plantain-300);
-  font-size: 0.77rem;
-  font-weight: 720;
-  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
   text-transform: uppercase;
 }
 
-.contactIntro h1 {
-  max-width: 650px;
-  margin: 24px 0 0;
-  font-family: var(--font-editorial);
-  font-size: clamp(4.1rem, 6.4vw, 6rem);
-  font-weight: 560;
-  letter-spacing: -0.04em;
-  line-height: 0.88;
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.35rem;
+  color: var(--plantain-300);
 }
 
-.contactIntro h1 em {
-  display: block;
-  color: var(--plantain-300);
-  font-weight: 520;
+.eyebrow::before {
+  width: 2.3rem;
+  height: 1px;
+  background: currentColor;
+  content: "";
 }
 
 .heroLead {
-  max-width: 45ch;
-  margin: 34px 0 0;
-  color: #d7e2de;
-  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  line-height: 1.65;
+  max-width: 37rem;
+  margin: 1.75rem 0 0;
+  color: var(--contact-dark-muted);
+  font-size: clamp(1.03rem, 1.4vw, 1.17rem);
+  line-height: 1.7;
 }
 
 .directContacts {
-  margin-top: 52px;
-  padding-top: 26px;
-  border-top: 1px solid rgb(233 235 229 / 26%);
+  margin: 0;
 }
 
 .directContactHeading {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding-bottom: 1.5rem;
 }
 
 .directContactHeading > svg {
-  width: 19px;
-  height: 19px;
-  color: var(--plantain-300);
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.65rem;
+  color: var(--chili-600);
 }
 
 .directContactHeading h2 {
   margin: 0;
-  font-size: 0.8rem;
-  font-weight: 720;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--font-editorial);
+  font-size: clamp(2.65rem, 4.5vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .contactList {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 18px;
+  grid-template-columns: 1fr;
+  margin: 0;
+  border-top: 1px solid var(--line);
   font-style: normal;
 }
 
 .contactCard,
 .instagramLink {
-  color: inherit;
+  color: var(--forest-950);
   text-decoration: none;
   transition:
-    border-color 180ms ease-out,
     background-color 180ms ease-out,
+    color 180ms ease-out,
     transform 180ms ease-out;
 }
 
-.contactCard {
+.contactCard,
+.instagramLink {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 1rem;
   align-items: center;
+  min-height: 6.2rem;
   min-width: 0;
-  padding: 15px 13px;
-  border: 1px solid rgb(233 235 229 / 22%);
-  border-radius: 8px;
-  background: rgb(7 31 26 / 24%);
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .contactCard:hover,
 .instagramLink:hover {
-  border-color: rgb(221 191 132 / 72%);
-  background: rgb(221 191 132 / 8%);
-  transform: translateY(-2px);
+  background: var(--forest-900);
+  color: var(--cassava-50);
+  transform: translateX(0.2rem);
 }
 
 .contactIcon {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 2.75rem;
+  height: 2.75rem;
   place-items: center;
-  border: 1px solid rgb(221 191 132 / 44%);
+  border: 1px solid currentColor;
   border-radius: 50%;
-  color: var(--plantain-300);
 }
 
 .contactIcon svg {
-  width: 17px;
-  height: 17px;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .contactDetails {
@@ -148,56 +226,57 @@
 }
 
 .contactDetails span {
-  overflow: hidden;
-  color: #bccdc6;
-  font-size: 0.72rem;
-  font-weight: 650;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: var(--contact-muted);
+  font-size: 0.7rem;
+  font-weight: 740;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contactCard:hover .contactDetails span,
+.instagramLink:hover > span {
+  color: #d5e0dc;
 }
 
 .contactDetails strong {
-  margin-top: 2px;
-  font-size: 0.89rem;
-  font-weight: 690;
+  margin-top: 0.2rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+  font-weight: 700;
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
 
 .contactCard > svg,
 .instagramLink > svg:last-child {
-  width: 17px;
-  height: 17px;
-  color: var(--plantain-300);
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .instagramLink {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  margin-top: 10px;
-  padding: 15px 16px;
-  border: 1px solid rgb(233 235 229 / 22%);
-  border-radius: 8px;
+  margin-top: 0.8rem;
+  border-top: 1px solid var(--line);
 }
 
 .instagramLink > svg:first-child {
-  width: 22px;
-  height: 22px;
-  color: var(--plantain-300);
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .instagramLink > span {
   display: grid;
-  color: #c9d7d2;
-  font-size: 0.74rem;
+  color: var(--contact-muted);
+  font-size: 0.72rem;
 }
 
 .instagramLink strong {
+  margin-top: 0.15rem;
+  color: var(--forest-950);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.instagramLink:hover strong {
   color: var(--cassava-50);
-  font-size: 0.96rem;
-  font-weight: 680;
 }
 
 .formPanel {
@@ -532,18 +611,23 @@
   line-height: 1.5;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 64rem) {
+  .contactHeroInner {
+    grid-template-columns: minmax(0, 0.9fr) minmax(21rem, 1.1fr);
+    gap: 2.5rem;
+  }
+
+  .contactHeroCopy h1 {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .contactVisual {
+    min-height: 0;
+  }
+
   .contactLayout {
-    grid-template-columns: minmax(310px, 0.8fr) minmax(500px, 1.2fr);
-    gap: 44px;
-  }
-
-  .contactList {
-    grid-template-columns: 1fr;
-  }
-
-  .contactIntro h1 {
-    font-size: clamp(4.1rem, 8.2vw, 5.8rem);
+    grid-template-columns: minmax(15rem, 0.75fr) minmax(0, 1.25fr);
+    gap: 3rem;
   }
 
   .formPanel {
@@ -557,32 +641,45 @@
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 48rem) {
+  .contactHeroInner,
+  .contactLayout {
+    width: min(100% - 2rem, 38rem);
+  }
+
   .contactHero {
-    padding-top: 66px;
+    padding: 3.75rem 0 2rem;
+  }
+
+  .contactHeroInner,
+  .contactLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .contactHeroCopy h1 {
+    max-width: 13ch;
+    font-size: clamp(3rem, 13vw, 4.4rem);
+  }
+
+  .contactVisual {
+    min-height: 0;
+    margin-top: 0.5rem;
+  }
+
+  .contactBody {
+    padding: 4.5rem 0;
   }
 
   .contactLayout {
-    grid-template-columns: 1fr;
-    width: min(100% - 36px, 690px);
+    gap: 2.5rem;
   }
 
   .contactIntro {
-    position: static;
-    padding-top: 0;
-  }
-
-  .contactIntro h1 {
-    max-width: 620px;
-    font-size: clamp(4rem, 14vw, 5.8rem);
+    max-width: 38rem;
   }
 
   .heroLead {
-    max-width: 53ch;
-  }
-
-  .contactList {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 37rem;
   }
 
   .formPanel {
@@ -591,21 +688,6 @@
 }
 
 @media (max-width: 620px) {
-  .contactHero {
-    padding-top: 52px;
-    padding-bottom: 78px;
-  }
-
-  .contactLayout {
-    width: calc(100% - 28px);
-    gap: 48px;
-  }
-
-  .contactIntro h1 {
-    font-size: clamp(3.75rem, 19vw, 5.4rem);
-  }
-
-  .contactList,
   .contactOptions,
   .fieldGrid,
   .submitArea {
@@ -643,15 +725,25 @@
   }
 }
 
+@media (max-width: 34rem) {
+  .contactVisual {
+    aspect-ratio: 4 / 3;
+  }
+
+  .contactCard,
+  .instagramLink {
+    min-height: 5.6rem;
+    padding-inline: 0;
+  }
+
+  .contactCard:hover,
+  .instagramLink:hover {
+    padding-inline: 0.75rem;
+    transform: none;
+  }
+}
+
 @media (max-width: 380px) {
-  .contactLayout {
-    width: calc(100% - 22px);
-  }
-
-  .contactIntro h1 {
-    font-size: 3.65rem;
-  }
-
   .formPanel {
     padding-right: 15px;
     padding-left: 15px;
@@ -667,6 +759,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .contactVisual img,
   .contactCard,
   .instagramLink,
   .contactOption,
@@ -674,5 +767,11 @@
   .field textarea,
   .submitButton {
     transition: none;
+  }
+
+  .contactVisual:hover img,
+  .contactCard:hover,
+  .instagramLink:hover {
+    transform: none;
   }
 }

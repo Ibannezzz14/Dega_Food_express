@@ -72,29 +72,9 @@
   box-shadow: 0 24px 62px rgb(0 20 15 / 28%);
 }
 
-.heroVisual::after {
-  position: absolute;
-  inset: 45% 0 0;
-  background: linear-gradient(180deg, transparent, rgb(7 31 26 / 72%));
-  content: "";
-  pointer-events: none;
-}
-
 .heroVisual img {
   object-fit: cover;
   object-position: center;
-}
-
-.heroVisual figcaption {
-  position: absolute;
-  z-index: 1;
-  right: 22px;
-  bottom: 19px;
-  left: 22px;
-  color: white;
-  font-size: 0.78rem;
-  font-weight: 680;
-  letter-spacing: 0.06em;
 }
 
 .origin {
@@ -461,13 +441,6 @@
 @media (max-width: 620px) {
   .heroVisual {
     aspect-ratio: 4 / 3;
-  }
-
-  .heroVisual figcaption {
-    right: 17px;
-    bottom: 15px;
-    left: 17px;
-    font-size: 0.72rem;
   }
 
   .origin {

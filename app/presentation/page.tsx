@@ -8,10 +8,10 @@ export const metadata: Metadata = createPageMetadata({
     "Découvrez l’histoire de Marie-José et Geneviève, fondatrices de Dega Food Express, et leur passion pour la cuisine ivoirienne.",
   path: "/presentation",
   image: {
-    url: "/images/editorial/alloco-tilapia-ivoirien.webp",
-    width: 1600,
-    height: 1100,
-    alt: "Tilapia braisé servi avec de l’alloco et une sauce",
+    url: "/images/menu/attieke-tilapia-proprietaire.webp",
+    width: 720,
+    height: 720,
+    alt: "Tilapia braisé entier servi avec de l’attiéké et des condiments",
   },
 });
 

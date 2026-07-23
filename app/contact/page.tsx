@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   ArrowRightIcon,
   InstagramIcon,
@@ -21,8 +22,8 @@ export default function ContactPage() {
   return (
     <main id="contenu" className={styles.page}>
       <section className={styles.contactHero} aria-labelledby="contact-title">
-        <div className={styles.contactLayout}>
-          <div className={styles.contactIntro}>
+        <div className={styles.contactHeroInner}>
+          <div className={styles.contactHeroCopy}>
             <p className={styles.eyebrow}>Nous contacter</p>
             <h1 id="contact-title">
               Parlons de votre <em>demande.</em>
@@ -32,7 +33,23 @@ export default function ContactPage() {
               Choisissez le contact qui vous convient et préparez un message
               clair pour l’équipe.
             </p>
+          </div>
 
+          <figure className={styles.contactVisual}>
+            <Image
+              src="/images/menu/attieke-agneau-choukouya-proprietaire.webp"
+              alt="Attiéké servi avec de l’agneau choukouya et des crudités"
+              fill
+              priority
+              sizes="(max-width: 860px) 100vw, 52vw"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section className={styles.contactBody} aria-label="Moyens de contact">
+        <div className={styles.contactLayout}>
+          <aside className={styles.contactIntro}>
             <div
               className={styles.directContacts}
               aria-labelledby="direct-contact-title"
@@ -77,7 +94,7 @@ export default function ContactPage() {
               </span>
               <ArrowRightIcon />
             </a>
-          </div>
+          </aside>
 
           <ContactForm />
         </div>

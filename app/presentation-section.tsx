@@ -10,14 +10,13 @@ export default function PresentationSection() {
     >
       <div className={styles.presentationVisual}>
         <Image
-          src="/images/menu/beignets-africains.webp"
-          alt="Beignets africains dorés présentés sans accompagnement"
+          src="/images/menu/attieke-poulet-choukouya-proprietaire.webp"
+          alt="Attiéké servi avec du poulet choukouya et des condiments"
           fill
           sizes="(max-width: 760px) 100vw, 44vw"
         />
       </div>
       <div className={styles.presentationCopy}>
-        <p className={styles.presentationLabel}>La maison Dega</p>
         <h2 id="presentation-title">
           Une cuisine de partage, préparée sur commande.
         </h2>
