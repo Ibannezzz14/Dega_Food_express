@@ -26,7 +26,6 @@ export default function SiteFooter() {
 
   return (
     <footer className={styles.footer} id="contact">
-      <div className={styles.footerAccent} aria-hidden="true" />
       <div className={styles.footerInner}>
         <div className={styles.footerGrid}>
           <section
@@ -42,7 +41,6 @@ export default function SiteFooter() {
                 alt="Logo Dega Food Express"
               />
               <div>
-                <p className={styles.sectionLabel}>Cuisine ivoirienne</p>
                 <h2 id="footer-brand-title">Dega Food Express</h2>
               </div>
             </div>
@@ -74,8 +72,7 @@ export default function SiteFooter() {
             aria-labelledby="footer-contact-title"
           >
             <div className={styles.contactHeading}>
-              <p className={styles.sectionLabel}>Commandes à la carte</p>
-              <h2 id="footer-contact-title">Par téléphone</h2>
+              <h2 id="footer-contact-title">Commandes par téléphone</h2>
             </div>
             <address className={styles.contactCards}>
               {CONTACTS.map((contact) => (

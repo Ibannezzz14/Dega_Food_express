@@ -3,7 +3,6 @@ import Image from "next/image";
 import {
   ArrowRightIcon,
   InstagramIcon,
-  MessageIcon,
   PhoneIcon,
 } from "@/components/icons";
 import { CONTACTS, INSTAGRAM } from "@/data/contact";
@@ -24,21 +23,19 @@ export default function ContactPage() {
       <section className={styles.contactHero} aria-labelledby="contact-title">
         <div className={styles.contactHeroInner}>
           <div className={styles.contactHeroCopy}>
-            <p className={styles.eyebrow}>Nous contacter</p>
             <h1 id="contact-title">
               Parlons de votre <em>demande.</em>
             </h1>
             <p className={styles.heroLead}>
-              Une question sur la carte, une commande ou un événement ?
-              Choisissez le contact qui vous convient et préparez un message
-              clair pour l’équipe.
+              Une question, une commande ou un événement&nbsp;? Appelez-nous
+              ou préparez votre message pour WhatsApp.
             </p>
           </div>
 
           <figure className={styles.contactVisual}>
             <Image
-              src="/images/menu/attieke-agneau-choukouya-proprietaire.webp"
-              alt="Attiéké servi avec de l’agneau choukouya et des crudités"
+              src="/images/menu/alloco-poulet-choukouya-proprietaire.webp"
+              alt="Alloco servi avec du poulet choukouya et des crudités"
               fill
               priority
               sizes="(max-width: 860px) 100vw, 52vw"
@@ -55,7 +52,6 @@ export default function ContactPage() {
               aria-labelledby="direct-contact-title"
             >
               <div className={styles.directContactHeading}>
-                <MessageIcon />
                 <h2 id="direct-contact-title">Contacts directs</h2>
               </div>
 

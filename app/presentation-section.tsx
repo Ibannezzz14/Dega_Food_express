@@ -10,8 +10,8 @@ export default function PresentationSection() {
     >
       <div className={styles.presentationVisual}>
         <Image
-          src="/images/menu/attieke-poulet-choukouya-proprietaire.webp"
-          alt="Attiéké servi avec du poulet choukouya et des condiments"
+          src="/images/menu/alloco-poulet-choukouya-proprietaire.webp"
+          alt="Alloco servi avec du poulet choukouya et des crudités"
           fill
           sizes="(max-width: 760px) 100vw, 44vw"
         />
@@ -22,8 +22,8 @@ export default function PresentationSection() {
         </h2>
         <p className={styles.presentationIntro}>
           Dega Food Express propose des spécialités ivoiriennes à Lausanne,
-          Lucens et alentours, pour les commandes individuelles comme pour les
-          grandes tablées.
+          Lucens et alentours, pour un repas individuel, en famille ou lors
+          d’un événement.
         </p>
         <dl className={styles.presentationFacts}>
           <div>

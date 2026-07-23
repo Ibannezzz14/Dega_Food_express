@@ -3,9 +3,7 @@
   min-height: calc(100vh - 78px);
   place-items: center;
   padding: clamp(72px, 9vw, 132px) 24px;
-  background:
-    linear-gradient(135deg, rgb(201 163 93 / 9%), transparent 42%),
-    var(--forest-900);
+  background: var(--forest-900);
   color: var(--cassava-50);
 }
 
@@ -14,11 +12,10 @@
   padding: clamp(30px, 6vw, 64px);
   border: 1px solid rgb(245 245 240 / 22%);
   border-radius: 16px;
-  background: rgb(7 31 26 / 42%);
+  background: var(--forest-950);
 }
 
-.code,
-.eyebrow {
+.code {
   margin: 0 0 18px;
   color: var(--plantain-300);
   font-size: 0.86rem;
@@ -38,7 +35,7 @@
   text-wrap: balance;
 }
 
-.card > p:not(.code, .eyebrow) {
+.card > p:not(.code) {
   max-width: 58ch;
   margin: 28px 0 0;
   color: #d8e5df;
@@ -70,14 +67,11 @@
   background: var(--plantain-400);
   color: var(--forest-950);
   cursor: pointer;
-  transition:
-    background-color 160ms ease-out,
-    transform 160ms ease-out;
+  transition: background-color 160ms ease-out;
 }
 
 .primaryAction:hover {
   background: var(--plantain-300);
-  transform: translateY(-1px);
 }
 
 .primaryAction svg {
@@ -124,7 +118,4 @@
     transition: none;
   }
 
-  .primaryAction:hover {
-    transform: none;
-  }
 }

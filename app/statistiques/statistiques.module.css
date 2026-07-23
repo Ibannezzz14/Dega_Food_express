@@ -1,8 +1,6 @@
 .page {
   min-height: calc(100vh - 78px);
-  background:
-    linear-gradient(180deg, #e9e9e1 0, #f5f4ee 250px),
-    var(--cassava-50);
+  background: var(--cassava-50);
   color: var(--ink);
 }
 
@@ -10,21 +8,8 @@
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid rgb(221 191 132 / 34%);
-  background:
-    radial-gradient(circle at 82% -30%, rgb(201 163 93 / 17%), transparent 38%),
-    var(--forest-950);
+  background: var(--forest-950);
   color: var(--cassava-50);
-}
-
-.intro::after {
-  position: absolute;
-  top: -75%;
-  right: 9%;
-  width: 1px;
-  height: 230%;
-  background: rgb(221 191 132 / 24%);
-  content: "";
-  transform: rotate(28deg);
 }
 
 .introInner {
@@ -155,8 +140,6 @@
   place-items: center;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
-  background: #dce7e1;
   color: var(--forest-800);
 }
 
@@ -212,24 +195,12 @@
 }
 
 .metric {
-  position: relative;
   min-height: 174px;
   padding: 23px 24px;
   overflow: hidden;
   border: 1px solid #d2d7d0;
   border-radius: 10px;
   background: #fcfcf8;
-  box-shadow: 0 10px 28px rgb(13 58 49 / 5%);
-}
-
-.metric::after {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 72px;
-  height: 2px;
-  background: var(--plantain-400);
-  content: "";
 }
 
 .metric dt {
@@ -275,7 +246,6 @@
   border: 1px solid #d2d7d0;
   border-radius: 10px;
   background: #fcfcf8;
-  box-shadow: 0 10px 28px rgb(13 58 49 / 5%);
 }
 
 .panelHeading {
@@ -399,7 +369,7 @@
 .barTrack {
   height: 7px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: 4px;
   background: #e2e6e0;
 }
 
@@ -476,7 +446,7 @@
 .trendBar {
   width: min(60%, 32px);
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, var(--forest-800), var(--forest-900));
+  background: var(--forest-900);
 }
 
 .trendChart time {
@@ -499,7 +469,6 @@
   border: 1px solid #d1d6cf;
   border-radius: 10px;
   background: #fcfcf8;
-  box-shadow: 0 12px 32px rgb(13 58 49 / 5%);
 }
 
 .stateCard {
@@ -513,7 +482,6 @@
   margin-top: 6px;
   border: 3px solid var(--plantain-400);
   border-radius: 50%;
-  box-shadow: 0 0 0 5px rgb(201 163 93 / 14%);
 }
 
 .stateCard h2,

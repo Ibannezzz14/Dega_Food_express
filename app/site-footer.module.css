@@ -6,17 +6,6 @@
   color: var(--cassava-50);
 }
 
-.footerAccent {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 88px;
-  height: 3px;
-  border-radius: 0 0 999px 999px;
-  background: var(--plantain-400);
-  transform: translateX(-50%);
-}
-
 .footerInner {
   width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
@@ -53,16 +42,6 @@
   border: 1px solid rgb(245 245 240 / 24%);
   border-radius: 50%;
   object-fit: contain;
-}
-
-.sectionLabel {
-  margin: 0 0 4px;
-  color: var(--plantain-300);
-  font-size: 0.76rem;
-  font-weight: 670;
-  letter-spacing: 0.1em;
-  line-height: 1.35;
-  text-transform: uppercase;
 }
 
 .brandIdentity h2,
@@ -107,14 +86,12 @@
   text-decoration: none;
   transition:
     background-color 180ms ease-out,
-    border-color 180ms ease-out,
-    transform 180ms ease-out;
+    border-color 180ms ease-out;
 }
 
 .primaryAction:hover {
   border-color: #eed4a3;
   background: var(--plantain-300);
-  transform: translateY(-1px);
 }
 
 .primaryAction svg {
@@ -145,8 +122,7 @@
   font-weight: 520;
   text-decoration: none;
   transition:
-    color 180ms ease-out,
-    transform 180ms ease-out;
+    color 180ms ease-out;
 }
 
 .footerNavigation a::before {
@@ -162,7 +138,6 @@
 
 .footerNavigation a:hover {
   color: var(--cassava-50);
-  transform: translateX(2px);
 }
 
 .footerNavigation a:hover::before {
@@ -195,24 +170,19 @@
   text-decoration: none;
   transition:
     background-color 180ms ease-out,
-    border-color 180ms ease-out,
-    transform 180ms ease-out;
+    border-color 180ms ease-out;
 }
 
 .contactCard:hover {
   border-color: rgb(221 191 132 / 68%);
   background: rgb(24 82 71 / 38%);
-  transform: translateY(-1px);
 }
 
 .phoneIcon {
   display: inline-grid;
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   place-items: center;
-  border: 1px solid rgb(221 191 132 / 30%);
-  border-radius: 50%;
-  background: rgb(201 163 93 / 10%);
   color: var(--plantain-300);
 }
 
@@ -430,8 +400,6 @@
     transition: none;
   }
 
-  .primaryAction:hover,
-  .footerNavigation a:hover,
   .contactCard:hover,
   .contactCard:hover .contactArrow,
   .backToTop:hover svg {

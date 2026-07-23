@@ -3,12 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRightIcon,
-  BriefcaseIcon,
-  CheckIcon,
-  HeartIcon,
-  HomeIcon,
   MessageIcon,
-  PeopleIcon,
 } from "@/components/icons";
 import { CONTACTS } from "@/data/contact";
 import { createPageMetadata } from "@/lib/page-metadata";
@@ -32,26 +27,22 @@ const eventTypes = [
   {
     title: "Fêtes & cérémonies",
     description:
-      "Présentez l’occasion, la date souhaitée et le format de repas que vous imaginez.",
-    icon: HeartIcon,
+      "Précisez l’occasion, la date souhaitée et le format de repas.",
   },
   {
     title: "Repas de famille",
     description:
-      "Indiquez le nombre de convives et les plats que vous souhaitez partager.",
-    icon: HomeIcon,
+      "Indiquez le nombre de convives et les plats que vous souhaitez.",
   },
   {
     title: "Associations & communautés",
     description:
-      "Expliquez le contexte de votre rencontre afin que la demande puisse être étudiée.",
-    icon: PeopleIcon,
+      "Présentez votre rencontre et les besoins de votre groupe.",
   },
   {
     title: "Événements professionnels",
     description:
-      "Communiquez les informations utiles sur votre réception et son organisation.",
-    icon: BriefcaseIcon,
+      "Transmettez les informations utiles sur votre réception.",
   },
 ] as const;
 
@@ -79,14 +70,12 @@ const processSteps = [
 ] as const;
 
 type SectionHeadingProps = {
-  label: string;
   title: string;
   description?: string;
   titleId: string;
 };
 
 function SectionHeading({
-  label,
   title,
   description,
   titleId,
@@ -94,7 +83,6 @@ function SectionHeading({
   return (
     <header className={styles.sectionHeading}>
       <div>
-        <p className={styles.sectionLabel}>{label}</p>
         <h2 id={titleId}>{title}</h2>
       </div>
       {description ? <p>{description}</p> : null}
@@ -126,13 +114,13 @@ export default function EventsPage() {
       <section className={styles.hero} aria-labelledby="catering-title">
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>Service traiteur</p>
             <h1 id="catering-title">
-              Vos événements autour d’une cuisine ivoirienne généreuse.
+              Une cuisine ivoirienne pour votre événement.
             </h1>
             <p className={styles.heroText}>
-              Marie-José et Geneviève étudient chaque demande à partir de votre
-              occasion, du nombre de convives et des plats souhaités.
+              Dites-nous ce que vous préparez, le nombre de convives et les
+              plats souhaités. Marie-José et Geneviève vous répondent avec les
+              possibilités et un devis.
             </p>
             <div className={styles.heroActions}>
               <a className={styles.primaryButton} href="#devis-traiteur">
@@ -143,10 +131,6 @@ export default function EventsPage() {
                 Voir les spécialités
               </Link>
             </div>
-            <p className={styles.heroNote}>
-              <CheckIcon />
-              Devis établi sur demande après échange avec l’équipe.
-            </p>
           </div>
 
           <figure className={styles.heroVisual}>
@@ -167,28 +151,24 @@ export default function EventsPage() {
       >
         <div className={styles.approachInner}>
           <SectionHeading
-            label="Notre approche"
-            title="Une demande étudiée avec vous."
+            title="Un service adapté à votre événement."
             titleId="catering-approach-title"
           />
           <div className={styles.approachCopy}>
             <p>
-              Le service traiteur ne repose pas sur une formule unique. Vous
-              présentez votre événement et l’équipe échange avec vous pour
-              préciser ce qui peut être proposé.
+              Il n’y a pas de formule imposée. Nous échangeons avec vous sur
+              les plats, les quantités et l’organisation avant de confirmer la
+              prestation.
             </p>
             <ul>
               <li>
-                <CheckIcon />
                 Sélection des plats et quantités à définir
               </li>
               <li>
-                <CheckIcon />
                 Informations pratiques discutées avant confirmation
               </li>
               <li>
-                <CheckIcon />
-                Devis communiqué après étude de la demande
+                Prix communiqué dans un devis
               </li>
             </ul>
           </div>
@@ -201,25 +181,17 @@ export default function EventsPage() {
       >
         <div className={styles.sectionShell}>
           <SectionHeading
-            label="Vos occasions"
             title="Parlez-nous du moment que vous préparez."
-            description="Ces exemples vous aident à présenter votre demande. Les possibilités restent à confirmer avec l’équipe."
+            description="Voici quelques exemples. Vous pouvez aussi nous écrire pour un autre type d’événement."
             titleId="event-types-title"
           />
           <div className={styles.eventGrid}>
-            {eventTypes.map((event) => {
-              const Icon = event.icon;
-
-              return (
-                <article className={styles.eventCard} key={event.title}>
-                  <span className={styles.cardIcon} aria-hidden="true">
-                    <Icon />
-                  </span>
-                  <h3>{event.title}</h3>
-                  <p>{event.description}</p>
-                </article>
-              );
-            })}
+            {eventTypes.map((event) => (
+              <article className={styles.eventCard} key={event.title}>
+                <h3>{event.title}</h3>
+                <p>{event.description}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -227,7 +199,6 @@ export default function EventsPage() {
       <section className={styles.process} aria-labelledby="process-title">
         <div className={styles.sectionShell}>
           <SectionHeading
-            label="Comment ça se passe ?"
             title="Quatre étapes avant confirmation."
             description="Une prise de contact ne confirme pas encore la prestation."
             titleId="process-title"
@@ -252,7 +223,6 @@ export default function EventsPage() {
         <div className={styles.faqInner}>
           <div className={styles.faqIntro}>
             <SectionHeading
-              label="À savoir"
               title="Les réponses utiles avant de nous écrire."
               titleId="faq-title"
             />
@@ -279,7 +249,6 @@ export default function EventsPage() {
       >
         <div className={styles.finalCtaInner}>
           <div className={styles.finalCtaCopy}>
-            <p className={styles.sectionLabel}>Devis sur demande</p>
             <h2 id="devis-traiteur-title">
               Présentez-nous votre événement sur WhatsApp.
             </h2>
@@ -294,7 +263,7 @@ export default function EventsPage() {
             role="group"
             aria-label="Contacts WhatsApp du service traiteur"
           >
-            {CONTACTS.map((contact, index) => (
+            {CONTACTS.map((contact) => (
               <a
                 key={contact.whatsAppPhone}
                 href={quoteUrl(contact.whatsAppPhone)}
@@ -306,7 +275,7 @@ export default function EventsPage() {
                   <MessageIcon />
                 </span>
                 <span>
-                  <small>WhatsApp · contact {index + 1}</small>
+                  <small>{contact.area}</small>
                   <strong>{contact.displayPhone}</strong>
                 </span>
                 <ArrowRightIcon aria-hidden="true" />

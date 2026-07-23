@@ -305,7 +305,6 @@ export default function OrderExperience({
         aria-labelledby="menu-page-title"
       >
         <div className={styles.menuPageCopy}>
-          <p>Dega Food Express</p>
           <h1 id="menu-page-title">Composez votre commande.</h1>
           <span>
             Choisissez votre zone, ajoutez les plats puis continuez sur
@@ -561,16 +560,13 @@ export default function OrderExperience({
                   <article
                     className={`${styles.menuItem} ${
                       quantity > 0 ? styles.menuItemSelected : ""
+                    } ${
+                      item.imageStatus === "pending"
+                        ? styles.menuItemNoImage
+                        : ""
                     }`}
                   >
-                    {item.imageStatus === "pending" ? (
-                      <div
-                        className={`${styles.itemImage} ${styles.itemImagePending}`}
-                        aria-hidden="true"
-                      >
-                        <span>Dega Food</span>
-                      </div>
-                    ) : (
+                    {item.imageStatus !== "pending" ? (
                       <div
                         className={`${styles.itemImage} ${
                           item.imageFit === "contain"
@@ -585,7 +581,7 @@ export default function OrderExperience({
                           sizes="(max-width: 420px) 80px, (max-width: 760px) 88px, 116px"
                         />
                       </div>
-                    )}
+                    ) : null}
                     <div className={styles.itemName}>
                       <h3>{item.name}</h3>
                       {detail && <p>{detail}</p>}

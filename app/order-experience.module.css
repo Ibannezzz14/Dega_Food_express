@@ -89,14 +89,6 @@
   max-width: 650px;
 }
 
-.menuPageCopy > p {
-  margin: 0 0 18px;
-  color: var(--plantain-300);
-  font-family: var(--font-display);
-  font-size: 0.92rem;
-  font-weight: 600;
-}
-
 .menuPageCopy h1 {
   margin: 0;
   font-family: var(--font-editorial);
@@ -206,13 +198,11 @@
   transition:
     border-color 160ms ease-out,
     background 160ms ease-out,
-    color 160ms ease-out,
-    transform 160ms ease-out;
+    color 160ms ease-out;
 }
 
 .fulfillmentOptions label:hover {
   border-color: var(--plantain-300);
-  transform: translateY(-1px);
 }
 
 .fulfillmentOptions label:has(.fulfillmentInput:focus-visible) {
@@ -287,7 +277,6 @@
   border-color: var(--plantain-300);
   background: var(--cassava-50);
   color: var(--forest-950);
-  transform: translateY(-1px);
 }
 
 .fulfillmentOptions .fulfillmentActive .fulfillmentIcon {
@@ -423,7 +412,7 @@
   border: 1px solid #9aaba4;
   border-radius: 10px;
   background: #fff;
-  box-shadow: 0 18px 40px rgb(7 31 26 / 18%);
+  box-shadow: 0 12px 28px rgb(7 31 26 / 13%);
 }
 
 .postalField .addressSuggestionsPanel {
@@ -559,7 +548,6 @@
   height: 8px;
   border-radius: 50%;
   background: var(--forest-800);
-  box-shadow: 0 0 0 3px rgb(24 82 71 / 15%);
 }
 
 .deliveryZoneStatus button {
@@ -635,12 +623,7 @@
 }
 
 .categoryRail button small {
-  display: grid;
-  place-items: center;
-  min-width: 27px;
-  height: 27px;
-  border: 1px solid currentColor;
-  border-radius: 50%;
+  display: block;
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
@@ -706,13 +689,11 @@
   background: #fbfcf9;
   transition:
     background 150ms ease-out,
-    border-color 150ms ease-out,
-    transform 150ms ease-out;
+    border-color 150ms ease-out;
 }
 
 .menuItem:hover {
   border-color: #779087;
-  transform: translateY(-1px);
 }
 
 .menuItemSelected {
@@ -731,7 +712,6 @@
 
 .itemImage img {
   object-fit: cover;
-  transition: transform 260ms ease-out;
 }
 
 .itemImageContain {
@@ -743,38 +723,8 @@
   padding: 5px;
 }
 
-.itemImagePending {
-  display: grid;
-  place-items: center;
-  background: #e7e1d5;
-  color: #315249;
-  isolation: isolate;
-}
-
-.itemImagePending::before {
-  width: 58%;
-  aspect-ratio: 1;
-  border: 1px solid rgb(49 82 73 / 46%);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 8px rgb(255 255 255 / 30%);
-  content: "";
-}
-
-.itemImagePending span {
-  position: absolute;
-  bottom: 10px;
-  font-size: 0.58rem;
-  font-weight: 730;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.menuItem:hover .itemImage img {
-  transform: scale(1.025);
-}
-
-.menuItem:hover .itemImageContain img {
-  transform: none;
+.menuItemNoImage {
+  grid-template-columns: minmax(0, 1fr) 150px 146px;
 }
 
 .itemName h3 {
@@ -898,7 +848,7 @@
   border-radius: 12px;
   background: var(--forest-950);
   color: var(--cassava-50);
-  box-shadow: 10px 16px 36px rgb(7 31 26 / 24%);
+  box-shadow: 0 12px 28px rgb(7 31 26 / 18%);
   transform: translateY(12px);
   visibility: hidden;
   opacity: 0;
@@ -1108,6 +1058,14 @@
     padding: 10px;
   }
 
+  .menuItemNoImage {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .menuItemNoImage .quantityControl {
+    grid-column: 1 / -1;
+  }
+
   .itemImage {
     width: 88px;
     align-self: start;
@@ -1126,6 +1084,10 @@
   .quantityControl {
     grid-column: 2 / -1;
     width: 100%;
+  }
+
+  .menuItemNoImage .quantityControl {
+    grid-column: 1 / -1;
   }
 
   .quantityControl {
@@ -1203,6 +1165,10 @@
     grid-template-columns: 80px minmax(0, 1fr);
   }
 
+  .menuItemNoImage {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .itemImage {
     width: 80px;
     grid-row: 1 / span 3;
@@ -1215,6 +1181,10 @@
 
   .quantityControl {
     grid-column: 2;
+  }
+
+  .menuItemNoImage .quantityControl {
+    grid-column: 1 / -1;
   }
 
   .quantityControlEmpty .addButtonLabel {
@@ -1267,9 +1237,4 @@
     transition: none;
   }
 
-  .menuRegionFieldset button:hover,
-  .fulfillmentOptions label:hover,
-  .menuItem:hover {
-    transform: none;
-  }
 }

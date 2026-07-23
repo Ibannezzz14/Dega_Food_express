@@ -3,27 +3,8 @@
   display: grid;
   min-height: clamp(680px, calc(100svh - 78px), 900px);
   overflow: hidden;
-  background:
-    radial-gradient(
-      circle at 83% 20%,
-      rgb(221 191 132 / 15%),
-      transparent 34rem
-    ),
-    linear-gradient(135deg, var(--forest-950), #0b453a 72%, #123f37);
+  background: var(--forest-900);
   color: var(--cassava-50);
-  isolation: isolate;
-}
-
-.hero::after {
-  position: absolute;
-  right: clamp(32px, 8vw, 120px);
-  bottom: -19rem;
-  width: min(42vw, 620px);
-  aspect-ratio: 1;
-  border: 1px solid rgb(221 191 132 / 18%);
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
 }
 
 .heroInner {
@@ -36,16 +17,6 @@
 
 .heroCopy {
   max-width: 790px;
-  animation: hero-copy-reveal 700ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.eyebrow {
-  margin: 0 0 24px;
-  color: var(--plantain-300);
-  font-size: 0.84rem;
-  font-weight: 720;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
 }
 
 .heroCopy h1 {
@@ -93,8 +64,7 @@
   transition:
     background 170ms ease-out,
     border-color 170ms ease-out,
-    color 170ms ease-out,
-    transform 170ms ease-out;
+    color 170ms ease-out;
 }
 
 .primaryAction {
@@ -110,21 +80,18 @@
 .secondaryAction {
   padding: 11px 19px;
   border: 1px solid rgb(245 245 240 / 58%);
-  background: rgb(7 31 26 / 28%);
+  background: transparent;
   color: var(--cassava-50);
-  backdrop-filter: blur(8px);
 }
 
 .primaryAction:hover,
 .continueAction:hover {
   background: var(--plantain-300);
-  transform: translateY(-1px);
 }
 
 .secondaryAction:hover {
   border-color: var(--plantain-300);
-  background: rgb(7 31 26 / 56%);
-  transform: translateY(-1px);
+  background: rgb(245 245 240 / 7%);
 }
 
 .primaryAction svg,
@@ -223,7 +190,6 @@
   border-color: var(--forest-800);
   background: var(--forest-900);
   color: var(--cassava-50);
-  transform: translateY(-1px);
 }
 
 .continueAction {
@@ -234,18 +200,6 @@
   background: var(--forest-900);
   color: var(--cassava-50);
   white-space: nowrap;
-}
-
-@keyframes hero-copy-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @media (max-width: 1040px) {
@@ -267,11 +221,6 @@
   .heroInner {
     width: calc(100% - 40px);
     padding: 110px 0 72px;
-  }
-
-  .eyebrow {
-    margin-bottom: 18px;
-    font-size: 0.74rem;
   }
 
   .heroCopy h1 {
@@ -329,19 +278,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroCopy {
-    animation: none;
-  }
-
   .primaryAction,
   .secondaryAction,
   .continueAction {
     transition: none;
-  }
-
-  .primaryAction:hover,
-  .secondaryAction:hover,
-  .continueAction:hover {
-    transform: none;
   }
 }

@@ -14,55 +14,20 @@
 
 .eventMainImage {
   position: absolute;
-  inset: 48px 15% 48px 48px;
+  inset: 48px 0 48px 48px;
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 12px 0 0 12px;
 }
 
 .eventMainImage img {
   object-fit: cover;
-  object-position: 50% 100%;
-  transform: scale(1.18);
-}
-
-.eventDetailImage img {
-  object-fit: cover;
-  object-position: 50% 30%;
-  transform: scale(1.04);
-}
-
-.eventMainImage::after {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 72%, rgb(38 60 55 / 48%));
-  content: "";
-}
-
-.eventDetailImage {
-  position: absolute;
-  right: 3%;
-  bottom: 8%;
-  width: 31%;
-  aspect-ratio: 0.92;
-  overflow: hidden;
-  border: 3px solid var(--plantain-300);
-  border-radius: 12px;
-  box-shadow: 10px 16px 34px rgb(5 23 19 / 26%);
+  object-position: center;
 }
 
 .eventsCopy {
   align-self: center;
   max-width: 620px;
   padding: 82px clamp(36px, 7vw, 108px) 82px 48px;
-}
-
-.eventsEyebrow {
-  margin: 0 0 14px;
-  color: var(--plantain-300);
-  font-size: 0.82rem;
-  font-weight: 680;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .eventsCopy h1,
@@ -180,7 +145,6 @@
 
 .galleryGrid img {
   object-fit: cover;
-  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .galleryTall img {
@@ -195,10 +159,6 @@
   object-position: 50% 45%;
 }
 
-.galleryGrid figure:hover img {
-  transform: scale(1.025);
-}
-
 .galleryGrid figcaption {
   position: absolute;
   z-index: 1;
@@ -206,7 +166,7 @@
   bottom: 0;
   left: 0;
   padding: 72px 20px 18px;
-  background: linear-gradient(180deg, transparent, rgb(5 30 24 / 88%));
+  background: rgb(5 30 24 / 88%);
   color: var(--cassava-50);
 }
 
@@ -260,7 +220,6 @@
 
 .finalCta a:hover {
   background: var(--plantain-300);
-  transform: translateY(-1px);
 }
 
 .finalCta a svg {
@@ -316,21 +275,12 @@
   }
 
   .eventMainImage {
-    inset: 20px 9% 20px 0;
+    inset: 20px 0;
     border-radius: 0 14px 14px 0;
   }
 
-  .eventDetailImage {
-    right: 4%;
-    bottom: 8%;
-    width: 38%;
-    border-width: 2px;
-    box-shadow: 7px 12px 26px rgb(5 23 19 / 24%);
-  }
-
   .eventMainImage img {
-    object-position: 50% 100%;
-    transform: scale(1.18);
+    object-position: center;
   }
 
   .eventsCopy h1,
@@ -394,16 +344,5 @@
 
   .finalCta a {
     width: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .galleryGrid img {
-    transition: none;
-  }
-
-  .galleryGrid figure:hover img,
-  .finalCta a:hover {
-    transform: none;
   }
 }

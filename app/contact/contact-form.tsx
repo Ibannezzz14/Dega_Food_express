@@ -159,11 +159,10 @@ export default function ContactForm() {
   return (
     <section className={styles.formPanel} aria-labelledby="contact-form-title">
       <div className={styles.formHeading}>
-        <p className={styles.sectionLabel}>Votre demande</p>
         <h2 id="contact-form-title">Préparez votre message.</h2>
         <p>
-          Les champs marqués « obligatoire » doivent être complétés. Aucun
-          message n’est envoyé automatiquement.
+          Complétez les champs obligatoires. Vous pourrez relire le texte avant
+          de l’envoyer sur WhatsApp.
         </p>
       </div>
 
@@ -197,7 +196,7 @@ export default function ContactForm() {
             <span className={styles.requiredText}>obligatoire</span>
           </legend>
           <div className={styles.contactOptions}>
-            {CONTACTS.map((contact, index) => (
+            {CONTACTS.map((contact) => (
               <label className={styles.contactOption} key={contact.id}>
                 <input
                   id={`contact-${contact.id}`}
@@ -207,9 +206,6 @@ export default function ContactForm() {
                   required
                   onChange={() => clearError("contact")}
                 />
-                <span className={styles.contactIndex} aria-hidden="true">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
                 <span className={styles.contactOptionCopy}>
                   <strong>{contact.area}</strong>
                   <span>{contact.displayPhone}</span>
@@ -401,10 +397,6 @@ export default function ContactForm() {
             Préparer le message sur WhatsApp
             <ArrowRightIcon />
           </button>
-          <p>
-            WhatsApp s’ouvrira avec votre texte prérempli. Vous pourrez le
-            relire avant de l’envoyer.
-          </p>
         </div>
       </form>
     </section>

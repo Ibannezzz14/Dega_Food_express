@@ -40,8 +40,8 @@ export default function GallerySection() {
         </figure>
         <figure>
           <Image
-            src="/images/menu/drinks/bissap-33cl-proprietaire.webp"
-            alt="Bouteille de bissap frais au format 33 centilitres"
+            src="/images/menu/drinks/bissap-pexels.webp"
+            alt="Verre de bissap frais servi avec une tranche de citron vert"
             fill
             sizes="(max-width: 760px) 50vw, 27vw"
           />

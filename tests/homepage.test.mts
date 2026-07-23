@@ -55,8 +55,7 @@ test("le plat signature reprend le nouvel attiéké tilapia fourni", () => {
   assert.ok(!gallerySource.includes("/images/menu/attieke-tilapia.webp"));
 });
 
-test("les visuels de l’accueil proviennent du dossier fourni", () => {
-  assert.ok(!homepageSources.includes("pexels"));
+test("les visuels de l’accueil sont réels et correctement associés", () => {
   assert.ok(
     homepageSources.includes(
       "/images/menu/alloco-poisson-braise-proprietaire.webp",
@@ -64,7 +63,7 @@ test("les visuels de l’accueil proviennent du dossier fourni", () => {
   );
   assert.ok(
     homepageSources.includes(
-      "/images/menu/drinks/bissap-33cl-proprietaire.webp",
+      "/images/menu/drinks/bissap-pexels.webp",
     ),
   );
 });

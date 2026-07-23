@@ -1,12 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRightIcon,
-  HeartIcon,
-  LeafIcon,
-  PeopleIcon,
-  SunIcon,
-} from "@/components/icons";
+import { ArrowRightIcon } from "@/components/icons";
 import styles from "./presentation.module.css";
 
 const values = [
@@ -14,25 +8,21 @@ const values = [
     title: "La passion",
     description:
       "Le plaisir de cuisiner avec attention et de transmettre des saveurs qui leur tiennent à cœur.",
-    icon: HeartIcon,
   },
   {
     title: "La convivialité",
     description:
       "Des plats généreux, pensés pour rapprocher les personnes et accompagner les moments partagés.",
-    icon: PeopleIcon,
   },
   {
     title: "L’authenticité",
     description:
       "Des recettes qui mettent à l’honneur les goûts et les traditions de la cuisine ivoirienne.",
-    icon: SunIcon,
   },
   {
     title: "La qualité",
     description:
       "Des ingrédients choisis avec soin et des préparations réalisées avec exigence.",
-    icon: LeafIcon,
   },
 ] as const;
 
@@ -42,7 +32,6 @@ export default function PresentationStory() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>Dega Food Express</p>
             <h1 id="story-title">Notre histoire</h1>
             <p className={styles.heroIntro}>
               Une passion commune pour une cuisine généreuse, vivante et
@@ -52,8 +41,8 @@ export default function PresentationStory() {
 
           <figure className={styles.heroVisual}>
             <Image
-              src="/images/menu/attieke-tilapia-proprietaire.webp"
-              alt="Tilapia braisé entier servi avec de l’attiéké et des condiments"
+              src="/images/menu/alloco-agneau-choukouya-proprietaire.webp"
+              alt="Alloco servi avec de l’agneau choukouya et des crudités"
               fill
               priority
               sizes="(max-width: 900px) 100vw, 52vw"
@@ -64,7 +53,6 @@ export default function PresentationStory() {
 
       <section className={styles.origin} aria-labelledby="origin-title">
         <div className={styles.originHeading}>
-          <p className={styles.sectionLabel}>À l’origine</p>
           <h2 id="origin-title">Deux femmes réunies par la cuisine.</h2>
           <p className={styles.founderNames}>
             Marie-José
@@ -91,16 +79,18 @@ export default function PresentationStory() {
       <section className={styles.mission} aria-labelledby="mission-title">
         <div className={styles.missionVisual}>
           <Image
-            src="/images/menu/placali-sauce-kope-proprietaire.webp"
-            alt="Deux portions de placali servies avec une sauce kopé"
+            src="/images/menu/alloco-poulet-choukouya-proprietaire.webp"
+            alt="Alloco servi avec du poulet choukouya et des crudités"
             fill
             sizes="(max-width: 900px) 100vw, 46vw"
           />
         </div>
 
         <div className={styles.missionCopy}>
-          <p className={styles.missionLabel}>Notre mission</p>
-          <h2 id="mission-title">Partager des saveurs qui ont une histoire.</h2>
+          <h2 id="mission-title">Notre mission</h2>
+          <p className={styles.missionTitle}>
+            Partager des saveurs qui ont une histoire.
+          </p>
           <p>
             Dega Food Express propose des plats authentiques, savoureux et
             préparés avec soin. Chaque recette est une façon de faire découvrir
@@ -117,30 +107,21 @@ export default function PresentationStory() {
 
       <section className={styles.values} aria-labelledby="values-title">
         <header className={styles.valuesHeading}>
-          <p className={styles.sectionLabel}>Ce qui nous guide</p>
           <h2 id="values-title">Des valeurs présentes dans chaque plat.</h2>
         </header>
 
         <ul className={styles.valuesGrid}>
-          {values.map((value) => {
-            const Icon = value.icon;
-
-            return (
-              <li className={styles.value} key={value.title}>
-                <span className={styles.valueIcon} aria-hidden="true">
-                  <Icon />
-                </span>
-                <h3>{value.title}</h3>
-                <p>{value.description}</p>
-              </li>
-            );
-          })}
+          {values.map((value) => (
+            <li className={styles.value} key={value.title}>
+              <h3>{value.title}</h3>
+              <p>{value.description}</p>
+            </li>
+          ))}
         </ul>
       </section>
 
       <section className={styles.callToAction} aria-labelledby="cta-title">
         <div>
-          <p>À découvrir à votre table</p>
           <h2 id="cta-title">Goûtez nos spécialités ivoiriennes.</h2>
         </div>
         <Link href="/carte">

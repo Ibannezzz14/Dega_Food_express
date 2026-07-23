@@ -12,7 +12,6 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
   return (
     <main className={styles.page} id="contenu">
       <div className={styles.card}>
-        <p className={styles.eyebrow}>Un imprévu est survenu</p>
         <h1>La page ne peut pas s’afficher pour le moment.</h1>
         <p>
           Réessayez maintenant. Si le problème persiste, revenez à l’accueil

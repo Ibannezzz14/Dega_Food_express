@@ -7,12 +7,9 @@ import { menuItems } from "../data/menu.ts";
 const projectRoot = resolve(import.meta.dirname, "..");
 const editorialImages = [
   "/images/editorial/alloco-tilapia-ivoirien.webp",
-  "/images/editorial/tilapia-frais-glace-pexels.webp",
 ] as const;
-const pendingImageIds = [] as const;
-
 const evianImage = "/images/menu/drinks/eau-evian-33cl-officiel.webp";
-const beignetsImage = "/images/menu/beignets-puff-puff-pexels.webp";
+const beignetsImage = "/images/menu/beignets-proprietaire.webp";
 const suppliedAttiekeTilapiaImage =
   "/images/menu/attieke-tilapia-proprietaire.webp";
 const suppliedAllocoPoissonImage =
@@ -31,11 +28,13 @@ const suppliedMainDishImages = {
     "/images/menu/alloco-agneau-choukouya-proprietaire.webp",
 } as const;
 
-const suppliedDrinkImages = {
-  "bissap-33": "/images/menu/drinks/bissap-33cl-proprietaire.webp",
-  "bissap-1l": "/images/menu/drinks/bissap-1l-proprietaire.webp",
-  "gingembre-33": "/images/menu/drinks/gingembre-33cl-proprietaire.webp",
-  "gingembre-1l": "/images/menu/drinks/gingembre-1l-proprietaire.webp",
+const verifiedDrinkImages = {
+  "bissap-33": "/images/menu/drinks/bissap-pexels.webp",
+  "bissap-1l": "/images/menu/drinks/bissap-pexels.webp",
+  "gingembre-33": "/images/menu/drinks/gingembre-pexels.webp",
+  "gingembre-1l": "/images/menu/drinks/gingembre-pexels.webp",
+} as const;
+const restoredDrinkImages = {
   guinness: "/images/menu/drinks/guinness-33cl-proprietaire.webp",
   "super-bock": "/images/menu/drinks/super-bock-33cl-proprietaire.webp",
   "vin-rouge-primitivo-merlot":
@@ -143,7 +142,7 @@ test("les photographies éditoriales sont locales et optimisées", () => {
   }
 });
 
-test("les beignets utilisent le nouveau cadrage puff-puff sans modifier le prix", () => {
+test("les beignets utilisent la nouvelle photographie fournie sans modifier le prix", () => {
   const item = menuItems.find((candidate) => candidate.id === "beignets");
 
   assert.ok(item);
@@ -201,19 +200,30 @@ test("les quatre plats fournis utilisent chacun leur visuel propre", () => {
   );
 });
 
-test("chaque boisson fournie utilise son visuel et son format propres", () => {
-  for (const [id, image] of Object.entries(suppliedDrinkImages)) {
+test("les boissons artisanales utilisent des photographies réelles et sans fausse étiquette", () => {
+  for (const [id, image] of Object.entries(verifiedDrinkImages)) {
     const item = menuItems.find((candidate) => candidate.id === id);
 
-    assert.ok(item, `Boisson fournie manquante : ${id}`);
-    assert.notEqual(item.imageStatus, "pending", `Visuel encore masqué : ${id}`);
-    assert.equal(item.image, image, `Mauvais visuel associé : ${id}`);
+    assert.ok(item, `Boisson manquante : ${id}`);
+    assert.notEqual(item.imageStatus, "pending", `Visuel masqué : ${id}`);
+    assert.equal(item.image, image, `Mauvaise photographie associée : ${id}`);
   }
 
   assert.equal(
-    new Set(Object.values(suppliedDrinkImages)).size,
-    Object.keys(suppliedDrinkImages).length,
+    new Set(Object.values(verifiedDrinkImages)).size,
+    2,
   );
+});
+
+test("les quatre boissons restaurées affichent le visuel fourni", () => {
+  for (const [id, image] of Object.entries(restoredDrinkImages)) {
+    const item = menuItems.find((candidate) => candidate.id === id);
+
+    assert.ok(item, `Boisson manquante : ${id}`);
+    assert.notEqual(item.imageStatus, "pending");
+    assert.equal(item.image, image);
+    assert.equal(item.imageFit, "contain");
+  }
 });
 
 test("l’eau Evian utilise la bouteille officielle de 33 cl", () => {
@@ -237,12 +247,12 @@ test("le dégué utilise le visuel fourni pour le dessert", () => {
   assert.equal(item.price, 6);
 });
 
-test("les produits sans photographie exacte restent masqués", () => {
+test("toutes les références de la carte affichent une image", () => {
   const actualPendingIds = menuItems
     .filter((item) => item.imageStatus === "pending")
     .map((item) => item.id);
 
-  assert.deepEqual(actualPendingIds, pendingImageIds);
+  assert.deepEqual(actualPendingIds, []);
   assert.equal(
     menuItems.filter((item) => item.imageStatus !== "pending").length,
     18,
@@ -257,14 +267,10 @@ test("les sources externes et les visuels fournis sont documentés", () => {
 
   assert.match(registry, /https:\/\/commons\.wikimedia\.org/);
   assert.match(registry, /CC BY-SA 4\.0/);
-  assert.match(registry, /gpt-image/);
   assert.ok(registry.includes(beignetsImage));
   assert.ok(
-    registry.includes(
-      "https://www.pexels.com/photo/close-up-shot-of-delicious-puff-puff-on-white-ceramic-bowl-13915068/",
-    ),
+    registry.includes("ChatGPT Image 23 juil. 2026, 23_53_06.png"),
   );
-  assert.ok(registry.includes("https://www.pexels.com/license/"));
   assert.ok(registry.includes(evianImage));
   assert.ok(registry.includes(suppliedAttiekeTilapiaImage));
   assert.ok(registry.includes(suppliedAllocoPoissonImage));
@@ -272,16 +278,26 @@ test("les sources externes et les visuels fournis sont documentés", () => {
   assert.ok(registry.includes(suppliedPlacaliImage));
   assert.ok(
     registry.includes(
-      "https://www.pexels.com/photo/displayed-raw-tilapia-on-a-row-8352786/",
-    ),
-  );
-  assert.ok(
-    registry.includes(
       "https://www.evian.com/fr_ch/produits/bouteilles-en-verre/33cl/",
     ),
   );
 
-  for (const image of Object.values(suppliedDrinkImages)) {
+  assert.ok(
+    registry.includes(
+      "https://www.pexels.com/photo/refreshing-hibiscus-drink-with-lime-garnish-36630822/",
+    ),
+  );
+  assert.ok(
+    registry.includes(
+      "https://www.pexels.com/photo/healthy-giinger-ade-drink-13425810/",
+    ),
+  );
+
+  for (const image of Object.values(verifiedDrinkImages)) {
+    assert.ok(registry.includes(image), `Source non documentée : ${image}`);
+  }
+
+  for (const image of Object.values(restoredDrinkImages)) {
     assert.ok(registry.includes(image), `Source non documentée : ${image}`);
   }
 

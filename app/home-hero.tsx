@@ -14,16 +14,13 @@ export default function HomeHero() {
       <section className={styles.hero} id="accueil" aria-labelledby="hero-title">
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>
-              Cuisine ivoirienne · Lausanne & Lucens
-            </p>
             <h1 id="hero-title">
               La Côte d’Ivoire,
               <span>à votre table.</span>
             </h1>
             <p className={styles.heroText}>
-              Des spécialités préparées sur commande avec soin, pour vos repas
-              du quotidien comme pour les grandes tablées.
+              Des plats ivoiriens préparés sur commande, pour un repas à la
+              maison comme pour une grande tablée.
             </p>
             <div className={styles.heroActions}>
               <Link className={styles.primaryAction} href="/carte">
@@ -46,8 +43,7 @@ export default function HomeHero() {
           <div className={styles.quickOrderCopy}>
             <h2 id="quick-order-title">Choisissez votre zone.</h2>
             <span>
-              Nous vous dirigeons ensuite vers les plats disponibles et le bon
-              contact WhatsApp.
+              Vous verrez ensuite la carte et le contact WhatsApp correspondant.
             </span>
           </div>
 
