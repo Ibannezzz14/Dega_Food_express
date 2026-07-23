@@ -1,9 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import {
-  getStatsCredentials,
-  isStatsAuthorizationValid,
-} from "@/lib/stats-auth";
+import { getStatsCredentials } from "@/lib/stats-auth";
+import { validateStatsAuthorization } from "@/lib/stats-auth-core";
 
 export function proxy(request: NextRequest) {
   const credentials = getStatsCredentials();
@@ -18,7 +16,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (
-    !isStatsAuthorizationValid(
+    !validateStatsAuthorization(
       request.headers.get("authorization"),
       credentials,
     )

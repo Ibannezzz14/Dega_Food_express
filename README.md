@@ -9,6 +9,7 @@ et CSS Modules.
 - `/presentation` : présentation et galerie
 - `/carte` : carte interactive et préparation de la commande
 - `/evenements` : service traiteur avec demande de devis
+- `/contact` : téléphone, WhatsApp, Instagram et formulaire de contact
 - `/statistiques` : tableau de bord privé des demandes géographiques
 
 Le parcours de commande :
@@ -18,11 +19,16 @@ Le parcours de commande :
 - propose des adresses, NPA ou localités suisses et synchronise les trois champs ;
 - vérifie en interne la zone de livraison à partir de l’adresse ;
 - dirige la demande vers le bon numéro WhatsApp ;
+- conserve le panier pendant la navigation interne, sans conserver l’adresse ;
 - comptabilise de façon agrégée les passages validés vers WhatsApp.
 
 Le site ne peut pas confirmer qu’un message a ensuite été envoyé dans WhatsApp.
 Les statistiques mesurent donc des passages vers WhatsApp, pas des commandes
 confirmées.
+
+Les visuels culinaires vérifiés sont optimisés localement en WebP. Les preuves
+de provenance, les licences et les décisions d’audit restent documentées dans
+les fichiers internes `IMAGE_SOURCES.md` et `MENU_IMAGE_AUDIT.md`.
 
 ## Confidentialité des statistiques
 
@@ -35,7 +41,8 @@ plus de 730 jours sont supprimés automatiquement lors d’un nouveau passage.
 
 ## Lancer le projet
 
-Prérequis : Node.js 22, npm et une base PostgreSQL pour activer les statistiques.
+Prérequis : Node.js 24 et npm. PostgreSQL est facultatif pour le site public,
+mais nécessaire pour activer les statistiques.
 
 ```bash
 npm ci
@@ -43,17 +50,29 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Renseigner dans `.env.local` :
+Variables disponibles dans `.env.local` :
 
 ```dotenv
+SITE_URL=http://localhost:3000
 DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require
 STATS_USER=dega
 STATS_PASSWORD=un-mot-de-passe-long-et-unique
 ```
 
-Le mot de passe du tableau de bord doit contenir au moins 12 caractères. Le
-schéma PostgreSQL est fourni dans `db/schema.sql`. L’application sait aussi le
-créer automatiquement en solution de secours.
+`SITE_URL` sert aux liens canoniques, au sitemap et aux aperçus sociaux. En
+production, indiquez l’adresse publique en HTTPS. Le mot de passe du tableau de
+bord doit contenir au moins 12 caractères.
+
+Le schéma PostgreSQL est fourni dans `db/schema.sql` et doit être appliqué une
+fois avec un compte de migration :
+
+```bash
+psql "$DATABASE_URL" -f db/schema.sql
+```
+
+Le compte utilisé ensuite par l’application n’a besoin que des droits de
+lecture et d’écriture sur `whatsapp_handoff_daily`. Aucune création ou
+modification de table n’est exécutée pendant les requêtes.
 
 Sans `DATABASE_URL`, le parcours WhatsApp continue de fonctionner mais aucune
 statistique n’est enregistrée. Sans identifiants statistiques valides,
@@ -64,10 +83,15 @@ Ouvrir ensuite [http://localhost:3000](http://localhost:3000).
 ## Vérifications
 
 ```bash
+npm run lint
 npm test
 npm run typecheck
 npm run build
+npm audit --audit-level=high
 ```
+
+La même suite est lancée automatiquement par
+`.github/workflows/ci.yml` à chaque push sur `main` et pour chaque pull request.
 
 ## Publier sur GitHub
 
@@ -81,8 +105,8 @@ git remote add origin https://github.com/VOTRE-COMPTE/VOTRE-DEPOT.git
 git push -u origin main
 ```
 
-Les fichiers `.env*` privés sont ignorés. `.env.example` ne contient aucun
-secret et reste versionné.
+Les dépendances, builds, caches et fichiers `.env*` privés sont ignorés.
+`.env.example` ne contient aucun secret et reste versionné.
 
 ## Mettre le site en ligne
 
@@ -97,7 +121,15 @@ Pour le déployer sur Vercel :
 3. vérifier que `DATABASE_URL` est disponible dans le projet ;
 4. appliquer `db/schema.sql` une fois dans la console SQL du fournisseur ;
 5. ajouter `STATS_USER` et un `STATS_PASSWORD` unique d’au moins 12 caractères ;
-6. lancer le déploiement puis ouvrir `/statistiques` en HTTPS.
+6. ajouter `SITE_URL` avec l’URL HTTPS définitive du site ;
+7. choisir Node.js 24 dans les réglages du projet ;
+8. lancer le déploiement puis ouvrir `/statistiques` en HTTPS.
+
+Pour limiter les appels automatisés, configurez aussi des règles Vercel
+Firewall sur `/api/address-suggestions`, `/api/delivery-zone` et
+`/statistiques`. Commencez en mode journalisation avant d’activer un blocage ou
+un challenge. Les deux API refusent déjà les corps JSON invalides et ceux de
+plus de 8 Kio.
 
 ## Données externes
 
