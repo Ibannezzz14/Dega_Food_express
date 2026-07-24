@@ -2,28 +2,22 @@ import styles from "./evenements.module.css";
 
 const faqItems = [
   {
-    id: "demande",
-    question: "Comment demander un devis traiteur ?",
+    id: "devis",
+    question: "Comment le devis est-il établi ?",
     answer:
-      "Choisissez l’un des deux contacts WhatsApp et complétez le message préparé avec la date, le nombre de convives, la localité et vos envies de plats. L’équipe étudie ensuite votre demande.",
-  },
-  {
-    id: "plats",
-    question: "Peut-on demander plusieurs plats ?",
-    answer:
-      "Vous pouvez mentionner plusieurs spécialités dans votre message. La sélection, les quantités et les possibilités de préparation sont précisées pendant l’échange avec l’équipe.",
+      "Le devis est préparé après étude de la date, du lieu, du nombre de convives, des plats et des services souhaités. Le prix n’est pas standardisé.",
   },
   {
     id: "confirmation",
-    question: "Le premier message confirme-t-il la prestation ?",
+    question: "Quand la prestation est-elle confirmée ?",
     answer:
-      "Non. La prestation est confirmée uniquement après l’échange sur votre événement, la communication du devis et l’accord des deux parties.",
+      "La prestation est confirmée après l’échange avec l’équipe, la communication du devis et l’accord des deux parties. Le premier message WhatsApp ne constitue pas une confirmation.",
   },
   {
-    id: "autre-evenement",
-    question: "Mon type d’événement n’est pas dans la liste, que faire ?",
+    id: "allergies",
+    question: "Comment signaler une allergie ou une contrainte alimentaire ?",
     answer:
-      "Décrivez simplement votre occasion dans le message. Marie-José et Geneviève vous indiqueront ce qu’il est possible d’envisager après avoir étudié les informations transmises.",
+      "Indiquez-la dans le champ Informations complémentaires. L’équipe vous précisera les possibilités, sans pouvoir garantir une absence totale de contamination croisée.",
   },
 ] as const;
 

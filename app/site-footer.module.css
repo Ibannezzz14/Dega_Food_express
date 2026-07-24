@@ -406,3 +406,21 @@
     transform: none;
   }
 }
+
+:global(body:has(main[data-page="contact"])) .footerGrid {
+  grid-template-columns: minmax(280px, 1.3fr) minmax(170px, 0.7fr);
+}
+
+:global(body:has(main[data-page="contact"])) .brandColumn {
+  grid-column: auto;
+}
+
+:global(body:has(main[data-page="contact"])) .contactColumn {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  :global(body:has(main[data-page="contact"])) .footerGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,98 +1,74 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import {
-  ArrowRightIcon,
-  InstagramIcon,
-  PhoneIcon,
-} from "@/components/icons";
-import { CONTACTS, INSTAGRAM } from "@/data/contact";
+import Link from "next/link";
+import { ArrowRightIcon, PhoneIcon } from "@/components/icons";
+import { CONTACTS } from "@/data/contact";
 import { createPageMetadata } from "@/lib/page-metadata";
-import ContactForm from "./contact-form";
 import styles from "./contact.module.css";
+
+/*
+ * THESIS: Faire du contact un annuaire immédiat, sans décor ni discours commercial.
+ * OWN-WORLD: Deux bandes vert nuit et ivoire, filets fins, numéros typographiques et actions nettes.
+ * STORY: Comprendre qui appeler, choisir sa région, lancer l’appel ou rejoindre le devis traiteur.
+ * FIRST VIEWPORT: Une introduction courte précède deux lignes de contact qui portent toute la page.
+ * FORM: Table d’appel, troisième structure retenue, composition linéaire — seed 80878522.
+ */
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contact | Dega Food Express",
   description:
-    "Contactez Dega Food Express à Lausanne ou Lucens, ou préparez votre demande directement sur WhatsApp.",
+    "Appelez directement Dega Food Express à Lausanne ou Lucens.",
   path: "/contact",
 });
 
 export default function ContactPage() {
   return (
-    <main id="contenu" className={styles.page}>
-      <section className={styles.contactHero} aria-labelledby="contact-title">
-        <div className={styles.contactHeroInner}>
-          <div className={styles.contactHeroCopy}>
-            <h1 id="contact-title">
-              Parlons de votre <em>demande.</em>
-            </h1>
-            <p className={styles.heroLead}>
-              Une question, une commande ou un événement&nbsp;? Appelez-nous
-              ou préparez votre message pour WhatsApp.
-            </p>
-          </div>
-
-          <figure className={styles.contactVisual}>
-            <Image
-              src="/images/menu/alloco-poulet-choukouya-proprietaire.webp"
-              alt="Alloco servi avec du poulet choukouya et des crudités"
-              fill
-              priority
-              sizes="(max-width: 860px) 100vw, 52vw"
-            />
-          </figure>
+    <main id="contenu" className={styles.page} data-page="contact">
+      <section className={styles.introBand} aria-labelledby="contact-title">
+        <div className={`${styles.contactShell} ${styles.introInner}`}>
+          <h1 id="contact-title">Nous contacter</h1>
+          <p>
+            Pour une question ou une commande, choisissez le numéro de votre
+            région.
+          </p>
         </div>
       </section>
 
-      <section className={styles.contactBody} aria-label="Moyens de contact">
-        <div className={styles.contactLayout}>
-          <aside className={styles.contactIntro}>
-            <div
-              className={styles.directContacts}
-              aria-labelledby="direct-contact-title"
-            >
-              <div className={styles.directContactHeading}>
-                <h2 id="direct-contact-title">Contacts directs</h2>
-              </div>
+      <section
+        className={styles.directory}
+        aria-labelledby="contact-directory-title"
+      >
+        <div className={`${styles.contactShell} ${styles.directoryInner}`}>
+          <h2 className="sr-only" id="contact-directory-title">
+            Numéros de téléphone par région
+          </h2>
 
-              <address className={styles.contactList}>
-                {CONTACTS.map((contact) => (
-                  <a
-                    className={styles.contactCard}
-                    href={contact.phoneHref}
-                    key={contact.id}
-                    aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
-                  >
-                    <span className={styles.contactIcon}>
-                      <PhoneIcon />
-                    </span>
-                    <span className={styles.contactDetails}>
-                      <span>{contact.area}</span>
-                      <strong>{contact.displayPhone}</strong>
-                    </span>
-                    <ArrowRightIcon />
-                  </a>
-                ))}
-              </address>
-            </div>
+          <address className={styles.contactList}>
+            {CONTACTS.map((contact) => (
+              <a
+                className={styles.contactRow}
+                href={contact.phoneHref}
+                key={contact.id}
+                aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
+              >
+                <span className={styles.contactArea}>{contact.area}</span>
+                <strong className={styles.contactNumber}>
+                  {contact.displayPhone}
+                </strong>
+                <span className={styles.callAction}>
+                  <PhoneIcon />
+                  Appeler
+                </span>
+              </a>
+            ))}
+          </address>
 
-            <a
-              className={styles.instagramLink}
-              href={INSTAGRAM.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Voir Dega Food Express sur Instagram, nouvel onglet"
-            >
-              <InstagramIcon />
-              <span>
-                Suivre sur Instagram
-                <strong>{INSTAGRAM.handle}</strong>
-              </span>
+          <div className={styles.cateringPrompt}>
+            <p>Vous organisez un événement&nbsp;?</p>
+            <Link className={styles.cateringLink} href="/evenements">
+              Demander un devis traiteur
               <ArrowRightIcon />
-            </a>
-          </aside>
-
-          <ContactForm />
+            </Link>
+          </div>
         </div>
       </section>
     </main>
