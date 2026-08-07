@@ -5,15 +5,15 @@ import test from "node:test";
 
 const projectRoot = resolve(import.meta.dirname, "..");
 const experienceSource = readFileSync(
-  resolve(projectRoot, "app/order-experience.tsx"),
+  resolve(projectRoot, "components/order/order-experience.tsx"),
   "utf8",
 );
 const cartSource = readFileSync(
-  resolve(projectRoot, "app/order-cart.tsx"),
+  resolve(projectRoot, "components/order/order-cart.tsx"),
   "utf8",
 );
 const actionSource = readFileSync(
-  resolve(projectRoot, "app/actions.ts"),
+  resolve(projectRoot, "app/carte/order-actions.ts"),
   "utf8",
 );
 const carteContentSource = readFileSync(
@@ -21,7 +21,7 @@ const carteContentSource = readFileSync(
   "utf8",
 );
 const experienceStyleSource = readFileSync(
-  resolve(projectRoot, "app/order-experience.module.css"),
+  resolve(projectRoot, "components/order/order-experience.module.css"),
   "utf8",
 );
 
@@ -51,17 +51,24 @@ test("la validation WhatsApp se trouve dans le récapitulatif", () => {
 test("la livraison exige un mode de paiement validé côté client et serveur", () => {
   assert.ok(experienceSource.includes('name="paymentMethod"'));
   assert.ok(experienceSource.includes("hasValidPaymentMethod"));
-  assert.ok(experienceSource.includes("Une capture d’écran ne"));
+  assert.ok(experienceSource.includes("<strong>{method.label}</strong>"));
+  assert.equal(experienceSource.includes("PAYMENT_PHONE_LABEL"), false);
   assert.ok(cartSource.includes("getDeliveryPaymentMethodLabel"));
   assert.ok(actionSource.includes("isDeliveryPaymentMethod"));
   assert.ok(actionSource.includes("Paiement :"));
+});
+
+test("les demandes de prix passent par le numéro unique de commande", () => {
+  assert.ok(experienceSource.includes("createOrderWhatsAppHref"));
+  assert.ok(experienceSource.includes("ORDER_CONTACT.displayPhone"));
+  assert.equal(experienceSource.includes("INSTAGRAM.href"), false);
 });
 
 test("un lien direct peut ouvrir la carte avec la livraison présélectionnée", () => {
   assert.ok(carteContentSource.includes('searchParams.get("mode")'));
   assert.ok(carteContentSource.includes('"livraison"'));
   assert.ok(experienceSource.includes("initialFulfillmentMethod"));
-  assert.ok(experienceSource.includes("Espèces ou TWINT"));
+  assert.ok(experienceSource.includes("DELIVERY_PAYMENT_METHODS"));
 });
 
 test("le panier gère explicitement son état vide", () => {
@@ -82,13 +89,22 @@ test("une erreur de validation disparaît après correction de la commande", () 
   assert.ok(experienceSource.includes("visibleActionState"));
 });
 
-test("la zone visible suit la zone réellement détectée pour la livraison", () => {
-  assert.ok(experienceSource.includes("setRegion(result.suggestedRegion)"));
+test("une adresse hors de la zone habituelle peut devenir une demande à confirmer", () => {
+  assert.ok(experienceSource.includes('zoneCheck.status === "on_request"'));
+  assert.ok(experienceSource.includes("Faisabilité et frais"));
+  assert.ok(experienceSource.includes("DELIVERY_SETTINGS.availabilityMessage"));
   assert.ok(
     experienceSource.includes(
       "DELIVERY_ZONES[zoneCheck.region].label",
     ),
   );
+  assert.ok(cartSource.includes('deliveryFee === null'));
+  assert.ok(cartSource.includes("À confirmer"));
+  assert.ok(experienceSource.includes("Sous-total des plats"));
+  assert.ok(actionSource.includes('zoneValidation.status === "on_request"'));
+  assert.ok(actionSource.includes("faisabilité et frais"));
+  assert.equal(experienceSource.includes("unsupported_locality"), false);
+  assert.equal(experienceSource.includes('zoneCheck.status === "outside"'), false);
 });
 
 test("le survol ne masque pas la catégorie sélectionnée", () => {

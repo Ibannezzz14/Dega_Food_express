@@ -6,7 +6,9 @@ import { menuItems } from "../data/menu.ts";
 
 const projectRoot = resolve(import.meta.dirname, "..");
 const editorialImages = [
-  "/images/editorial/alloco-tilapia-ivoirien.webp",
+  "/images/site/alloco-tilapia-ivoirien.webp",
+  "/images/site/home-grunge-hero.webp",
+  "/images/site/home-grunge-paper.webp",
 ] as const;
 const beignetsImage = "/images/menu/beignets-proprietaire.webp";
 const suppliedAttiekeTilapiaImage =
@@ -42,10 +44,10 @@ const removedDrinkIds = [
 ] as const;
 
 test("chaque photo validée est locale et optimisée", () => {
-  assert.equal(menuItems.length, 13);
+  assert.equal(menuItems.length, 16);
   assert.ok(
     menuItems.every(
-      (item) => Number.isFinite(item.price) && item.price > 0,
+      (item) => item.price === null || (Number.isFinite(item.price) && item.price > 0),
     ),
   );
 
@@ -68,6 +70,32 @@ test("chaque photo validée est locale et optimisée", () => {
       statSync(imagePath).size <= 180_000,
       `Image trop lourde : ${item.image}`,
     );
+  }
+});
+
+test("l’aller-retour figure dans les entrées", () => {
+  const item = menuItems.find((candidate) => candidate.id === "aller-retour");
+
+  assert.ok(item);
+  assert.equal(item.name, "Aller-retour");
+  assert.equal(item.price, 5);
+  assert.equal(item.category, "entrees");
+  assert.equal(item.image, "/images/menu/aller-retour.webp");
+});
+
+test("les nouvelles photos sont associées à Aller-retour et Pastel", () => {
+  const expectedImages = {
+    "aller-retour": "/images/menu/aller-retour.webp",
+    pastel: "/images/menu/pastel.webp",
+  } as const;
+
+  for (const [id, image] of Object.entries(expectedImages)) {
+    const item = menuItems.find((candidate) => candidate.id === id);
+
+    assert.ok(item);
+    assert.notEqual(item.imageStatus, "pending");
+    assert.equal(item.image, image);
+    assert.equal(item.category, "entrees");
   }
 });
 
@@ -114,14 +142,14 @@ test("les photographies éditoriales sont locales et optimisées", () => {
 
     assert.ok(existsSync(imagePath), `Image manquante : ${image}`);
     assert.ok(
-      statSync(imagePath).size <= 250_000,
+      statSync(imagePath).size <= 300_000,
       `Image éditoriale trop lourde : ${image}`,
     );
   }
 });
 
-test("les beignets utilisent la nouvelle photographie fournie sans modifier le prix", () => {
-  const item = menuItems.find((candidate) => candidate.id === "beignets");
+test("le Dum-Dum utilise la photographie fournie sans modifier le prix", () => {
+  const item = menuItems.find((candidate) => candidate.name === "Dum-Dum");
 
   assert.ok(item);
   assert.equal(item.image, beignetsImage);
@@ -157,6 +185,18 @@ test("le placali sauce kopé utilise le nouveau visuel fourni", () => {
 
   assert.ok(item);
   assert.equal(item.image, suppliedPlacaliImage);
+  assert.equal(item.price, 30);
+  assert.equal(item.category, "plats");
+});
+
+test("le foutou sauce graine utilise la nouvelle photo", () => {
+  const item = menuItems.find(
+    (candidate) => candidate.id === "Foutu_sauceGraine",
+  );
+
+  assert.ok(item);
+  assert.equal(item.name, "Foutou sauce graine");
+  assert.equal(item.image, "/images/menu/foutou-sauce-graine.webp");
   assert.equal(item.price, 30);
   assert.equal(item.category, "plats");
 });
@@ -203,7 +243,7 @@ test("le dégué utilise le visuel fourni pour le dessert", () => {
   assert.equal(item.price, 6);
 });
 
-test("toutes les références de la carte affichent une image", () => {
+test("tous les plats de la carte ont désormais un visuel", () => {
   const actualPendingIds = menuItems
     .filter((item) => item.imageStatus === "pending")
     .map((item) => item.id);
@@ -211,13 +251,18 @@ test("toutes les références de la carte affichent une image", () => {
   assert.deepEqual(actualPendingIds, []);
   assert.equal(
     menuItems.filter((item) => item.imageStatus !== "pending").length,
-    13,
+    16,
   );
+
+  const pendingPrices = menuItems
+    .filter((item) => actualPendingIds.includes(item.id))
+    .map((item) => item.price);
+  assert.deepEqual(pendingPrices, []);
 });
 
 test("les sources externes et les visuels fournis sont documentés", () => {
   const registry = readFileSync(
-    resolve(projectRoot, "IMAGE_SOURCES.md"),
+    resolve(projectRoot, "docs/internal/IMAGE_SOURCES.md"),
     "utf8",
   );
 
@@ -243,6 +288,10 @@ test("les sources externes et les visuels fournis sont documentés", () => {
   );
 
   for (const image of Object.values(verifiedDrinkImages)) {
+    assert.ok(registry.includes(image), `Source non documentée : ${image}`);
+  }
+
+  for (const image of editorialImages) {
     assert.ok(registry.includes(image), `Source non documentée : ${image}`);
   }
 

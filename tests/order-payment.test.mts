@@ -22,5 +22,8 @@ test("les libellés de paiement sont explicites pour la commande", () => {
     getDeliveryPaymentMethodLabel("cash"),
     "Espèces à la livraison",
   );
-  assert.equal(getDeliveryPaymentMethodLabel("twint"), "TWINT au livreur");
+  assert.equal(
+    getDeliveryPaymentMethodLabel("twint"),
+    "TWINT à la livraison",
+  );
 });

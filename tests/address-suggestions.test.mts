@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import {
   POSTAL_LOCALITY_LAYER,
@@ -8,6 +10,8 @@ import {
   parseGeoAdminAddress,
   parseGeoAdminPostalLocality,
 } from "../lib/address-suggestions.ts";
+
+const projectRoot = resolve(import.meta.dirname, "..");
 
 test("transforme une réponse GeoAdmin en adresse structurée", () => {
   const suggestion = parseGeoAdminAddress({
@@ -150,6 +154,16 @@ test("normalise la recherche avant l’envoi", () => {
     normalizeAddressQuery("  Rue   de   Bourg  10  "),
     "Rue de Bourg 10",
   );
+});
+
+test("la recherche de rue n’est pas biaisée vers une seule ville", () => {
+  const routeSource = readFileSync(
+    resolve(projectRoot, "app/api/address-suggestions/route.ts"),
+    "utf8",
+  );
+
+  assert.equal(routeSource.includes("DELIVERY_ZONES[region].label"), false);
+  assert.ok(routeSource.includes("`${postalCode} ${city}`.trim()"));
 });
 
 test("transforme un résultat NPA en NPA et localité", () => {

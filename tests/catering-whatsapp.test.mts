@@ -1,9 +1,46 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import test from "node:test";
 import {
   buildCateringWhatsAppMessage,
   formatSwissDate,
 } from "../lib/catering-whatsapp.ts";
+
+const projectRoot = resolve(import.meta.dirname, "..");
+const cateringFormSource = readFileSync(
+  resolve(projectRoot, "app/evenements/catering-form.tsx"),
+  "utf8",
+);
+const cateringPageSource = readFileSync(
+  resolve(projectRoot, "app/evenements/page.tsx"),
+  "utf8",
+);
+
+test("les demandes traiteur utilisent leur numéro WhatsApp dédié", () => {
+  assert.ok(cateringFormSource.includes("createCateringWhatsAppHref"));
+  assert.equal(cateringFormSource.includes("createOrderWhatsAppHref"), false);
+  assert.equal(cateringFormSource.includes("DELIVERY_SETTINGS"), false);
+  assert.ok(cateringFormSource.includes("Livraison selon le lieu et le devis"));
+  assert.equal(cateringFormSource.includes("CATERING_CONTACT"), false);
+  assert.equal(cateringFormSource.includes("ORDER_CONTACT"), false);
+  assert.equal(cateringFormSource.includes("CATERING_AREA_SETTINGS"), false);
+  assert.equal(cateringFormSource.includes("contactSummary"), false);
+});
+
+test("la fin de la page traiteur affiche directement les deux numéros", () => {
+  assert.ok(cateringPageSource.includes("ORDER_CONTACT.phoneHref"));
+  assert.ok(cateringPageSource.includes("ORDER_CONTACT.displayPhone"));
+  assert.ok(cateringPageSource.includes("CATERING_CONTACT.phoneHref"));
+  assert.ok(cateringPageSource.includes("CATERING_CONTACT.displayPhone"));
+  assert.ok(cateringPageSource.includes("ORDER_CONTACT.label"));
+  assert.ok(cateringPageSource.includes("Service traiteur"));
+  assert.ok(
+    cateringPageSource.includes("CATERING_AREA_SETTINGS.availabilityMessage"),
+  );
+  assert.equal(cateringPageSource.includes("DELIVERY_SETTINGS"), false);
+  assert.equal(cateringPageSource.includes("ORDER_WHATSAPP_HREF"), false);
+});
 
 test("formatSwissDate converts an ISO date to the Swiss display format", () => {
   assert.equal(formatSwissDate("2026-09-05"), "05.09.2026");
@@ -12,17 +49,19 @@ test("formatSwissDate converts an ISO date to the Swiss display format", () => {
 
 test("buildCateringWhatsAppMessage includes the complete catering request", () => {
   const message = buildCateringWhatsAppMessage({
-    contactArea: "Lausanne",
     firstName: "Awa",
     lastName: "Koné",
     phone: "+41 79 123 45 67",
     email: "awa@example.com",
     eventType: "Mariage",
     eventDate: "2026-09-05",
-    location: "Lausanne",
+    location: "Lucens",
     guestCount: "80",
     dishes: ["Attiéké tilapia", "Dégué"],
-    services: ["Livraison", "Présentation en buffet"],
+    services: [
+      "Livraison selon le lieu et le devis",
+      "Présentation en buffet",
+    ],
     details: "Une personne est allergique aux arachides.",
   });
 
@@ -30,12 +69,13 @@ test("buildCateringWhatsAppMessage includes the complete catering request", () =
   assert.match(message, /Date souhaitée : 05\.09\.2026/);
   assert.match(message, /• Attiéké tilapia/);
   assert.match(message, /• Présentation en buffet/);
+  assert.match(message, /• Livraison selon le lieu et le devis/);
   assert.match(message, /allergique aux arachides/);
+  assert.doesNotMatch(message, /Contact souhaité/);
 });
 
 test("buildCateringWhatsAppMessage omits optional empty sections", () => {
   const message = buildCateringWhatsAppMessage({
-    contactArea: "Lucens et alentours",
     firstName: "Jean",
     lastName: "Yao",
     phone: "076 000 00 00",

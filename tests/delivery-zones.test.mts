@@ -1,89 +1,82 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  ORDER_WHATSAPP_HREF,
+  SITE_CONFIG,
+} from "../config/site-config.ts";
+import {
+  DELIVERY_REGION_IDS,
   DELIVERY_ZONES,
-  PUBLIC_REGIONS,
   distanceFromDeliveryZone,
   findEligibleDeliveryZone,
   isDeliveryRegionId,
   resolveDeliveryZone,
 } from "../data/delivery-zones.ts";
 
-test("associe chaque centre à sa propre zone de livraison", () => {
+const regionId = "lucens";
+
+test("Lausanne et Lucens partagent une seule zone et un seul contact de livraison", () => {
+  assert.deepEqual(DELIVERY_REGION_IDS, [regionId]);
+  assert.equal(isDeliveryRegionId(regionId), true);
+  assert.equal(isDeliveryRegionId("lausanne"), false);
+  assert.equal(isDeliveryRegionId("lausanne-lucens"), false);
+  assert.equal(SITE_CONFIG.delivery.regionId, regionId);
   assert.equal(
-    findEligibleDeliveryZone(DELIVERY_ZONES.lausanne.center),
-    "lausanne",
+    SITE_CONFIG.delivery.availabilityMessage,
+    "Livraison disponible à Lausanne, Lucens et dans les régions environnantes",
   );
+  assert.equal(SITE_CONFIG.contacts.orders.displayPhone, "076 603 60 11");
   assert.equal(
-    findEligibleDeliveryZone(DELIVERY_ZONES.lucens.center),
-    "lucens",
+    SITE_CONFIG.contacts.orders.internationalPhone,
+    "41766036011",
   );
+  assert.match(ORDER_WHATSAPP_HREF, /^https:\/\/wa\.me\/41766036011\?/);
 });
 
-test("choisit la zone la plus proche lorsque les rayons se chevauchent", () => {
-  assert.ok(
-    distanceFromDeliveryZone("lausanne", DELIVERY_ZONES.lucens.center) <=
-      DELIVERY_ZONES.lausanne.radiusKm,
-  );
-  assert.equal(
-    findEligibleDeliveryZone(DELIVERY_ZONES.lucens.center),
-    "lucens",
-  );
-  assert.deepEqual(
-    resolveDeliveryZone("lausanne", DELIVERY_ZONES.lucens.center),
-    {
-      status: "outside",
-      region: "lausanne",
-      distanceKm: distanceFromDeliveryZone(
-        "lausanne",
-        DELIVERY_ZONES.lucens.center,
-      ),
-      suggestedRegion: "lucens",
-    },
-  );
-  assert.deepEqual(
-    resolveDeliveryZone("lucens", DELIVERY_ZONES.lucens.center),
-    {
+test("les centres de Lausanne, Lucens et une localité intermédiaire sont éligibles", () => {
+  const zone = DELIVERY_ZONES[regionId];
+  const lausanne = zone.anchors.find((anchor) => anchor.id === "lausanne");
+  const lucens = zone.anchors.find((anchor) => anchor.id === "lucens");
+  assert.ok(lausanne);
+  assert.ok(lucens);
+
+  for (const center of [lausanne.center, lucens.center]) {
+    assert.equal(findEligibleDeliveryZone(center), regionId);
+    assert.deepEqual(resolveDeliveryZone(regionId, center), {
       status: "eligible",
-      region: "lucens",
+      region: regionId,
       distanceKm: 0,
-    },
+    });
+  }
+
+  assert.equal(
+    findEligibleDeliveryZone({ latitude: 46.6684, longitude: 6.7973 }),
+    regionId,
   );
 });
 
-test("refuse une adresse située à Genève", () => {
-  const geneva = {
-    latitude: 46.210251,
-    longitude: 6.146667,
+test("une adresse suisse hors de la zone habituelle reste envoyable pour confirmation", () => {
+  const distantAddress = {
+    latitude: 46.2044,
+    longitude: 6.1432,
   };
 
-  assert.equal(findEligibleDeliveryZone(geneva), undefined);
-  assert.deepEqual(resolveDeliveryZone("lausanne", geneva), {
-    status: "outside",
-    region: "lausanne",
-    distanceKm: distanceFromDeliveryZone("lausanne", geneva),
-    suggestedRegion: null,
+  assert.equal(findEligibleDeliveryZone(distantAddress), undefined);
+  assert.deepEqual(resolveDeliveryZone(regionId, distantAddress), {
+    status: "on_request",
+    region: regionId,
+    distanceKm: distanceFromDeliveryZone(regionId, distantAddress),
   });
-  assert.ok(
-    distanceFromDeliveryZone("lausanne", geneva) >
-      DELIVERY_ZONES.lausanne.radiusKm,
-  );
-  assert.ok(
-    distanceFromDeliveryZone("lucens", geneva) >
-      DELIVERY_ZONES.lucens.radiusKm,
-  );
 });
 
-test("affiche Genève sans l’activer comme zone de commande", () => {
-  const geneva = PUBLIC_REGIONS.find((region) => region.id === "geneve");
-
-  assert.deepEqual(geneva, {
-    id: "geneve",
-    label: "Genève",
-    selectionLabel: "Genève",
-    availability: "coming_soon",
-    availabilityLabel: "Contact bientôt disponible",
-  });
-  assert.equal(isDeliveryRegionId("geneve"), false);
-  assert.equal(isDeliveryRegionId("Genève"), false);
+test("le traiteur est disponible dans toute la Suisse sans rayon automatique", () => {
+  assert.equal(SITE_CONFIG.cateringArea.label, "Toute la Suisse");
+  assert.equal(SITE_CONFIG.cateringArea.nationwide, true);
+  assert.deepEqual(SITE_CONFIG.cateringArea.locations, [
+    "Suisse romande",
+    "Suisse alémanique",
+    "Tessin",
+  ]);
+  assert.equal("radiusKm" in SITE_CONFIG.cateringArea, false);
+  assert.match(SITE_CONFIG.cateringArea.detail, /devis personnalisé/i);
 });

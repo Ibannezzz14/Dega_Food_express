@@ -32,6 +32,15 @@ test("fusionne les variantes d’écriture d’une même localité", () => {
 
 test("ne conserve que le NPA et la localité pour une livraison", () => {
   assert.deepEqual(
+    getStatisticsLocation("delivery", "1522", "  Lucens  "),
+    {
+      postalCode: "1522",
+      cityKey: "lucens",
+      cityLabel: "Lucens",
+    },
+  );
+  assert.equal(getStatisticsLocation("delivery", "12", "Lucens"), null);
+  assert.deepEqual(
     getStatisticsLocation("delivery", "1003", "  Lausanne  "),
     {
       postalCode: "1003",
@@ -39,7 +48,6 @@ test("ne conserve que le NPA et la localité pour une livraison", () => {
       cityLabel: "Lausanne",
     },
   );
-  assert.equal(getStatisticsLocation("delivery", "12", "Lausanne"), null);
 });
 
 test("ne conserve aucune localisation client pour un retrait", () => {

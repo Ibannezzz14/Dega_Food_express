@@ -156,6 +156,12 @@ La même suite est lancée automatiquement par
 
 ## Publier sur GitHub
 
+Le dossier contient plus de 100 fichiers : ne le glissez pas entièrement dans
+l’interface web de GitHub, qui limite chaque envoi à 100 fichiers. Utilisez Git
+avec les commandes ci-dessous, ou GitHub Desktop. Initialisez bien le dépôt
+depuis ce dossier afin que `package.json`, `app/` et `public/` restent à la
+racine du dépôt.
+
 Créer un dépôt GitHub vide, puis exécuter depuis ce dossier :
 
 ```bash

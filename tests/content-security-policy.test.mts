@@ -9,6 +9,7 @@ test("restreint les ressources des pages publiques", () => {
   assert.match(policy, /script-src 'self' 'unsafe-inline'/);
   assert.match(policy, /script-src-attr 'none'/);
   assert.match(policy, /connect-src 'self'/);
+  assert.match(policy, /img-src 'self' data: blob:/);
   assert.doesNotMatch(policy, /'unsafe-eval'/);
 });
 

@@ -16,13 +16,13 @@ test("valide une adresse de livraison avec rue, numéro, NPA et localité", () =
   const address = normalizeDeliveryAddress({
     streetAddress: "  Rue de Bourg 10 ",
     postalCode: " 1003 ",
-    city: " Lausanne ",
+    city: " Lucens ",
   });
 
   assert.deepEqual(address, {
     streetAddress: "Rue de Bourg 10",
     postalCode: "1003",
-    city: "Lausanne",
+    city: "Lucens",
   });
   assert.equal(getDeliveryAddressIssue(address), null);
 });
@@ -32,7 +32,7 @@ test("identifie précisément le premier champ d’adresse invalide", () => {
     getDeliveryAddressIssue({
       streetAddress: "Rue de Bourg",
       postalCode: "1003",
-      city: "Lausanne",
+      city: "Lucens",
     }),
     "street_address",
   );
@@ -40,7 +40,7 @@ test("identifie précisément le premier champ d’adresse invalide", () => {
     getDeliveryAddressIssue({
       streetAddress: "Rue de Bourg 10",
       postalCode: "100",
-      city: "Lausanne",
+      city: "Lucens",
     }),
     "postal_code",
   );
