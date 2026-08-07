@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_CONFIG } from "@/config/site-config";
 
 type PageMetadataOptions = {
   title: string;
@@ -35,7 +36,7 @@ export function createPageMetadata({
       title,
       description,
       url: path,
-      siteName: "Dega Food Express",
+      siteName: SITE_CONFIG.brand.name,
       locale: "fr_CH",
       type: "website",
       images: [image],

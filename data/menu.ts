@@ -10,7 +10,7 @@ export type CategoryId = (typeof categories)[number]["id"];
 type MenuItemDetails = {
   id: string;
   name: string;
-  price: number;
+  price: number | null;
   category: CategoryId;
   section?: "sans-alcool";
   volume?: string;
@@ -33,14 +33,39 @@ type PendingMenuItem = MenuItemDetails & {
 
 export type MenuItem = VerifiedMenuItem | PendingMenuItem;
 
+export type OrderableMenuItem = MenuItem & { price: number };
+
+export function isMenuItemOrderable(
+  item: MenuItem,
+): item is OrderableMenuItem {
+  return item.price !== null;
+}
+
 export const menuItems: readonly MenuItem[] = [
   {
-    id: "beignets",
-    name: "Beignets",
+    id: "Beignets",
+    name: "Dum-Dum",
     price: 5,
     category: "entrees",
     image: "/images/menu/beignets-proprietaire.webp",
     imageAlt: "Beignets africains dorés disposés dans un grand plat",
+  },
+  {
+    id: "pastel",
+    name: "Pastel",
+    price: 5,
+    category: "entrees",
+    image: "/images/menu/pastel.webp",
+    imageAlt: "Pastels frits dorés disposés dans un panier",
+  },
+  {
+    id: "aller-retour",
+    name: "Aller-retour",
+    price: 5,
+    category: "entrees",
+    image: "/images/menu/aller-retour.webp",
+    imageAlt:
+      "Beignets ivoiriens aller-retour dorés servis avec des vermicelles",
   },
   {
     id: "attieke-tilapia",
@@ -103,6 +128,14 @@ export const menuItems: readonly MenuItem[] = [
     image: "/images/menu/placali-sauce-kope-proprietaire.webp",
     imageAlt:
       "Deux portions de placali ivoirien accompagnées d’une sauce kopé",
+  },
+  {
+    id: "Foutu_sauceGraine",
+    name: "Foutou sauce graine",
+    price: 30,
+    category: "plats",
+    image: "/images/menu/foutou-sauce-graine.webp",
+    imageAlt: "Foutou banane servi avec une sauce graine et de la viande",
   },
   {
     id: "deguee",

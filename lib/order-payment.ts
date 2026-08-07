@@ -3,14 +3,11 @@ export const DELIVERY_PAYMENT_METHODS = [
     id: "cash",
     label: "Espèces à la livraison",
     shortLabel: "Espèces",
-    description: "Réglez directement au livreur. Montant exact apprécié.",
   },
   {
     id: "twint",
-    label: "TWINT au livreur",
+    label: "TWINT à la livraison",
     shortLabel: "TWINT",
-    description:
-      "Scannez le QR code présenté par le livreur, qui vérifie le paiement en direct.",
   },
 ] as const;
 

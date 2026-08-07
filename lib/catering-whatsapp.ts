@@ -1,5 +1,4 @@
 export type CateringRequest = {
-  contactArea: string;
   firstName: string;
   lastName: string;
   phone: string;
@@ -29,7 +28,6 @@ export function buildCateringWhatsAppMessage(request: CateringRequest) {
     "",
     "Je souhaite demander un devis pour une prestation traiteur.",
     "",
-    `Contact souhaité : ${request.contactArea}`,
     `Prénom et nom : ${request.firstName} ${request.lastName}`,
     `Téléphone : ${request.phone}`,
     ...(request.email ? [`E-mail : ${request.email}`] : []),
