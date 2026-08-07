@@ -18,6 +18,8 @@ export const metadata: Metadata = createPageMetadata({
 export default async function ReviewsPage() {
   const result = await getPublishedCustomerReviews(24);
   const testimonials = result.reviews;
+  const hasTestimonials =
+    result.status === "ready" && testimonials.length > 0;
 
   return (
     <main id="contenu" className={styles.page} tabIndex={-1}>
@@ -34,21 +36,22 @@ export default async function ReviewsPage() {
           <p className={styles.eyebrow}>Instagram</p>
           <h1 id="reviews-page-title">Témoignages de nos clients.</h1>
           <p className={styles.heroText}>
-            Des messages reçus directement sur Instagram.
+            {hasTestimonials
+              ? "Des messages reçus directement sur Instagram."
+              : "Les témoignages arriveront bientôt."}
           </p>
         </div>
       </section>
 
-      <section
-        className={styles.testimonialsSection}
-        aria-labelledby="testimonials-title"
-      >
-        <div className={styles.sectionInner}>
-          <h2 className="sr-only" id="testimonials-title">
-            Témoignages publiés
-          </h2>
-
-          {testimonials.length > 0 ? (
+      {hasTestimonials ? (
+        <section
+          className={styles.testimonialsSection}
+          aria-labelledby="testimonials-title"
+        >
+          <div className={styles.sectionInner}>
+            <h2 className="sr-only" id="testimonials-title">
+              Témoignages publiés
+            </h2>
             <ol className={styles.reviewGrid} role="list">
               {testimonials.map((review) => (
                 <li key={review.id}>
@@ -56,17 +59,9 @@ export default async function ReviewsPage() {
                 </li>
               ))}
             </ol>
-          ) : (
-            <div className={styles.emptyState}>
-              <p>
-                {result.status === "ready"
-                  ? "Aucun témoignage publié pour le moment."
-                  : "Les témoignages sont momentanément indisponibles."}
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

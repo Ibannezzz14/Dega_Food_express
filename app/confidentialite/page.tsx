@@ -49,7 +49,7 @@ export default function PrivacyPage() {
           <ul>
             <li>
               <a
-                href="https://www.geo.admin.ch/fr/geo-admin-ch-2"
+                href="https://www.geo.admin.ch/fr/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

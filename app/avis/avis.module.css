@@ -91,22 +91,6 @@
   min-width: 0;
 }
 
-.emptyState {
-  display: grid;
-  min-height: 10rem;
-  place-items: center;
-  margin: 0;
-  padding: 1.5rem;
-  border: 1px dashed #b9c6c0;
-  border-radius: 0.75rem;
-  color: #60736c;
-  text-align: center;
-}
-
-.emptyState p {
-  margin: 0;
-}
-
 @media (max-width: 62rem) {
   .reviewGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
