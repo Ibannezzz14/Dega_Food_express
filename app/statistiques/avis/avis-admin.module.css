@@ -1,0 +1,396 @@
+.page {
+  min-height: calc(100vh - 78px);
+  background: var(--cassava-50);
+  color: var(--ink);
+}
+
+.hero {
+  border-bottom: 1px solid rgb(221 191 132 / 34%);
+  background: var(--forest-950);
+  color: var(--cassava-50);
+}
+
+.heroInner {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  width: min(76rem, calc(100% - 4rem));
+  margin: 0 auto;
+  padding: 3.4rem 0 3rem;
+}
+
+.eyebrow,
+.sectionLabel {
+  margin: 0;
+  color: var(--plantain-300);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.adminNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.6rem;
+}
+
+.adminNav a {
+  display: inline-flex;
+  min-height: 2.8rem;
+  align-items: center;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgb(245 245 240 / 28%);
+  border-radius: 0.4rem;
+  color: var(--cassava-50);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.adminNav a:hover {
+  border-color: var(--plantain-300);
+}
+
+.content {
+  display: grid;
+  gap: 3.5rem;
+  width: min(76rem, calc(100% - 4rem));
+  margin: 0 auto;
+  padding: 2rem 0 6rem;
+}
+
+.successMessage,
+.errorMessage {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid;
+  border-radius: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.successMessage {
+  border-color: #8eaea1;
+  background: #e6f2ec;
+  color: #1e5948;
+}
+
+.errorMessage {
+  border-color: #d0a293;
+  background: #fff0eb;
+  color: #7b2d22;
+}
+
+.configurationState,
+.emptyState {
+  padding: clamp(2rem, 6vw, 4rem);
+  border: 1px dashed #b9c6c0;
+  border-radius: 0.7rem;
+  background: #fff;
+  text-align: center;
+}
+
+.configurationState h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+
+.configurationState p {
+  margin: 0.7rem 0 0;
+  color: #60736c;
+}
+
+.createPanel,
+.adminReviewCard {
+  border: 1px solid #ced7d2;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.createPanel {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+.sectionLabel {
+  color: var(--chili-600);
+}
+
+.sectionHeading h2 {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.reviewCount {
+  color: #60736c;
+  font-size: 0.84rem;
+}
+
+.reviewForm {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+.field > span,
+.field > label:first-child {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #9eafa8;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+.field input[type="file"] {
+  padding: 0.55rem;
+}
+
+.field textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.field small {
+  color: #687b74;
+  font-size: 0.7rem;
+}
+
+.messageField {
+  grid-column: 1 / -1;
+}
+
+.formFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e5e2;
+}
+
+.checkOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.2rem;
+}
+
+.checkOptions label,
+.removeAvatar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.checkOptions input,
+.removeAvatar input {
+  width: 1rem;
+  min-height: 1rem;
+  margin: 0;
+  accent-color: var(--forest-800);
+}
+
+.primaryButton,
+.secondaryButton,
+.deleteButton,
+.orderControls button {
+  min-height: 2.8rem;
+  border-radius: 0.4rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 0.65rem 1rem;
+}
+
+.primaryButton {
+  border: 1px solid var(--forest-900);
+  background: var(--forest-900);
+  color: var(--cassava-50);
+}
+
+.secondaryButton {
+  border: 1px solid var(--plantain-400);
+  background: var(--plantain-400);
+  color: var(--forest-950);
+}
+
+.adminReviewList {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adminReviewCard {
+  padding: clamp(1.2rem, 3vw, 1.8rem);
+}
+
+.cardToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e5e2;
+}
+
+.cardIdentity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardIdentity > img,
+.cardIdentity > span {
+  display: grid;
+  flex: 0 0 auto;
+  width: 3.25rem;
+  height: 3.25rem;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid #bdc9c4;
+  border-radius: 50%;
+  background: #e8eee9;
+  color: var(--forest-800);
+  font-weight: 700;
+  object-fit: cover;
+}
+
+.cardIdentity > div {
+  display: grid;
+}
+
+.cardIdentity strong {
+  overflow-wrap: anywhere;
+}
+
+.cardIdentity small {
+  color: #61746d;
+}
+
+.orderControls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.orderControls button {
+  width: 2.8rem;
+  padding: 0;
+  border: 1px solid #b7c3bd;
+  background: #fff;
+  color: var(--forest-900);
+  font-size: 1.05rem;
+}
+
+.orderControls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.deleteForm {
+  display: flex;
+  justify-content: end;
+  margin-top: 1rem;
+}
+
+.deleteButton {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #c99687;
+  background: transparent;
+  color: #873426;
+}
+
+.deleteButton:hover {
+  background: #fff0eb;
+}
+
+@media (max-width: 48rem) {
+  .heroInner {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .adminNav {
+    width: 100%;
+    justify-content: start;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .messageField {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 38rem) {
+  .heroInner,
+  .content {
+    width: calc(100% - 2rem);
+  }
+
+  .formFooter,
+  .cardToolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .orderControls {
+    align-self: end;
+  }
+}
