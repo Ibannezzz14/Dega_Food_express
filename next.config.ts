@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
+import { createContentSecurityPolicy } from "./lib/content-security-policy";
 
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
-    value: "base-uri 'self'; frame-ancestors 'none'; object-src 'none'",
+    value: createContentSecurityPolicy({
+      development: process.env.NODE_ENV === "development",
+    }),
   },
   {
     key: "Cross-Origin-Opener-Policy",
@@ -22,6 +25,10 @@ const securityHeaders = [
     value: "strict-origin-when-cross-origin",
   },
   {
+    key: "Strict-Transport-Security",
+    value: "max-age=31536000",
+  },
+  {
     key: "X-Content-Type-Options",
     value: "nosniff",
   },
@@ -33,6 +40,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "64kb",
+    },
+  },
   async redirects() {
     return [
       {

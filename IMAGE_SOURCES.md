@@ -77,9 +77,9 @@ par les visuels fournis :
   par une photographie réelle ;
 Le détail de chaque décision se trouve dans `MENU_IMAGE_AUDIT.md`.
 
-## Photos à demander au propriétaire
+## Visuels de boissons archivés
 
-Une photographie authentique du conditionnement réellement vendu reste à
-fournir pour Guinness, Super Bock, Primitivo Merlot et Œil-de-Perdrix. Elle
-doit être nette, lumineuse, sans personne ni main, et autorisée pour un usage
-commercial.
+L’eau Evian, Guinness, Super Bock, Primitivo Merlot et Œil-de-Perdrix ont été
+retirés de la carte le 31 juillet 2026. Leurs fichiers restent archivés avec
+leur provenance afin de conserver l’historique du projet, mais ils ne sont plus
+chargés ni affichés dans la carte.
