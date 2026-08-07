@@ -1,0 +1,190 @@
+export const categories = [
+  { id: "entrees", label: "Entrées", shortLabel: "Entrées" },
+  { id: "plats", label: "Plats", shortLabel: "Plats" },
+  { id: "desserts", label: "Desserts", shortLabel: "Desserts" },
+  { id: "boissons", label: "Boissons", shortLabel: "Boissons" },
+] as const;
+
+export type CategoryId = (typeof categories)[number]["id"];
+
+type MenuItemDetails = {
+  id: string;
+  name: string;
+  price: number | null;
+  category: CategoryId;
+  section?: "sans-alcool";
+  volume?: string;
+  packaging?: string;
+};
+
+type VerifiedMenuItem = MenuItemDetails & {
+  imageStatus?: "verified";
+  image: string;
+  imageAlt: string;
+  imageFit?: "cover" | "contain";
+};
+
+type PendingMenuItem = MenuItemDetails & {
+  imageStatus: "pending";
+  image?: never;
+  imageAlt?: never;
+  imageFit?: never;
+};
+
+export type MenuItem = VerifiedMenuItem | PendingMenuItem;
+
+export type OrderableMenuItem = MenuItem & { price: number };
+
+export function isMenuItemOrderable(
+  item: MenuItem,
+): item is OrderableMenuItem {
+  return item.price !== null;
+}
+
+export const menuItems: readonly MenuItem[] = [
+  {
+    id: "Beignets",
+    name: "Dum-Dum",
+    price: 5,
+    category: "entrees",
+    image: "/images/menu/beignets-proprietaire.webp",
+    imageAlt: "Beignets africains dorés disposés dans un grand plat",
+  },
+  {
+    id: "pastel",
+    name: "Pastel",
+    price: 5,
+    category: "entrees",
+    image: "/images/menu/pastel.webp",
+    imageAlt: "Pastels frits dorés disposés dans un panier",
+  },
+  {
+    id: "aller-retour",
+    name: "Aller-retour",
+    price: 5,
+    category: "entrees",
+    image: "/images/menu/aller-retour.webp",
+    imageAlt:
+      "Beignets ivoiriens aller-retour dorés servis avec des vermicelles",
+  },
+  {
+    id: "attieke-tilapia",
+    name: "Attiéké tilapia",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/attieke-tilapia-proprietaire.webp",
+    imageAlt:
+      "Tilapia braisé entier servi avec de l’attiéké et des condiments",
+  },
+  {
+    id: "attieke-poulet-choukouya",
+    name: "Attiéké poulet choukouya",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/attieke-poulet-choukouya-proprietaire.webp",
+    imageAlt:
+      "Attiéké servi avec du poulet choukouya, de l’alloco et des crudités",
+  },
+  {
+    id: "attieke-agneau-choukouya",
+    name: "Attiéké agneau choukouya",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/attieke-agneau-choukouya-proprietaire.webp",
+    imageAlt:
+      "Attiéké servi avec de l’agneau choukouya, une sauce et des crudités",
+  },
+  {
+    id: "alloco-tilapia",
+    name: "Alloco poisson braisé",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/alloco-poisson-braise-proprietaire.webp",
+    imageAlt: "Poisson braisé servi avec de l’alloco et des crudités",
+  },
+  {
+    id: "alloco-poulet-choukouya",
+    name: "Alloco poulet choukouya",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/alloco-poulet-choukouya-proprietaire.webp",
+    imageAlt:
+      "Alloco servi avec du poulet choukouya aux oignons et des crudités",
+  },
+  {
+    id: "alloco-agneau-choukouya",
+    name: "Alloco agneau choukouya",
+    price: 25,
+    category: "plats",
+    image: "/images/menu/alloco-agneau-choukouya-proprietaire.webp",
+    imageAlt:
+      "Alloco servi avec de l’agneau choukouya, de l’attiéké et des crudités",
+  },
+  {
+    id: "placali-sauce-kope",
+    name: "Placali sauce kopé",
+    price: 30,
+    category: "plats",
+    image: "/images/menu/placali-sauce-kope-proprietaire.webp",
+    imageAlt:
+      "Deux portions de placali ivoirien accompagnées d’une sauce kopé",
+  },
+  {
+    id: "Foutu_sauceGraine",
+    name: "Foutou sauce graine",
+    price: 30,
+    category: "plats",
+    image: "/images/menu/foutou-sauce-graine.webp",
+    imageAlt: "Foutou banane servi avec une sauce graine et de la viande",
+  },
+  {
+    id: "deguee",
+    name: "Dégué",
+    price: 6,
+    category: "desserts",
+    image: "/images/menu/deguee-proprietaire.webp",
+    imageAlt: "Coupe de dégué au lait fermenté et aux grains de mil",
+  },
+  {
+    id: "bissap-33",
+    name: "Bissap",
+    price: 5,
+    category: "boissons",
+    image: "/images/menu/drinks/bissap-pexels.webp",
+    imageAlt: "Verre de bissap frais servi avec une tranche de citron vert",
+    section: "sans-alcool",
+    volume: "33 cl",
+  },
+  {
+    id: "bissap-1l",
+    name: "Bissap",
+    price: 14,
+    category: "boissons",
+    image: "/images/menu/drinks/bissap-pexels.webp",
+    imageAlt: "Verre de bissap frais servi avec une tranche de citron vert",
+    section: "sans-alcool",
+    volume: "1 L",
+  },
+  {
+    id: "gingembre-33",
+    name: "Gingembre",
+    price: 5,
+    category: "boissons",
+    image: "/images/menu/drinks/gingembre-pexels.webp",
+    imageAlt: "Boisson fraîche au gingembre servie dans un verre",
+    section: "sans-alcool",
+    volume: "33 cl",
+  },
+  {
+    id: "gingembre-1l",
+    name: "Gingembre",
+    price: 14,
+    category: "boissons",
+    image: "/images/menu/drinks/gingembre-pexels.webp",
+    imageAlt: "Boisson fraîche au gingembre servie dans un verre",
+    section: "sans-alcool",
+    volume: "1 L",
+  },
+];
+
+export const menuById = new Map(menuItems.map((item) => [item.id, item]));
