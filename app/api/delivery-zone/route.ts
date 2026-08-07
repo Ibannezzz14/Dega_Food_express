@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
+import { isDeliveryRegionId } from "@/data/delivery-zones";
 import {
-  DELIVERY_ZONES,
-  type RegionId,
-} from "@/data/delivery-zones";
-import { readJsonObject } from "@/lib/read-json-object";
+  getDeliveryAddressIssue,
+  normalizeDeliveryAddress,
+} from "@/lib/delivery-address";
+import {
+  hasJsonContentType,
+  readJsonObject,
+} from "@/lib/read-json-object";
 import { validateDeliveryZone } from "@/lib/validate-delivery-zone";
 
 type DeliveryZoneRequest = {
@@ -15,7 +19,7 @@ type DeliveryZoneRequest = {
 
 function noStoreJson(
   body: { status: "not_found" },
-  status: 400 | 413,
+  status: 400 | 413 | 415,
 ) {
   return NextResponse.json(body, {
     status,
@@ -26,6 +30,10 @@ function noStoreJson(
 }
 
 export async function POST(request: Request) {
+  if (!hasJsonContentType(request)) {
+    return noStoreJson({ status: "not_found" }, 415);
+  }
+
   const body = await readJsonObject(request);
   if (!body.ok) {
     return noStoreJson(
@@ -36,27 +44,21 @@ export async function POST(request: Request) {
   const payload: DeliveryZoneRequest = body.value;
 
   const region = typeof payload.region === "string" ? payload.region : "";
-  const streetAddress =
-    typeof payload.streetAddress === "string"
-      ? payload.streetAddress.trim()
-      : "";
-  const postalCode =
-    typeof payload.postalCode === "string" ? payload.postalCode.trim() : "";
-  const city = typeof payload.city === "string" ? payload.city.trim() : "";
+  const { streetAddress, postalCode, city } = normalizeDeliveryAddress({
+    streetAddress: payload.streetAddress,
+    postalCode: payload.postalCode,
+    city: payload.city,
+  });
 
   if (
-    !(region in DELIVERY_ZONES) ||
-    streetAddress.length < 5 ||
-    streetAddress.length > 120 ||
-    !/^\d{4}$/.test(postalCode) ||
-    city.length < 2 ||
-    city.length > 80
+    !isDeliveryRegionId(region) ||
+    getDeliveryAddressIssue({ streetAddress, postalCode, city })
   ) {
     return noStoreJson({ status: "not_found" }, 400);
   }
 
   const result = await validateDeliveryZone(
-    region as RegionId,
+    region,
     streetAddress,
     postalCode,
     city,

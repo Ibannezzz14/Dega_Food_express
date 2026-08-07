@@ -1,64 +1,18 @@
 import "server-only";
 
 import {
-  DELIVERY_ZONES,
-  distanceFromDeliveryZone,
-  findEligibleDeliveryZone,
+  resolveDeliveryZone,
   type DeliveryZoneResult,
   type RegionId,
 } from "@/data/delivery-zones";
-
-type GeoAdminResult = {
-  attrs?: {
-    detail?: string;
-    label?: string;
-    lat?: number;
-    lon?: number;
-    origin?: string;
-  };
-};
+import {
+  findMatchingGeoAdminAddress,
+  type GeoAdminAddressResult,
+} from "@/lib/address-suggestions";
 
 type GeoAdminResponse = {
-  results?: GeoAdminResult[];
+  results?: GeoAdminAddressResult[];
 };
-
-function normalizeLocality(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLocaleLowerCase("fr-CH")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-function matchingCoordinates(
-  results: GeoAdminResult[],
-  postalCode: string,
-  city: string,
-) {
-  const normalizedPostalLocality = normalizeLocality(`${postalCode} ${city}`);
-
-  for (const result of results) {
-    const attrs = result.attrs;
-    if (
-      attrs?.origin !== "address" ||
-      typeof attrs.lat !== "number" ||
-      typeof attrs.lon !== "number" ||
-      typeof attrs.detail !== "string"
-    ) {
-      continue;
-    }
-
-    if (normalizeLocality(attrs.detail).includes(normalizedPostalLocality)) {
-      return {
-        latitude: attrs.lat,
-        longitude: attrs.lon,
-      };
-    }
-  }
-
-  return null;
-}
 
 export async function validateDeliveryZone(
   region: RegionId,
@@ -92,31 +46,20 @@ export async function validateDeliveryZone(
     }
 
     const payload = (await response.json()) as GeoAdminResponse;
-    const coordinates = matchingCoordinates(
+    const matchingAddress = findMatchingGeoAdminAddress(
       Array.isArray(payload.results) ? payload.results : [],
-      postalCode,
-      city,
+      {
+        streetAddress,
+        postalCode,
+        city,
+      },
     );
 
-    if (!coordinates) {
+    if (!matchingAddress) {
       return { status: "not_found" };
     }
 
-    const distanceKm = distanceFromDeliveryZone(region, coordinates);
-    if (distanceKm <= DELIVERY_ZONES[region].radiusKm) {
-      return {
-        status: "eligible",
-        region,
-        distanceKm,
-      };
-    }
-
-    return {
-      status: "outside",
-      region,
-      distanceKm,
-      suggestedRegion: findEligibleDeliveryZone(coordinates) ?? null,
-    };
+    return resolveDeliveryZone(region, matchingAddress.coordinates);
   } catch {
     return { status: "service_error" };
   }

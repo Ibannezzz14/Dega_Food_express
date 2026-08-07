@@ -178,6 +178,17 @@
   background: rgb(24 82 71 / 38%);
 }
 
+.contactCardUnavailable {
+  grid-template-columns: auto minmax(0, 1fr);
+  border-style: dashed;
+  background: rgb(245 245 240 / 2%);
+}
+
+.contactCardUnavailable:hover {
+  border-color: rgb(245 245 240 / 18%);
+  background: rgb(245 245 240 / 2%);
+}
+
 .phoneIcon {
   display: inline-grid;
   width: 28px;
@@ -215,6 +226,13 @@
   letter-spacing: 0.01em;
   line-height: 1.35;
   white-space: nowrap;
+}
+
+.contactSoon {
+  color: #d7dfdb;
+  font-size: 0.85rem;
+  font-weight: 620;
+  line-height: 1.3;
 }
 
 .contactArrow {

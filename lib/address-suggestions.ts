@@ -44,6 +44,19 @@ export type GeoAdminAddressResult = {
   };
 };
 
+function normalizeAddressIdentity(value: string) {
+  return value
+    .normalize("NFD")
+    .toLocaleLowerCase("fr-CH")
+    .replace(/œ/g, "oe")
+    .replace(/æ/g, "ae")
+    .replace(/ß/g, "ss")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
 const LOWERCASE_LOCALITY_WORDS = new Set([
   "aux",
   "de",
@@ -193,6 +206,40 @@ export function parseGeoAdminAddress(
       longitude: attrs.lon,
     },
   };
+}
+
+export function findMatchingGeoAdminAddress(
+  results: GeoAdminAddressResult[],
+  expectedAddress: AddressFormValue,
+) {
+  const expectedStreetAddress = normalizeAddressIdentity(
+    expectedAddress.streetAddress,
+  );
+  const expectedPostalCode = expectedAddress.postalCode.trim();
+  const expectedCity = normalizeAddressIdentity(expectedAddress.city);
+
+  if (
+    expectedStreetAddress.length < 3 ||
+    !/^\d{4}$/.test(expectedPostalCode) ||
+    expectedCity.length < 2
+  ) {
+    return null;
+  }
+
+  for (const result of results) {
+    const suggestion = parseGeoAdminAddress(result);
+    if (
+      suggestion &&
+      normalizeAddressIdentity(suggestion.streetAddress) ===
+        expectedStreetAddress &&
+      suggestion.postalCode === expectedPostalCode &&
+      normalizeAddressIdentity(suggestion.city) === expectedCity
+    ) {
+      return suggestion;
+    }
+  }
+
+  return null;
 }
 
 export function parseGeoAdminPostalLocality(

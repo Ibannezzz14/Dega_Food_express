@@ -12,6 +12,10 @@ const gallerySource = readFileSync(
   resolve(projectRoot, "app/gallery-section.tsx"),
   "utf8",
 );
+const heroStyleSource = readFileSync(
+  resolve(projectRoot, "app/home-hero.module.css"),
+  "utf8",
+);
 const homepageSources = [
   heroSource,
   gallerySource,
@@ -35,6 +39,23 @@ test("les actions du Hero mènent vers des pages existantes", () => {
   assert.match(
     heroSource,
     /className=\{styles\.secondaryAction\} href="\/presentation"/,
+  );
+});
+
+test("le Hero affiche aussi les régions qui ne sont pas encore commandables", () => {
+  assert.ok(heroSource.includes("PUBLIC_REGIONS.map"));
+  assert.ok(heroSource.includes("regionOption.availabilityLabel"));
+  assert.ok(heroSource.includes("disabled"));
+});
+
+test("le survol ne masque pas le libellé de la zone sélectionnée", () => {
+  assert.ok(
+    heroStyleSource.includes(
+      "button:not(:disabled):not(.regionActive):hover",
+    ),
+  );
+  assert.ok(
+    !heroStyleSource.includes("button:not(:disabled):hover {"),
   );
 });
 

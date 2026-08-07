@@ -12,7 +12,7 @@ type MenuItemDetails = {
   name: string;
   price: number;
   category: CategoryId;
-  section?: "sans-alcool" | "bieres" | "vins";
+  section?: "sans-alcool";
   volume?: string;
   packaging?: string;
 };
@@ -113,17 +113,6 @@ export const menuItems: readonly MenuItem[] = [
     imageAlt: "Coupe de dégué au lait fermenté et aux grains de mil",
   },
   {
-    id: "eau-plate",
-    name: "Eau Evian",
-    price: 2.5,
-    category: "boissons",
-    image: "/images/menu/drinks/eau-evian-33cl-officiel.webp",
-    imageAlt: "Bouteille en verre d’eau minérale Evian, format 33 cl",
-    imageFit: "contain",
-    section: "sans-alcool",
-    volume: "33 cl",
-  },
-  {
     id: "bissap-33",
     name: "Bissap",
     price: 5,
@@ -162,52 +151,6 @@ export const menuItems: readonly MenuItem[] = [
     imageAlt: "Boisson fraîche au gingembre servie dans un verre",
     section: "sans-alcool",
     volume: "1 L",
-  },
-  {
-    id: "guinness",
-    name: "Guinness",
-    price: 6,
-    category: "boissons",
-    image: "/images/menu/drinks/guinness-33cl-proprietaire.webp",
-    imageAlt: "Canette noire de Guinness Draught, format 33 cl",
-    imageFit: "contain",
-    section: "bieres",
-    volume: "33 cl",
-    packaging: "canette",
-  },
-  {
-    id: "super-bock",
-    name: "Super Bock",
-    price: 5,
-    category: "boissons",
-    image: "/images/menu/drinks/super-bock-33cl-proprietaire.webp",
-    imageAlt: "Bouteille de bière Super Bock, format 33 cl",
-    imageFit: "contain",
-    section: "bieres",
-    volume: "33 cl",
-    packaging: "bouteille",
-  },
-  {
-    id: "vin-rouge-primitivo-merlot",
-    name: "Primitivo Merlot",
-    price: 25,
-    category: "boissons",
-    image: "/images/menu/drinks/primitivo-merlot-proprietaire.webp",
-    imageAlt: "Bouteille de vin rouge Primitivo Merlot",
-    imageFit: "contain",
-    section: "vins",
-    packaging: "bouteille",
-  },
-  {
-    id: "vin-rose-oeil-perdrix",
-    name: "Œil-de-Perdrix",
-    price: 25,
-    category: "boissons",
-    image: "/images/menu/drinks/oeil-de-perdrix-proprietaire.webp",
-    imageAlt: "Bouteille de vin rosé Œil-de-Perdrix",
-    imageFit: "contain",
-    section: "vins",
-    packaging: "bouteille",
   },
 ];
 

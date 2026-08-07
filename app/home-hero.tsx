@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRightIcon, CheckIcon, MapPinIcon } from "@/components/icons";
-import { DELIVERY_ZONES } from "@/data/delivery-zones";
+import { PUBLIC_REGIONS } from "@/data/delivery-zones";
 import styles from "./home-hero.module.css";
 import { useOrderSession } from "./order-session";
 
@@ -52,26 +52,40 @@ export default function HomeHero() {
               Zone de commande <span className="sr-only">(obligatoire)</span>
             </legend>
             <div className={styles.regionOptions}>
-              <button
-                type="button"
-                className={region === "lausanne" ? styles.regionActive : ""}
-                aria-pressed={region === "lausanne"}
-                onClick={() => setRegion("lausanne")}
-              >
-                <MapPinIcon />
-                <span>{DELIVERY_ZONES.lausanne.selectionLabel}</span>
-                {region === "lausanne" && <CheckIcon />}
-              </button>
-              <button
-                type="button"
-                className={region === "lucens" ? styles.regionActive : ""}
-                aria-pressed={region === "lucens"}
-                onClick={() => setRegion("lucens")}
-              >
-                <MapPinIcon />
-                <span>{DELIVERY_ZONES.lucens.selectionLabel}</span>
-                {region === "lucens" && <CheckIcon />}
-              </button>
+              {PUBLIC_REGIONS.map((regionOption) => {
+                if (regionOption.availability === "coming_soon") {
+                  return (
+                    <button
+                      type="button"
+                      className={styles.regionUnavailable}
+                      key={regionOption.id}
+                      disabled
+                    >
+                      <MapPinIcon />
+                      <span>
+                        <strong>{regionOption.selectionLabel}</strong>
+                        <small>{regionOption.availabilityLabel}</small>
+                      </span>
+                    </button>
+                  );
+                }
+
+                const isActive = region === regionOption.id;
+
+                return (
+                  <button
+                    type="button"
+                    className={isActive ? styles.regionActive : ""}
+                    key={regionOption.id}
+                    aria-pressed={isActive}
+                    onClick={() => setRegion(regionOption.id)}
+                  >
+                    <MapPinIcon />
+                    <span>{regionOption.selectionLabel}</span>
+                    {isActive && <CheckIcon />}
+                  </button>
+                );
+              })}
             </div>
           </fieldset>
 

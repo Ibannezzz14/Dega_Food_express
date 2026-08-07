@@ -3,9 +3,10 @@ import Link from "next/link";
 import {
   ArrowRightIcon,
   InstagramIcon,
+  MapPinIcon,
   PhoneIcon,
 } from "@/components/icons";
-import { CONTACTS, INSTAGRAM } from "@/data/contact";
+import { CONTACT_DIRECTORY, INSTAGRAM } from "@/data/contact";
 import styles from "./site-footer.module.css";
 
 type FooterNavigationItem = {
@@ -45,7 +46,7 @@ export default function SiteFooter() {
               </div>
             </div>
             <p className={styles.brandDescription}>
-              Cuisine ivoirienne à Lausanne & Lucens.
+              Cuisine ivoirienne à Lausanne, Lucens et bientôt Genève.
             </p>
             <Link className={styles.primaryAction} href="/carte">
               Voir le menu
@@ -72,28 +73,49 @@ export default function SiteFooter() {
             aria-labelledby="footer-contact-title"
           >
             <div className={styles.contactHeading}>
-              <h2 id="footer-contact-title">Commandes par téléphone</h2>
+              <h2 id="footer-contact-title">Contacts par région</h2>
             </div>
             <address className={styles.contactCards}>
-              {CONTACTS.map((contact) => (
-                <a
-                  className={styles.contactCard}
-                  href={contact.phoneHref}
-                  key={contact.phoneHref}
-                  aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
-                >
-                  <span className={styles.phoneIcon}>
-                    <PhoneIcon />
-                  </span>
-                  <span className={styles.contactDetails}>
-                    <span className={styles.contactArea}>{contact.area}</span>
-                    <span className={styles.contactNumber}>
-                      {contact.displayPhone}
+              {CONTACT_DIRECTORY.map((contact) => {
+                if (contact.availability === "coming_soon") {
+                  return (
+                    <div
+                      className={`${styles.contactCard} ${styles.contactCardUnavailable}`}
+                      key={contact.id}
+                    >
+                      <span className={styles.phoneIcon}>
+                        <MapPinIcon />
+                      </span>
+                      <span className={styles.contactDetails}>
+                        <span className={styles.contactArea}>{contact.area}</span>
+                        <span className={styles.contactSoon}>
+                          {contact.availabilityLabel}
+                        </span>
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <a
+                    className={styles.contactCard}
+                    href={contact.phoneHref}
+                    key={contact.id}
+                    aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
+                  >
+                    <span className={styles.phoneIcon}>
+                      <PhoneIcon />
                     </span>
-                  </span>
-                  <ArrowRightIcon className={styles.contactArrow} />
-                </a>
-              ))}
+                    <span className={styles.contactDetails}>
+                      <span className={styles.contactArea}>{contact.area}</span>
+                      <span className={styles.contactNumber}>
+                        {contact.displayPhone}
+                      </span>
+                    </span>
+                    <ArrowRightIcon className={styles.contactArrow} />
+                  </a>
+                );
+              })}
             </address>
           </section>
         </div>

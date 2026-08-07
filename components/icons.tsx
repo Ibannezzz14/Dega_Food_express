@@ -51,6 +51,24 @@ export function PlusIcon(props: IconProps) {
   );
 }
 
+export function CloseIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m6 6 12 12M18 6 6 18" />
+    </IconBase>
+  );
+}
+
+export function CartIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 5h2l1.6 9.2a2 2 0 0 0 2 1.7h7.9a2 2 0 0 0 1.9-1.5L21 8H7" />
+      <circle cx="10" cy="20" r="1.3" />
+      <circle cx="18" cy="20" r="1.3" />
+    </IconBase>
+  );
+}
+
 export function MapPinIcon(props: IconProps) {
   return (
     <IconBase {...props}>

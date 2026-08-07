@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import {
+  isDeliveryRegionId,
   DELIVERY_ZONES,
   type RegionId,
 } from "@/data/delivery-zones";
@@ -11,6 +12,16 @@ import {
   calculateDeliveryFee,
   FREE_DELIVERY_THRESHOLD,
 } from "@/data/order-rules";
+import {
+  getDeliveryAddressIssue,
+  normalizeDeliveryAddress,
+  normalizeTextInput,
+} from "@/lib/delivery-address";
+import {
+  getDeliveryPaymentMethodLabel,
+  isDeliveryPaymentMethod,
+  type DeliveryPaymentMethod,
+} from "@/lib/order-payment";
 import { trackOrderHandoff } from "@/lib/order-statistics";
 import { validateDeliveryZone } from "@/lib/validate-delivery-zone";
 
@@ -45,26 +56,16 @@ function formatPrice(value: number) {
   }).format(value);
 }
 
-function normalizeField(value: FormDataEntryValue | null) {
-  return String(value ?? "")
-    .trim()
-    .replace(/\s+/g, " ");
-}
-
-function isRegionId(value: string): value is RegionId {
-  return Object.prototype.hasOwnProperty.call(DELIVERY_ZONES, value);
-}
-
 export async function prepareWhatsAppOrder(
   _previousState: OrderActionState,
   formData: FormData,
 ): Promise<OrderActionState> {
   const regionId = String(formData.get("region") ?? "");
 
-  if (!isRegionId(regionId)) {
+  if (!isDeliveryRegionId(regionId)) {
     return {
       status: "error",
-      message: "Choisissez Lausanne ou Lucens avant de continuer.",
+      message: "Choisissez une zone disponible avant de continuer.",
     };
   }
 
@@ -79,27 +80,51 @@ export async function prepareWhatsAppOrder(
     };
   }
 
-  const streetAddress = normalizeField(formData.get("streetAddress"));
-  const postalCode = normalizeField(formData.get("postalCode"));
-  const city = normalizeField(formData.get("city"));
-  const addressExtra = normalizeField(formData.get("addressExtra"));
+  let paymentMethod: DeliveryPaymentMethod | null = null;
 
   if (fulfillment === "delivery") {
-    if (streetAddress.length < 5 || streetAddress.length > 120) {
+    const submittedPaymentMethod = formData.get("paymentMethod");
+
+    if (!isDeliveryPaymentMethod(submittedPaymentMethod)) {
+      return {
+        status: "error",
+        message:
+          "Choisissez le paiement en espèces ou par TWINT à la livraison.",
+      };
+    }
+
+    paymentMethod = submittedPaymentMethod;
+  }
+
+  const { streetAddress, postalCode, city } = normalizeDeliveryAddress({
+    streetAddress: formData.get("streetAddress"),
+    postalCode: formData.get("postalCode"),
+    city: formData.get("city"),
+  });
+  const addressExtra = normalizeTextInput(formData.get("addressExtra"));
+
+  if (fulfillment === "delivery") {
+    const addressIssue = getDeliveryAddressIssue({
+      streetAddress,
+      postalCode,
+      city,
+    });
+
+    if (addressIssue === "street_address") {
       return {
         status: "error",
         message: "Indiquez la rue et le numéro de livraison.",
       };
     }
 
-    if (!/^\d{4}$/.test(postalCode)) {
+    if (addressIssue === "postal_code") {
       return {
         status: "error",
         message: "Indiquez un NPA suisse à 4 chiffres.",
       };
     }
 
-    if (city.length < 2 || city.length > 80) {
+    if (addressIssue === "city") {
       return {
         status: "error",
         message: "Indiquez la localité de livraison.",
@@ -144,9 +169,16 @@ export async function prepareWhatsAppOrder(
     };
   }
 
+  if (rawOrder.some((line) => !menuById.has(line.id))) {
+    return {
+      status: "error",
+      message: "Un article n’existe plus dans la carte. Rechargez la page.",
+    };
+  }
+
   if (fulfillment === "delivery") {
     const zoneValidation = await validateDeliveryZone(
-      regionId as RegionId,
+      regionId,
       streetAddress,
       postalCode,
       city,
@@ -222,6 +254,9 @@ export async function prepareWhatsAppOrder(
       ? "Mode : Livraison"
       : "Mode : Retrait",
     ...deliveryAddressLines,
+    fulfillment === "delivery" && paymentMethod
+      ? `Paiement : ${getDeliveryPaymentMethodLabel(paymentMethod)}`
+      : "Paiement : À convenir lors du retrait",
     "",
     ...lines,
     "",

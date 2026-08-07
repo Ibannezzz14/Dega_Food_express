@@ -5,6 +5,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { prepareWhatsAppOrder, type OrderActionState } from "./actions";
 import {
   DELIVERY_ZONES,
+  PUBLIC_REGIONS,
   type DeliveryZoneResult,
   type RegionId,
 } from "@/data/delivery-zones";
@@ -18,15 +19,20 @@ import {
   type AddressLookupSuggestion,
 } from "@/lib/address-suggestions";
 import {
+  DELIVERY_PAYMENT_METHODS,
+  type DeliveryPaymentMethod,
+} from "@/lib/order-payment";
+import {
+  CartIcon,
   CheckIcon,
   DeliveryIcon,
   MapPinIcon,
-  MessageIcon,
   MinusIcon,
   PickupIcon,
   PlusIcon,
 } from "@/components/icons";
 import AddressAutocomplete from "./address-autocomplete";
+import OrderCart from "./order-cart";
 import {
   useOrderSession,
   type FulfillmentMethod,
@@ -38,6 +44,7 @@ type ZoneCheckState =
   | DeliveryZoneResult;
 
 type OrderExperienceProps = {
+  initialFulfillmentMethod?: FulfillmentMethod | null;
   initialRegion?: RegionId | null;
 };
 
@@ -48,8 +55,6 @@ const initialActionState: OrderActionState = {
 
 const sectionLabels = {
   "sans-alcool": "Sans alcool",
-  bieres: "Bières",
-  vins: "Vins",
 } as const;
 
 function formatPrice(value: number) {
@@ -64,17 +69,22 @@ function itemDetail(item: MenuItem) {
 }
 
 export default function OrderExperience({
+  initialFulfillmentMethod = null,
   initialRegion = null,
 }: OrderExperienceProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("plats");
   const {
-    fulfillmentMethod,
+    fulfillmentMethod: storedFulfillmentMethod,
+    paymentMethod,
     quantities,
     region: storedRegion,
     setFulfillmentMethod,
+    setPaymentMethod,
     setQuantities,
     setRegion,
   } = useOrderSession();
+  const fulfillmentMethod =
+    storedFulfillmentMethod ?? initialFulfillmentMethod;
   const region = storedRegion ?? initialRegion;
   const [streetAddress, setStreetAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
@@ -84,7 +94,10 @@ export default function OrderExperience({
     status: "idle",
   });
   const [zoneCheckAttempt, setZoneCheckAttempt] = useState(0);
-  const formErrorRef = useRef<HTMLParagraphElement>(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [orderRevision, setOrderRevision] = useState(0);
+  const [submittedRevision, setSubmittedRevision] = useState(-1);
+  const cartTriggerRef = useRef<HTMLButtonElement>(null);
   const incrementButtonRefs = useRef(
     new Map<string, HTMLButtonElement>(),
   );
@@ -114,11 +127,14 @@ export default function OrderExperience({
       city.trim().length >= 2);
   const hasValidDeliveryZone =
     fulfillmentMethod !== "delivery" || zoneCheck.status === "eligible";
+  const hasValidPaymentMethod =
+    fulfillmentMethod !== "delivery" || paymentMethod !== null;
   const isOrderReady =
     region !== null &&
     fulfillmentMethod !== null &&
     hasValidDeliveryAddress &&
-    hasValidDeliveryZone;
+    hasValidDeliveryZone &&
+    hasValidPaymentMethod;
   const setupActionLabel = !region
     ? "Choisir la zone"
     : !fulfillmentMethod
@@ -127,14 +143,11 @@ export default function OrderExperience({
         ? "Compléter l’adresse"
         : zoneCheck.status === "checking"
           ? "Vérification…"
-          : "Finaliser l’adresse";
-  const setupActionShortLabel = !region
-    ? "Zone"
-    : !fulfillmentMethod
-      ? "Mode"
-      : zoneCheck.status === "checking"
-        ? "Vérification…"
-        : "Adresse";
+          : !hasValidDeliveryZone
+            ? "Finaliser l’adresse"
+            : !hasValidPaymentMethod
+              ? "Choisir le paiement"
+              : "Finaliser la commande";
   const orderStatusMessage =
     selectedCount === 0
       ? "Votre commande est vide."
@@ -142,6 +155,13 @@ export default function OrderExperience({
   const serializedOrder = JSON.stringify(
     selectedLines.map(({ item, quantity }) => ({ id: item.id, quantity })),
   );
+  const visibleActionState =
+    !isPending &&
+    actionState.status === "error" &&
+    submittedRevision === orderRevision
+      ? actionState
+      : initialActionState;
+
   useEffect(() => {
     if (
       fulfillmentMethod !== "delivery" ||
@@ -178,6 +198,8 @@ export default function OrderExperience({
             result.status === "outside" &&
             result.suggestedRegion
           ) {
+            setRegion(result.suggestedRegion);
+            setOrderRevision((current) => current + 1);
             setZoneCheck({
               status: "eligible",
               region: result.suggestedRegion,
@@ -203,24 +225,21 @@ export default function OrderExperience({
     fulfillmentMethod,
     postalCode,
     region,
+    setRegion,
     streetAddress,
     zoneCheckAttempt,
   ]);
 
-  useEffect(() => {
-    if (actionState.status === "error") {
-      formErrorRef.current?.focus();
-    }
-  }, [actionState.message, actionState.status]);
-
   function changeStreetAddress(value: string) {
     setStreetAddress(value);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
   }
 
   function changeRegion(value: RegionId) {
     setRegion(value);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
   }
 
   function changeFulfillmentMethod(value: FulfillmentMethod) {
@@ -229,16 +248,24 @@ export default function OrderExperience({
     }
     setFulfillmentMethod(value);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
+  }
+
+  function changePaymentMethod(value: DeliveryPaymentMethod) {
+    setPaymentMethod(value);
+    setOrderRevision((current) => current + 1);
   }
 
   function changePostalCode(value: string) {
     setPostalCode(value);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
   }
 
   function changeCity(value: string) {
     setCity(value);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
   }
 
   function selectAddressSuggestion(suggestion: AddressLookupSuggestion) {
@@ -251,9 +278,11 @@ export default function OrderExperience({
     setPostalCode(nextAddress.postalCode);
     setCity(nextAddress.city);
     setZoneCheck({ status: "idle" });
+    setOrderRevision((current) => current + 1);
   }
 
   function changeQuantity(itemId: string, delta: number) {
+    setOrderRevision((current) => current + 1);
     setQuantities((current) => {
       const nextQuantity = Math.min(20, Math.max(0, (current[itemId] ?? 0) + delta));
       const next = { ...current };
@@ -284,7 +313,26 @@ export default function OrderExperience({
       ? document.getElementById("menu-region-lausanne")
       : !fulfillmentMethod
         ? document.getElementById("fulfillment-pickup")
-        : document.getElementById("streetAddress");
+        : fulfillmentMethod === "delivery" &&
+            hasValidDeliveryAddress &&
+            hasValidDeliveryZone &&
+            !hasValidPaymentMethod
+          ? document.getElementById("payment-cash")
+          : document.getElementById("streetAddress");
+
+    if (!target) {
+      return;
+    }
+
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior, block: "center" });
+  }
+
+  function returnToMenu() {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    const target = document.getElementById(`category-${activeCategory}`);
 
     if (!target) {
       return;
@@ -295,7 +343,13 @@ export default function OrderExperience({
   }
 
   return (
-    <form action={formAction} className={styles.orderForm}>
+    <form
+      action={formAction}
+      className={styles.orderForm}
+      onSubmit={() => {
+        setSubmittedRevision(orderRevision);
+      }}
+    >
       <input type="hidden" name="region" value={region ?? ""} />
       <input type="hidden" name="order" value={serializedOrder} />
 
@@ -316,27 +370,45 @@ export default function OrderExperience({
           <legend>
             Votre zone <span className="sr-only">(obligatoire)</span>
           </legend>
-          <button
-            id="menu-region-lausanne"
-            type="button"
-            className={region === "lausanne" ? styles.menuRegionActive : ""}
-            aria-pressed={region === "lausanne"}
-            onClick={() => changeRegion("lausanne")}
-          >
-            <MapPinIcon />
-            <span>{DELIVERY_ZONES.lausanne.selectionLabel}</span>
-            {region === "lausanne" && <CheckIcon />}
-          </button>
-          <button
-            type="button"
-            className={region === "lucens" ? styles.menuRegionActive : ""}
-            aria-pressed={region === "lucens"}
-            onClick={() => changeRegion("lucens")}
-          >
-            <MapPinIcon />
-            <span>{DELIVERY_ZONES.lucens.selectionLabel}</span>
-            {region === "lucens" && <CheckIcon />}
-          </button>
+          {PUBLIC_REGIONS.map((regionOption) => {
+            if (regionOption.availability === "coming_soon") {
+              return (
+                <button
+                  type="button"
+                  className={styles.menuRegionUnavailable}
+                  key={regionOption.id}
+                  disabled
+                >
+                  <MapPinIcon />
+                  <span>
+                    <strong>{regionOption.selectionLabel}</strong>
+                    <small>{regionOption.availabilityLabel}</small>
+                  </span>
+                </button>
+              );
+            }
+
+            const isActive = region === regionOption.id;
+
+            return (
+              <button
+                id={
+                  regionOption.id === "lausanne"
+                    ? "menu-region-lausanne"
+                    : undefined
+                }
+                type="button"
+                className={isActive ? styles.menuRegionActive : ""}
+                key={regionOption.id}
+                aria-pressed={isActive}
+                onClick={() => changeRegion(regionOption.id)}
+              >
+                <MapPinIcon />
+                <span>{regionOption.selectionLabel}</span>
+                {isActive && <CheckIcon />}
+              </button>
+            );
+          })}
         </fieldset>
 
         <fieldset className={styles.fulfillmentFieldset}>
@@ -388,7 +460,9 @@ export default function OrderExperience({
               <span className={styles.fulfillmentCopy}>
                 <strong>Livraison</strong>
                 <small aria-live="polite">
-                  {isFreeDelivery ? "Offerte" : "7,90 CHF"}
+                  {isFreeDelivery
+                    ? "Offerte · Espèces ou TWINT"
+                    : "7,90 CHF · Espèces ou TWINT"}
                 </small>
               </span>
               <span className={styles.fulfillmentState} aria-hidden="true">
@@ -408,6 +482,10 @@ export default function OrderExperience({
                 </span>
                 <span className={styles.addressPanelTitle}>
                   <strong>Adresse postale</strong>
+                  <small>
+                    Les champs saisis sont envoyés au service fédéral
+                    GeoAdmin pour proposer et vérifier l’adresse.
+                  </small>
                 </span>
               </div>
 
@@ -436,7 +514,10 @@ export default function OrderExperience({
                     type="text"
                     name="addressExtra"
                     value={addressExtra}
-                    onChange={(event) => setAddressExtra(event.target.value)}
+                    onChange={(event) => {
+                      setAddressExtra(event.target.value);
+                      setOrderRevision((current) => current + 1);
+                    }}
                     autoComplete="address-line2"
                     placeholder="Étage, entrée ou indication"
                     maxLength={100}
@@ -493,7 +574,10 @@ export default function OrderExperience({
                     className={styles.deliveryZoneSuccessIndicator}
                     aria-hidden="true"
                   />
-                  <span>Adresse de livraison vérifiée.</span>
+                  <span>
+                    Adresse vérifiée pour{" "}
+                    {DELIVERY_ZONES[zoneCheck.region].label}.
+                  </span>
                 </div>
               )}
 
@@ -502,6 +586,62 @@ export default function OrderExperience({
                   ? "Frais de livraison offerts"
                   : `Livraison ${formatPrice(deliveryFee)} CHF · offerte au-delà de ${formatPrice(FREE_DELIVERY_THRESHOLD)} CHF`}
               </p>
+
+              <fieldset
+                className={styles.paymentFieldset}
+                aria-describedby="delivery-payment-help"
+              >
+                <legend>
+                  Mode de paiement{" "}
+                  <span className="sr-only">(obligatoire)</span>
+                </legend>
+                <p id="delivery-payment-help" className={styles.paymentIntro}>
+                  Le règlement se fait à l’arrivée du livreur.
+                </p>
+
+                <div className={styles.paymentOptions}>
+                  {DELIVERY_PAYMENT_METHODS.map((method) => {
+                    const isActive = paymentMethod === method.id;
+
+                    return (
+                      <label
+                        className={isActive ? styles.paymentActive : ""}
+                        key={method.id}
+                      >
+                        <input
+                          className={styles.paymentInput}
+                          type="radio"
+                          id={`payment-${method.id}`}
+                          name="paymentMethod"
+                          value={method.id}
+                          checked={isActive}
+                          onChange={() => changePaymentMethod(method.id)}
+                          aria-describedby={`payment-${method.id}-description`}
+                          required
+                        />
+                        <span className={styles.paymentChoiceHeader}>
+                          <strong>{method.label}</strong>
+                          <span
+                            className={styles.paymentState}
+                            aria-hidden="true"
+                          >
+                            {isActive && <CheckIcon />}
+                          </span>
+                        </span>
+                        <small id={`payment-${method.id}-description`}>
+                          {method.description}
+                        </small>
+                      </label>
+                    );
+                  })}
+                </div>
+
+                <p className={styles.paymentSecurityNote}>
+                  Pour TWINT, le livreur vérifie la réception du paiement en
+                  direct avant de remettre la commande. Une capture d’écran ne
+                  constitue pas une confirmation.
+                </p>
+              </fieldset>
             </div>
           )}
         </fieldset>
@@ -511,6 +651,7 @@ export default function OrderExperience({
         <nav className={styles.categoryRail} aria-label="Catégories de la carte">
           {categories.map((category) => (
             <button
+              id={`category-${category.id}`}
               type="button"
               key={category.id}
               aria-pressed={activeCategory === category.id}
@@ -658,47 +799,42 @@ export default function OrderExperience({
               </span>
               <strong>{formatPrice(orderTotal)} CHF</strong>
             </div>
-            {isOrderReady ? (
-              <button
-                type="submit"
-                className={styles.submitButton}
-                disabled={isPending}
-              >
-                <MessageIcon />
-                {isPending ? (
-                  "Préparation…"
-                ) : (
-                  <>
-                    <span className={styles.submitLong}>Envoyer sur WhatsApp</span>
-                    <span className={styles.submitShort}>WhatsApp</span>
-                  </>
-                )}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className={styles.submitButton}
-                onClick={returnToSetup}
-              >
-                <MapPinIcon />
-                <span className={styles.submitLong}>{setupActionLabel}</span>
-                <span className={styles.submitShort}>
-                  {setupActionShortLabel}
-                </span>
-              </button>
-            )}
-            {actionState.status === "error" && (
-              <p
-                ref={formErrorRef}
-                className={styles.formError}
-                role="alert"
-                tabIndex={-1}
-              >
-                {actionState.message}
-              </p>
-            )}
+            <button
+              ref={cartTriggerRef}
+              type="button"
+              className={styles.submitButton}
+              onClick={() => setIsCartOpen(true)}
+              aria-haspopup="dialog"
+              aria-controls="order-cart-dialog"
+              aria-expanded={isCartOpen}
+            >
+              <CartIcon />
+              <span className={styles.submitLong}>Voir le panier</span>
+              <span className={styles.submitShort}>Panier</span>
+            </button>
           </div>
         )}
+
+        <OrderCart
+          actionState={visibleActionState}
+          deliveryFee={deliveryFee}
+          formatPrice={formatPrice}
+          fulfillmentMethod={fulfillmentMethod}
+          paymentMethod={paymentMethod}
+          isOpen={isCartOpen}
+          isOrderReady={isOrderReady}
+          isPending={isPending}
+          itemsSubtotal={itemsSubtotal}
+          lines={selectedLines}
+          onChangeQuantity={changeQuantity}
+          onOpenChange={setIsCartOpen}
+          onReturnToMenu={returnToMenu}
+          onReturnToSetup={returnToSetup}
+          orderTotal={orderTotal}
+          returnFocusRef={cartTriggerRef}
+          selectedCount={selectedCount}
+          setupActionLabel={setupActionLabel}
+        />
         <span
           className="sr-only"
           role="status"

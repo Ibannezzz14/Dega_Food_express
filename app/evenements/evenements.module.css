@@ -604,6 +604,18 @@
   background: #edf4f0;
 }
 
+.contactOptionUnavailable {
+  border-style: dashed;
+  background: #f0f2ee;
+  color: #526760;
+  cursor: not-allowed;
+}
+
+.contactOptionUnavailable:hover {
+  border-color: #98aaa3;
+  background: #f0f2ee;
+}
+
 .contactOption:has(input:focus-visible) {
   outline: 3px solid var(--plantain-400);
   outline-offset: 2px;
@@ -630,6 +642,13 @@
   border: 1.5px solid #71877e;
   border-radius: 50%;
   box-shadow: inset 0 0 0 4px #fafbf8;
+}
+
+.soonMark {
+  color: var(--catering-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .contactOption:has(input:checked) .radioMark {

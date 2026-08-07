@@ -2,6 +2,7 @@ import "server-only";
 
 import type { RegionId } from "@/data/delivery-zones";
 import {
+  PUBLIC_LOCATION_MIN_HANDOFFS,
   getStatisticsLocation,
   type FulfillmentMethod,
   type StatisticsPeriod,
@@ -150,8 +151,10 @@ export async function getOrderStatistics(
 
   try {
     const [summaryRows, locationRows, regionRows, trendRows] =
-      await Promise.all([
-        database<SummaryQueryRow[]>`
+      await database.begin(
+        "isolation level repeatable read read only",
+        (transaction) => [
+          transaction<SummaryQueryRow[]>`
           SELECT
             COALESCE(SUM(handoff_count), 0)::int AS handoffs,
             COALESCE(
@@ -168,7 +171,7 @@ export async function getOrderStatistics(
               ${daysBack}::int
             AND (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Zurich')::date
         `,
-        database<LocationQueryRow[]>`
+          transaction<LocationQueryRow[]>`
           SELECT
             postal_code,
             MAX(city_label) AS city,
@@ -181,11 +184,11 @@ export async function getOrderStatistics(
               ${daysBack}::int
               AND (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Zurich')::date
           GROUP BY postal_code, city_key
-          HAVING SUM(handoff_count) >= 2
+          HAVING SUM(handoff_count) >= ${PUBLIC_LOCATION_MIN_HANDOFFS}
           ORDER BY handoffs DESC, city ASC
           LIMIT 10
         `,
-        database<RegionQueryRow[]>`
+          transaction<RegionQueryRow[]>`
           SELECT
             region,
             fulfillment,
@@ -198,7 +201,7 @@ export async function getOrderStatistics(
           GROUP BY region, fulfillment
           ORDER BY handoffs DESC
         `,
-        database<TrendQueryRow[]>`
+          transaction<TrendQueryRow[]>`
           WITH days AS (
             SELECT generate_series(
               (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Zurich')::date -
@@ -217,7 +220,8 @@ export async function getOrderStatistics(
           GROUP BY days.day
           ORDER BY days.day ASC
         `,
-      ]);
+        ],
+      );
 
     const summary = summaryRows[0] ?? {
       handoffs: 0,

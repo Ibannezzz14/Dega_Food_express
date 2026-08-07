@@ -144,6 +144,7 @@ export default function AddressAutocomplete({
       } catch (error) {
         if (
           controller.signal.aborted ||
+          currentRequest !== requestSequence.current ||
           (error instanceof DOMException && error.name === "AbortError")
         ) {
           return;

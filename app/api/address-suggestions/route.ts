@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { DELIVERY_ZONES, type RegionId } from "@/data/delivery-zones";
+import {
+  DELIVERY_ZONES,
+  isDeliveryRegionId,
+} from "@/data/delivery-zones";
 import {
   POSTAL_LOCALITY_LAYER,
   normalizeAddressQuery,
@@ -8,7 +11,10 @@ import {
   type AddressLookupSuggestion,
   type GeoAdminAddressResult,
 } from "@/lib/address-suggestions";
-import { readJsonObject } from "@/lib/read-json-object";
+import {
+  hasJsonContentType,
+  readJsonObject,
+} from "@/lib/read-json-object";
 
 type AddressSearchField = "streetAddress" | "postalCode" | "city";
 
@@ -45,6 +51,10 @@ function isAddressSearchField(value: unknown): value is AddressSearchField {
 }
 
 export async function POST(request: Request) {
+  if (!hasJsonContentType(request)) {
+    return noStoreJson({ suggestions: [] }, 415);
+  }
+
   const body = await readJsonObject(request);
   if (!body.ok) {
     return noStoreJson(
@@ -76,10 +86,7 @@ export async function POST(request: Request) {
       ? normalizeAddressQuery(payload.city).slice(0, 80)
       : "";
 
-  const hasKnownRegion = Object.prototype.hasOwnProperty.call(
-    DELIVERY_ZONES,
-    region,
-  );
+  const hasKnownRegion = isDeliveryRegionId(region);
   const minimumQueryLength = field === "streetAddress" ? 3 : 2;
   const maximumQueryLength =
     field === "postalCode" ? 4 : field === "city" ? 80 : 120;
@@ -100,7 +107,7 @@ export async function POST(request: Request) {
     const enteredLocationHint = `${postalCode} ${city}`.trim();
     const locationHint =
       enteredLocationHint ||
-      (hasKnownRegion ? DELIVERY_ZONES[region as RegionId].label : "");
+      (hasKnownRegion ? DELIVERY_ZONES[region].label : "");
 
     searchUrl.searchParams.set(
       "searchText",

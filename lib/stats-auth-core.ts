@@ -3,6 +3,32 @@ export type StatsCredentials = {
   password: string;
 };
 
+const MAX_BASIC_TOKEN_LENGTH = 2048;
+const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f]/;
+
+export function createStatsCredentials(
+  usernameValue: string | undefined,
+  passwordValue: string | undefined,
+): StatsCredentials | null {
+  const username = usernameValue?.trim();
+  const password = passwordValue;
+
+  if (
+    !username ||
+    username.length > 128 ||
+    username.includes(":") ||
+    CONTROL_CHARACTERS.test(username) ||
+    !password ||
+    password.length < 12 ||
+    password.length > 256 ||
+    CONTROL_CHARACTERS.test(password)
+  ) {
+    return null;
+  }
+
+  return { username, password };
+}
+
 function constantTimeEqual(left: string, right: string) {
   const length = Math.max(left.length, right.length);
   let difference = left.length ^ right.length;
@@ -26,7 +52,11 @@ export function validateStatsAuthorization(
   const match = authorization.match(
     /^Basic[ \t]+([A-Za-z0-9+/]+={0,2})$/i,
   );
-  if (!match || match[1].length % 4 !== 0) {
+  if (
+    !match ||
+    match[1].length > MAX_BASIC_TOKEN_LENGTH ||
+    match[1].length % 4 !== 0
+  ) {
     return false;
   }
 
@@ -39,11 +69,16 @@ export function validateStatsAuthorization(
 
     const username = decoded.slice(0, separatorIndex);
     const password = decoded.slice(separatorIndex + 1);
-
-    return (
-      constantTimeEqual(username, credentials.username) &&
-      constantTimeEqual(password, credentials.password)
+    const usernameMatches = constantTimeEqual(
+      username,
+      credentials.username,
     );
+    const passwordMatches = constantTimeEqual(
+      password,
+      credentials.password,
+    );
+
+    return usernameMatches && passwordMatches;
   } catch {
     return false;
   }

@@ -14,9 +14,10 @@ const styleSource = readFileSync(
 );
 
 test("la page Contact reste centrée sur l’appel direct", () => {
-  assert.ok(pageSource.includes("CONTACTS.map"));
+  assert.ok(pageSource.includes("CONTACT_DIRECTORY.map"));
   assert.ok(pageSource.includes("href={contact.phoneHref}"));
   assert.ok(pageSource.includes("Appeler"));
+  assert.ok(pageSource.includes("contact.availabilityLabel"));
   assert.ok(!pageSource.includes("next/image"));
   assert.ok(!pageSource.includes("INSTAGRAM"));
 });

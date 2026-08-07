@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   POSTAL_LOCALITY_LAYER,
   applyAddressLookupSuggestion,
+  findMatchingGeoAdminAddress,
   normalizeAddressQuery,
   parseGeoAdminAddress,
   parseGeoAdminPostalLocality,
@@ -31,6 +32,70 @@ test("transforme une réponse GeoAdmin en adresse structurée", () => {
       longitude: 6.634718894958496,
     },
   });
+});
+
+test("valide l’adresse complète et pas seulement le NPA et la localité", () => {
+  const results = [
+    {
+      attrs: {
+        featureId: "wrong-street",
+        label: "Ruelle de Bourg 10 <b>1003 Lausanne</b>",
+        lat: 46.5201,
+        lon: 6.6341,
+        num: 10,
+        origin: "address",
+      },
+    },
+    {
+      attrs: {
+        featureId: "right-street",
+        label: "Rue de Bourg 10 <b>1003 Lausanne</b>",
+        lat: 46.52004623413086,
+        lon: 6.634718894958496,
+        num: 10,
+        origin: "address",
+      },
+    },
+  ];
+
+  assert.equal(
+    findMatchingGeoAdminAddress(results, {
+      streetAddress: "rue de bourg 10",
+      postalCode: "1003",
+      city: "Lausanne",
+    })?.key,
+    "right-street-46.52004623413086-6.634718894958496",
+  );
+
+  assert.equal(
+    findMatchingGeoAdminAddress(results.slice(0, 1), {
+      streetAddress: "Rue de Bourg 10",
+      postalCode: "1003",
+      city: "Lausanne",
+    }),
+    null,
+  );
+});
+
+test("compare les adresses sans dépendre des accents", () => {
+  const result = {
+    attrs: {
+      featureId: "accented-address",
+      label: "Chemin de l’Église 2 <b>1522 Oulens-sur-Lucens</b>",
+      lat: 46.707394,
+      lon: 6.815282,
+      num: 2,
+      origin: "address",
+    },
+  };
+
+  assert.ok(
+    findMatchingGeoAdminAddress([result], {
+      streetAddress: "Chemin de l'Eglise 2",
+      postalCode: "1522",
+      city: "Oulens sur Lucens",
+    }),
+  );
 });
 
 test("conserve les numéros complexes et nettoie le HTML", () => {

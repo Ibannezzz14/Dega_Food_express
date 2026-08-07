@@ -317,8 +317,8 @@ export default async function StatisticsPage({
                   </div>
                 ) : (
                   <p className={styles.panelEmpty}>
-                    Pas encore assez de passages agrégés pour afficher une
-                    localité sur cette période.
+                    Une localité n’apparaît qu’à partir de cinq passages
+                    agrégés sur la période.
                   </p>
                 )}
               </section>

@@ -2,7 +2,11 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { ArrowRightIcon, MessageIcon } from "@/components/icons";
-import { CONTACTS, type ContactId } from "@/data/contact";
+import {
+  CONTACTS,
+  CONTACT_DIRECTORY,
+  type ContactId,
+} from "@/data/contact";
 import { menuItems } from "@/data/menu";
 import { buildCateringWhatsAppMessage } from "@/lib/catering-whatsapp";
 import styles from "./evenements.module.css";
@@ -92,7 +96,13 @@ function isPastDate(value: string) {
 }
 
 function isValidPhone(value: string) {
-  return /^[+()\d\s.-]{7,}$/.test(value);
+  const digitCount = value.replace(/\D/g, "").length;
+
+  return (
+    /^[+()\d\s.-]+$/.test(value) &&
+    digitCount >= 7 &&
+    digitCount <= 15
+  );
 }
 
 function isValidEmail(value: string) {
@@ -599,7 +609,7 @@ export default function CateringForm() {
               id="catering-details"
               name="details"
               rows={5}
-              maxLength={2000}
+              maxLength={5000}
               aria-describedby="catering-details-help"
             />
             <p className={styles.fieldHelp} id="catering-details-help">
@@ -617,25 +627,45 @@ export default function CateringForm() {
             errors.contact ? "catering-contact-error" : undefined
           }
         >
-          <legend>Contact WhatsApp</legend>
+          <legend>Région du contact WhatsApp</legend>
           <div className={styles.formContactOptions}>
-            {CONTACTS.map((contact) => (
-              <label className={styles.contactOption} key={contact.id}>
-                <input
-                  id={`catering-contact-${contact.id}`}
-                  name="contact"
-                  type="radio"
-                  value={contact.id}
-                  required
-                  onChange={() => clearError("contact")}
-                />
-                <span className={styles.contactOptionCopy}>
-                  <strong>{contact.area}</strong>
-                  <span>{contact.displayPhone}</span>
-                </span>
-                <span className={styles.radioMark} aria-hidden="true" />
-              </label>
-            ))}
+            {CONTACT_DIRECTORY.map((contact) => {
+              if (contact.availability === "coming_soon") {
+                return (
+                  <div
+                    className={`${styles.contactOption} ${styles.contactOptionUnavailable}`}
+                    key={contact.id}
+                    aria-disabled="true"
+                  >
+                    <span className={styles.contactOptionCopy}>
+                      <strong>{contact.area}</strong>
+                      <span>{contact.availabilityLabel}</span>
+                    </span>
+                    <span className={styles.soonMark} aria-hidden="true">
+                      Bientôt
+                    </span>
+                  </div>
+                );
+              }
+
+              return (
+                <label className={styles.contactOption} key={contact.id}>
+                  <input
+                    id={`catering-contact-${contact.id}`}
+                    name="contact"
+                    type="radio"
+                    value={contact.id}
+                    required
+                    onChange={() => clearError("contact")}
+                  />
+                  <span className={styles.contactOptionCopy}>
+                    <strong>{contact.area}</strong>
+                    <span>{contact.displayPhone}</span>
+                  </span>
+                  <span className={styles.radioMark} aria-hidden="true" />
+                </label>
+              );
+            })}
           </div>
           {errors.contact ? (
             <p className={styles.fieldError} id="catering-contact-error">

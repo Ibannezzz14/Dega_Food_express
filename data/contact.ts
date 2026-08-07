@@ -27,6 +27,30 @@ export const CONTACTS = [
   },
 ] as const satisfies readonly ContactDetails[];
 
+export type ContactDirectoryEntry =
+  | (ContactDetails & {
+      availability: "available";
+    })
+  | {
+      id: "geneve";
+      area: "Genève";
+      availability: "coming_soon";
+      availabilityLabel: "Contact bientôt disponible";
+    };
+
+export const CONTACT_DIRECTORY = [
+  ...CONTACTS.map((contact) => ({
+    ...contact,
+    availability: "available" as const,
+  })),
+  {
+    id: "geneve",
+    area: "Genève",
+    availability: "coming_soon",
+    availabilityLabel: "Contact bientôt disponible",
+  },
+] as const satisfies readonly ContactDirectoryEntry[];
+
 export const INSTAGRAM = {
   handle: "@dega_foodexpress",
   href: "https://www.instagram.com/dega_foodexpress/",

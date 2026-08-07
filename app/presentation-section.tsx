@@ -22,8 +22,8 @@ export default function PresentationSection() {
         </h2>
         <p className={styles.presentationIntro}>
           Dega Food Express propose des spécialités ivoiriennes à Lausanne,
-          Lucens et alentours, pour un repas individuel, en famille ou lors
-          d’un événement.
+          Lucens et bientôt Genève, pour un repas individuel, en famille ou
+          lors d’un événement.
         </p>
         <dl className={styles.presentationFacts}>
           <div>
@@ -31,8 +31,11 @@ export default function PresentationSection() {
             <dd>Vous choisissez les plats et les quantités.</dd>
           </div>
           <div>
-            <dt>Deux zones</dt>
-            <dd>Lausanne ou Lucens et alentours.</dd>
+            <dt>Trois régions</dt>
+            <dd>
+              Lausanne, Lucens et Genève, dont le contact sera bientôt
+              disponible.
+            </dd>
           </div>
           <div>
             <dt>Tous les formats</dt>

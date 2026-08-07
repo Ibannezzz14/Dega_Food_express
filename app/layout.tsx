@@ -11,9 +11,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   ...createPageMetadata({
-    title: "Dega Food Express | Cuisine ivoirienne à Lausanne & Lucens",
+    title:
+      "Dega Food Express | Cuisine ivoirienne à Lausanne, Lucens & Genève",
     description:
-      "Composez votre commande de plats ivoiriens et contactez Dega Food Express sur WhatsApp à Lausanne ou Lucens.",
+      "Composez votre commande de plats ivoiriens à Lausanne ou Lucens. Le contact de Genève sera bientôt disponible.",
     path: "/",
   }),
   icons: {

@@ -4,6 +4,17 @@ export type JsonObjectReadResult =
 
 const DEFAULT_MAX_BYTES = 8 * 1024;
 
+export function hasJsonContentType(request: Request) {
+  const contentType = request.headers.get("content-type");
+  if (!contentType) {
+    return false;
+  }
+
+  return (
+    contentType.split(";", 1)[0].trim().toLowerCase() === "application/json"
+  );
+}
+
 function isJsonObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }

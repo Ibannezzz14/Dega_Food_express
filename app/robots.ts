@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/statistiques",
+      disallow: ["/statistiques", "/prototype-twint"],
     },
     sitemap: new URL("/sitemap.xml", siteUrl).toString(),
   };

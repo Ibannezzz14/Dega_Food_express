@@ -1,7 +1,15 @@
 export const STATISTICS_PERIODS = [7, 30, 90, 365] as const;
+export const PUBLIC_LOCATION_MIN_HANDOFFS = 5;
 
 export type StatisticsPeriod = (typeof STATISTICS_PERIODS)[number];
 export type FulfillmentMethod = "pickup" | "delivery";
+
+export function shouldDisplayStatisticsLocation(handoffs: number) {
+  return (
+    Number.isInteger(handoffs) &&
+    handoffs >= PUBLIC_LOCATION_MIN_HANDOFFS
+  );
+}
 
 export function parseStatisticsPeriod(
   value: string | string[] | undefined,

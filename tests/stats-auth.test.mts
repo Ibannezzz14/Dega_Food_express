@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  createStatsCredentials,
   validateStatsAuthorization,
   type StatsCredentials,
 } from "../lib/stats-auth-core.ts";
@@ -48,5 +49,25 @@ test("refuse les en-têtes Basic absents ou malformés", () => {
   assert.equal(
     validateStatsAuthorization("Basic ZGVnYQ==", credentials),
     false,
+  );
+  assert.equal(
+    validateStatsAuthorization(`Basic ${"A".repeat(2052)}`, credentials),
+    false,
+  );
+});
+
+test("refuse des identifiants de configuration dangereux", () => {
+  assert.deepEqual(
+    createStatsCredentials("  dega  ", "un-mot-de-passe-solide"),
+    credentials,
+  );
+  assert.equal(
+    createStatsCredentials("dega:admin", "un-mot-de-passe-solide"),
+    null,
+  );
+  assert.equal(createStatsCredentials("dega", "trop-court"), null);
+  assert.equal(
+    createStatsCredentials("dega", `valide-mais\ninjecte`),
+    null,
   );
 });

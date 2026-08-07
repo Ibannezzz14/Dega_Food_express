@@ -1,3 +1,21 @@
+export const DELIVERY_REGION_IDS = ["lausanne", "lucens"] as const;
+
+export type RegionId = (typeof DELIVERY_REGION_IDS)[number];
+
+type DeliveryZone = {
+  label: string;
+  selectionLabel: string;
+  contactArea: string;
+  displayPhone: string;
+  phoneHref: `tel:${string}`;
+  phone: string;
+  radiusKm: number;
+  center: {
+    latitude: number;
+    longitude: number;
+  };
+};
+
 export const DELIVERY_ZONES = {
   lausanne: {
     label: "Lausanne",
@@ -6,7 +24,7 @@ export const DELIVERY_ZONES = {
     displayPhone: "078 265 40 81",
     phoneHref: "tel:+41782654081",
     phone: "41782654081",
-    radiusKm: 10,
+    radiusKm: 30,
     center: {
       latitude: 46.520008,
       longitude: 6.630101,
@@ -25,9 +43,48 @@ export const DELIVERY_ZONES = {
       longitude: 6.836576,
     },
   },
-} as const;
+} as const satisfies Record<RegionId, DeliveryZone>;
 
-export type RegionId = keyof typeof DELIVERY_ZONES;
+type PublicRegion =
+  | {
+      id: RegionId;
+      label: string;
+      selectionLabel: string;
+      availability: "available";
+    }
+  | {
+      id: "geneve";
+      label: "Genève";
+      selectionLabel: "Genève";
+      availability: "coming_soon";
+      availabilityLabel: "Contact bientôt disponible";
+    };
+
+export const PUBLIC_REGIONS = [
+  {
+    id: "lausanne",
+    label: DELIVERY_ZONES.lausanne.label,
+    selectionLabel: DELIVERY_ZONES.lausanne.selectionLabel,
+    availability: "available",
+  },
+  {
+    id: "lucens",
+    label: DELIVERY_ZONES.lucens.label,
+    selectionLabel: DELIVERY_ZONES.lucens.selectionLabel,
+    availability: "available",
+  },
+  {
+    id: "geneve",
+    label: "Genève",
+    selectionLabel: "Genève",
+    availability: "coming_soon",
+    availabilityLabel: "Contact bientôt disponible",
+  },
+] as const satisfies readonly PublicRegion[];
+
+export function isDeliveryRegionId(value: string): value is RegionId {
+  return DELIVERY_REGION_IDS.some((region) => region === value);
+}
 
 export type DeliveryZoneResult =
   | {
@@ -48,7 +105,7 @@ export type DeliveryZoneResult =
       status: "service_error";
     };
 
-type Coordinates = {
+export type Coordinates = {
   latitude: number;
   longitude: number;
 };
@@ -92,9 +149,40 @@ export function distanceFromDeliveryZone(
 }
 
 export function findEligibleDeliveryZone(coordinates: Coordinates) {
-  return (Object.keys(DELIVERY_ZONES) as RegionId[]).find(
-    (region) =>
-      distanceFromDeliveryZone(region, coordinates) <=
-      DELIVERY_ZONES[region].radiusKm,
+  return DELIVERY_REGION_IDS
+    .map((region) => ({
+      region,
+      distanceKm: distanceFromDeliveryZone(region, coordinates),
+    }))
+    .filter(
+      ({ region, distanceKm }) =>
+        distanceKm <= DELIVERY_ZONES[region].radiusKm,
+    )
+    .sort((first, second) => first.distanceKm - second.distanceKm)[0]?.region;
+}
+
+export function resolveDeliveryZone(
+  requestedRegion: RegionId,
+  coordinates: Coordinates,
+): DeliveryZoneResult {
+  const distanceKm = distanceFromDeliveryZone(
+    requestedRegion,
+    coordinates,
   );
+  const eligibleRegion = findEligibleDeliveryZone(coordinates);
+
+  if (eligibleRegion === requestedRegion) {
+    return {
+      status: "eligible",
+      region: requestedRegion,
+      distanceKm,
+    };
+  }
+
+  return {
+    status: "outside",
+    region: requestedRegion,
+    distanceKm,
+    suggestedRegion: eligibleRegion ?? null,
+  };
 }

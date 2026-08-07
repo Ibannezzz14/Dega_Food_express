@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRightIcon, PhoneIcon } from "@/components/icons";
-import { CONTACTS } from "@/data/contact";
+import { CONTACT_DIRECTORY } from "@/data/contact";
 import { createPageMetadata } from "@/lib/page-metadata";
 import styles from "./contact.module.css";
 
@@ -16,7 +16,7 @@ import styles from "./contact.module.css";
 export const metadata: Metadata = createPageMetadata({
   title: "Contact | Dega Food Express",
   description:
-    "Appelez directement Dega Food Express à Lausanne ou Lucens.",
+    "Contactez Dega Food Express à Lausanne ou Lucens. Le contact de Genève sera bientôt disponible.",
   path: "/contact",
 });
 
@@ -27,8 +27,8 @@ export default function ContactPage() {
         <div className={`${styles.contactShell} ${styles.introInner}`}>
           <h1 id="contact-title">Nous contacter</h1>
           <p>
-            Pour une question ou une commande, choisissez le numéro de votre
-            région.
+            Pour une question ou une commande, choisissez le contact de votre
+            région. Le contact de Genève sera bientôt disponible.
           </p>
         </div>
       </section>
@@ -39,27 +39,44 @@ export default function ContactPage() {
       >
         <div className={`${styles.contactShell} ${styles.directoryInner}`}>
           <h2 className="sr-only" id="contact-directory-title">
-            Numéros de téléphone par région
+            Contacts par région
           </h2>
 
           <address className={styles.contactList}>
-            {CONTACTS.map((contact) => (
-              <a
-                className={styles.contactRow}
-                href={contact.phoneHref}
-                key={contact.id}
-                aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
-              >
-                <span className={styles.contactArea}>{contact.area}</span>
-                <strong className={styles.contactNumber}>
-                  {contact.displayPhone}
-                </strong>
-                <span className={styles.callAction}>
-                  <PhoneIcon />
-                  Appeler
-                </span>
-              </a>
-            ))}
+            {CONTACT_DIRECTORY.map((contact) => {
+              if (contact.availability === "coming_soon") {
+                return (
+                  <div
+                    className={`${styles.contactRow} ${styles.contactRowUnavailable}`}
+                    key={contact.id}
+                  >
+                    <span className={styles.contactArea}>{contact.area}</span>
+                    <strong className={styles.contactAvailability}>
+                      {contact.availabilityLabel}
+                    </strong>
+                    <span className={styles.soonAction}>Bientôt</span>
+                  </div>
+                );
+              }
+
+              return (
+                <a
+                  className={styles.contactRow}
+                  href={contact.phoneHref}
+                  key={contact.id}
+                  aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
+                >
+                  <span className={styles.contactArea}>{contact.area}</span>
+                  <strong className={styles.contactNumber}>
+                    {contact.displayPhone}
+                  </strong>
+                  <span className={styles.callAction}>
+                    <PhoneIcon />
+                    Appeler
+                  </span>
+                </a>
+              );
+            })}
           </address>
 
           <div className={styles.cateringPrompt}>

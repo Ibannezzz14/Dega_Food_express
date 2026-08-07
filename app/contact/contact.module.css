@@ -60,7 +60,7 @@
 
 .contactList {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.85rem, 2vw, 1.25rem);
   margin: 0;
   font-style: normal;
@@ -104,6 +104,17 @@
   letter-spacing: -0.03em;
   line-height: 1;
   white-space: nowrap;
+}
+
+.contactAvailability {
+  grid-area: number;
+  align-self: end;
+  max-width: 14ch;
+  color: var(--contact-muted);
+  font-size: clamp(1.45rem, 2.7vw, 2.15rem);
+  font-weight: 620;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
 }
 
 .callAction {
@@ -152,6 +163,30 @@
   z-index: 1;
   outline: 3px solid var(--plantain-400);
   outline-offset: 3px;
+}
+
+.contactRowUnavailable {
+  border-style: dashed;
+  background: #eff2ed;
+}
+
+.contactRowUnavailable:hover {
+  border-color: #b8c5c0;
+  background: #eff2ed;
+}
+
+.soonAction {
+  grid-area: action;
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #a8b7b1;
+  border-radius: 0.4rem;
+  color: var(--contact-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .cateringPrompt {
@@ -205,6 +240,12 @@
   border-radius: 0.2rem;
   outline: 3px solid var(--plantain-400);
   outline-offset: 4px;
+}
+
+@media (max-width: 64rem) {
+  .contactList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 48rem) {
@@ -297,6 +338,10 @@
 
   .callAction {
     margin-top: 0.35rem;
+    justify-self: start;
+  }
+
+  .soonAction {
     justify-self: start;
   }
 }

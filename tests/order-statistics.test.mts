@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  PUBLIC_LOCATION_MIN_HANDOFFS,
   getStatisticsLocation,
   normalizeStatisticsCityKey,
   parseStatisticsPeriod,
+  shouldDisplayStatisticsLocation,
 } from "../lib/order-statistics-model.ts";
 
 test("limite les périodes statistiques aux choix prévus", () => {
@@ -53,4 +55,11 @@ test("ne conserve aucune localisation client pour un retrait", () => {
       cityLabel: "",
     },
   );
+});
+
+test("masque les localités sous le seuil public de confidentialité", () => {
+  assert.equal(PUBLIC_LOCATION_MIN_HANDOFFS, 5);
+  assert.equal(shouldDisplayStatisticsLocation(4), false);
+  assert.equal(shouldDisplayStatisticsLocation(5), true);
+  assert.equal(shouldDisplayStatisticsLocation(5.5), false);
 });

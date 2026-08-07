@@ -8,7 +8,6 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const editorialImages = [
   "/images/editorial/alloco-tilapia-ivoirien.webp",
 ] as const;
-const evianImage = "/images/menu/drinks/eau-evian-33cl-officiel.webp";
 const beignetsImage = "/images/menu/beignets-proprietaire.webp";
 const suppliedAttiekeTilapiaImage =
   "/images/menu/attieke-tilapia-proprietaire.webp";
@@ -34,17 +33,16 @@ const verifiedDrinkImages = {
   "gingembre-33": "/images/menu/drinks/gingembre-pexels.webp",
   "gingembre-1l": "/images/menu/drinks/gingembre-pexels.webp",
 } as const;
-const restoredDrinkImages = {
-  guinness: "/images/menu/drinks/guinness-33cl-proprietaire.webp",
-  "super-bock": "/images/menu/drinks/super-bock-33cl-proprietaire.webp",
-  "vin-rouge-primitivo-merlot":
-    "/images/menu/drinks/primitivo-merlot-proprietaire.webp",
-  "vin-rose-oeil-perdrix":
-    "/images/menu/drinks/oeil-de-perdrix-proprietaire.webp",
-} as const;
+const removedDrinkIds = [
+  "eau-plate",
+  "guinness",
+  "super-bock",
+  "vin-rouge-primitivo-merlot",
+  "vin-rose-oeil-perdrix",
+] as const;
 
 test("chaque photo validée est locale et optimisée", () => {
-  assert.equal(menuItems.length, 18);
+  assert.equal(menuItems.length, 13);
   assert.ok(
     menuItems.every(
       (item) => Number.isFinite(item.price) && item.price > 0,
@@ -75,40 +73,10 @@ test("chaque photo validée est locale et optimisée", () => {
 
 test("les références Boissons conservent leurs prix et décrivent leur conditionnement", () => {
   const expectedDrinks = [
-    {
-      id: "eau-plate",
-      price: 2.5,
-      volume: "33 cl",
-      packaging: undefined,
-    },
     { id: "bissap-33", price: 5, volume: "33 cl", packaging: undefined },
     { id: "bissap-1l", price: 14, volume: "1 L", packaging: undefined },
     { id: "gingembre-33", price: 5, volume: "33 cl", packaging: undefined },
     { id: "gingembre-1l", price: 14, volume: "1 L", packaging: undefined },
-    {
-      id: "guinness",
-      price: 6,
-      volume: "33 cl",
-      packaging: "canette",
-    },
-    {
-      id: "super-bock",
-      price: 5,
-      volume: "33 cl",
-      packaging: "bouteille",
-    },
-    {
-      id: "vin-rouge-primitivo-merlot",
-      price: 25,
-      volume: undefined,
-      packaging: "bouteille",
-    },
-    {
-      id: "vin-rose-oeil-perdrix",
-      price: 25,
-      volume: undefined,
-      packaging: "bouteille",
-    },
   ] as const;
 
   for (const expected of expectedDrinks) {
@@ -127,6 +95,16 @@ test("les références Boissons conservent leurs prix et décrivent leur conditi
     } else {
       assert.match(item.image, /^\/images\/menu\/drinks\/[a-z0-9-]+\.webp$/);
     }
+  }
+});
+
+test("la carte ne propose plus de bière, de vin ni d’eau", () => {
+  for (const id of removedDrinkIds) {
+    assert.equal(
+      menuItems.some((item) => item.id === id),
+      false,
+      `Référence encore affichée : ${id}`,
+    );
   }
 });
 
@@ -215,28 +193,6 @@ test("les boissons artisanales utilisent des photographies réelles et sans faus
   );
 });
 
-test("les quatre boissons restaurées affichent le visuel fourni", () => {
-  for (const [id, image] of Object.entries(restoredDrinkImages)) {
-    const item = menuItems.find((candidate) => candidate.id === id);
-
-    assert.ok(item, `Boisson manquante : ${id}`);
-    assert.notEqual(item.imageStatus, "pending");
-    assert.equal(item.image, image);
-    assert.equal(item.imageFit, "contain");
-  }
-});
-
-test("l’eau Evian utilise la bouteille officielle de 33 cl", () => {
-  const item = menuItems.find((candidate) => candidate.id === "eau-plate");
-
-  assert.ok(item);
-  assert.equal(item.name, "Eau Evian");
-  assert.notEqual(item.imageStatus, "pending");
-  assert.equal(item.image, evianImage);
-  assert.equal(item.volume, "33 cl");
-  assert.equal(item.imageFit, "contain");
-});
-
 test("le dégué utilise le visuel fourni pour le dessert", () => {
   const item = menuItems.find((candidate) => candidate.id === "deguee");
 
@@ -255,7 +211,7 @@ test("toutes les références de la carte affichent une image", () => {
   assert.deepEqual(actualPendingIds, []);
   assert.equal(
     menuItems.filter((item) => item.imageStatus !== "pending").length,
-    18,
+    13,
   );
 });
 
@@ -271,17 +227,10 @@ test("les sources externes et les visuels fournis sont documentés", () => {
   assert.ok(
     registry.includes("ChatGPT Image 23 juil. 2026, 23_53_06.png"),
   );
-  assert.ok(registry.includes(evianImage));
   assert.ok(registry.includes(suppliedAttiekeTilapiaImage));
   assert.ok(registry.includes(suppliedAllocoPoissonImage));
   assert.ok(registry.includes(suppliedDessertImage));
   assert.ok(registry.includes(suppliedPlacaliImage));
-  assert.ok(
-    registry.includes(
-      "https://www.evian.com/fr_ch/produits/bouteilles-en-verre/33cl/",
-    ),
-  );
-
   assert.ok(
     registry.includes(
       "https://www.pexels.com/photo/refreshing-hibiscus-drink-with-lime-garnish-36630822/",
@@ -294,10 +243,6 @@ test("les sources externes et les visuels fournis sont documentés", () => {
   );
 
   for (const image of Object.values(verifiedDrinkImages)) {
-    assert.ok(registry.includes(image), `Source non documentée : ${image}`);
-  }
-
-  for (const image of Object.values(restoredDrinkImages)) {
     assert.ok(registry.includes(image), `Source non documentée : ${image}`);
   }
 

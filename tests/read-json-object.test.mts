@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readJsonObject } from "../lib/read-json-object.ts";
+import {
+  hasJsonContentType,
+  readJsonObject,
+} from "../lib/read-json-object.ts";
 
 function jsonRequest(body: string) {
   return new Request("https://example.test/api", {
@@ -27,6 +30,34 @@ test("accepte uniquement un objet JSON", async () => {
       error: "invalid_json",
     });
   }
+});
+
+test("identifie strictement les requêtes JSON", () => {
+  assert.equal(hasJsonContentType(jsonRequest("{}")), true);
+  assert.equal(
+    hasJsonContentType(
+      new Request("https://example.test/api", {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      }),
+    ),
+    true,
+  );
+  assert.equal(
+    hasJsonContentType(
+      new Request("https://example.test/api", {
+        headers: {
+          "Content-Type": "text/plain",
+        },
+      }),
+    ),
+    false,
+  );
+  assert.equal(
+    hasJsonContentType(new Request("https://example.test/api")),
+    false,
+  );
 });
 
 test("refuse un corps dépassant la limite annoncée", async () => {

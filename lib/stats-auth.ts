@@ -1,19 +1,16 @@
 import "server-only";
 
 import {
+  createStatsCredentials,
   validateStatsAuthorization,
   type StatsCredentials,
 } from "@/lib/stats-auth-core";
 
 export function getStatsCredentials(): StatsCredentials | null {
-  const username = process.env.STATS_USER?.trim();
-  const password = process.env.STATS_PASSWORD;
-
-  if (!username || !password || password.length < 12) {
-    return null;
-  }
-
-  return { username, password };
+  return createStatsCredentials(
+    process.env.STATS_USER,
+    process.env.STATS_PASSWORD,
+  );
 }
 
 export function isStatsAuthorizationValid(
