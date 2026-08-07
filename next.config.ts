@@ -39,10 +39,12 @@ const securityHeaders = [
 ] as const;
 
 const nextConfig: NextConfig = {
+  agentRules: false,
   poweredByHeader: false,
   experimental: {
+    useTypeScriptCli: false,
     serverActions: {
-      bodySizeLimit: "64kb",
+      bodySizeLimit: "1mb",
     },
   },
   async redirects() {

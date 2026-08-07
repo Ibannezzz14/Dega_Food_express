@@ -9,31 +9,72 @@ et CSS Modules.
 - `/presentation` : présentation et galerie
 - `/carte` : carte interactive et préparation de la commande
 - `/evenements` : service traiteur avec demande de devis
-- `/contact` : annuaire téléphonique par région et accès au devis traiteur
+- `/avis` : témoignages Instagram administrés
+- `/contact` : contacts distincts pour les commandes, le traiteur et Instagram
+- `/confidentialite` et `/conditions` : informations légales publiques
 - `/statistiques` : tableau de bord privé des demandes géographiques
+- `/statistiques/avis` : gestion privée des témoignages
 
 Le parcours de commande :
 
-- calcule automatiquement le total et les frais de livraison ;
-- offre la livraison lorsque le sous-total dépasse 150 CHF ;
+- calcule automatiquement le total et les frais dans la zone habituelle ;
+- offre la livraison lorsque le sous-total dépasse 150 CHF dans cette zone ;
 - propose des adresses, NPA ou localités suisses et synchronise les trois champs ;
 - vérifie en interne la zone de livraison à partir de l’adresse ;
-- dirige la demande vers le bon numéro WhatsApp ;
+- laisse envoyer une demande hors de la zone habituelle sans inventer de frais
+  ni de total final ;
+- dirige toutes les commandes vers le numéro WhatsApp principal
+  `076 603 60 11` ;
 - conserve le panier pendant la navigation interne, sans conserver l’adresse ;
 - comptabilise de façon agrégée les passages validés vers WhatsApp.
 
-Lausanne et Lucens sont les deux zones actuellement commandables. Genève est
-affichée dans l’interface avec la mention « Contact bientôt disponible » et ne
-dispose volontairement d’aucun numéro, rayon de livraison ou lien WhatsApp
-tant que ces informations ne sont pas confirmées.
+La livraison couvre Lausanne, Lucens, les communes environnantes et les
+localités situées entre les deux secteurs. Toutes les demandes passent par le
+même prestataire et le même numéro, `076 603 60 11`. Une adresse suisse hors
+de la zone habituelle reste envoyable : la faisabilité et les frais sont alors
+confirmés directement, sans montant calculé automatiquement.
+
+Le service traiteur est disponible dans toute la Suisse. Le formulaire de
+devis accepte librement le lieu de l’événement et ouvre WhatsApp vers le
+`078 265 40 81`. Les deux numéros restent affichés à la fin de la page traiteur,
+sans les limiter à une région linguistique. Le devis tient compte du lieu, du
+nombre de personnes, du transport, du matériel, du personnel et des autres
+contraintes logistiques. Aucun supplément n’est inventé par le site.
 
 Le site ne peut pas confirmer qu’un message a ensuite été envoyé dans WhatsApp.
 Les statistiques mesurent donc des passages vers WhatsApp, pas des commandes
-confirmées.
+confirmées. Le mode de paiement est choisi dans le parcours de commande et le
+règlement s’effectue à la livraison, en espèces ou par TWINT. Aucun numéro de
+paiement séparé n’est affiché sur le site.
+
+La page d’accueil comporte un aperçu des témoignages et la page `/avis` les
+rassemble. Aucun visiteur ne peut publier directement un avis sur le site. Les
+témoignages reçus sur Instagram sont gérés uniquement dans l’espace privé
+`/statistiques/avis`.
 
 Les visuels culinaires vérifiés sont optimisés localement en WebP. Les preuves
 de provenance, les licences et les décisions d’audit sont conservées dans les
 documents internes du projet source ; elles ne sont pas affichées aux clients.
+
+## Modifier le contenu
+
+Les informations commerciales principales sont centralisées pour éviter les
+contradictions :
+
+- contacts, zone de livraison, zone traiteur, Instagram, identité et fonds
+  visuels dans
+  `config/site-config.ts` ;
+- plats, prix et images dans `data/menu.ts` ;
+- témoignages vérifiés dans l’espace privé `/statistiques/avis` ;
+- textes des pages dans `app/` et des sections réutilisables dans `components/`.
+
+Le guide détaillé et l’arborescence du projet sont dans
+[`docs/MODIFIER-LE-SITE.md`](docs/MODIFIER-LE-SITE.md).
+
+Les nouvelles photos peuvent être déposées par catégorie dans
+`PHOTOS-DEGA-FOOD-A-INTEGRER/A-INTEGRER/`. Les images publiées restent dans
+`public/images/` et les originaux dans `assets/source-images/`, afin d’éviter
+les copies dispersées.
 
 ## Confidentialité des statistiques
 
@@ -47,8 +88,8 @@ de plus de 730 jours sont supprimés automatiquement lors d’un nouveau passage
 
 ## Lancer le projet
 
-Prérequis : Node.js 24 et npm. PostgreSQL est facultatif pour le site public,
-mais nécessaire pour activer les statistiques.
+Prérequis : Node.js 24 et npm. PostgreSQL est facultatif pour consulter le site,
+mais nécessaire pour les statistiques et l’administration des témoignages.
 
 ```bash
 npm ci
@@ -77,14 +118,26 @@ fois avec un compte de migration :
 psql "$DATABASE_URL" -f db/schema.sql
 ```
 
-Le compte utilisé ensuite par l’application a besoin uniquement de `SELECT`,
-`INSERT`, `UPDATE` et `DELETE` sur `whatsapp_handoff_daily`. Le droit `DELETE`
-sert à la rétention automatique de 730 jours. Aucune création ou modification
-de table n’est exécutée pendant les requêtes.
+Pour une base créée avec l’ancienne version du site, appliquer également la
+migration idempotente :
 
-Sans `DATABASE_URL`, le parcours WhatsApp continue de fonctionner mais aucune
-statistique n’est enregistrée. Sans identifiants statistiques valides,
-`/statistiques` reste fermé.
+```bash
+psql "$DATABASE_URL" -f db/migrations/20260807_customer_review_admin.sql
+```
+
+Le compte utilisé ensuite par l’application a besoin de `SELECT`, `INSERT`,
+`UPDATE` et `DELETE` sur `whatsapp_handoff_daily`, ainsi que de `SELECT` et
+`INSERT`, `UPDATE` sur `customer_reviews` et de `USAGE` sur la séquence
+`customer_reviews_id_seq`. La suppression d’un témoignage depuis
+l’administration est douce et reste donc récupérable en base. Le droit
+`DELETE` reste nécessaire uniquement pour la rétention automatique des
+statistiques de plus de 730 jours. Aucune création ou modification de table
+n’est exécutée pendant les requêtes.
+
+Sans `DATABASE_URL`, le parcours WhatsApp continue de fonctionner, mais les
+statistiques et les témoignages administrés sont indisponibles. Sans
+identifiants privés valides, `/statistiques` et `/statistiques/avis` restent
+fermés.
 
 Ouvrir ensuite [http://localhost:3000](http://localhost:3000).
 
@@ -127,12 +180,12 @@ Pour le déployer sur Vercel :
 2. connecter un fournisseur PostgreSQL depuis le
    [Marketplace Vercel](https://vercel.com/marketplace?category=storage) ;
 3. vérifier que `DATABASE_URL` est disponible dans le projet ;
-4. appliquer `db/schema.sql` une fois dans la console SQL du fournisseur ;
-5. ajouter `STATS_USER` et un `STATS_PASSWORD` unique d’au moins 12 caractères ;
-6. ajouter `SITE_URL` avec l’URL HTTPS définitive du site ;
-7. choisir Node.js 24 dans les réglages du projet ;
-8. configurer puis vérifier les règles de limitation Vercel Firewall
+4. ajouter `STATS_USER` et un `STATS_PASSWORD` unique d’au moins 12 caractères ;
+5. ajouter `SITE_URL` avec l’URL HTTPS définitive du site ;
+6. choisir Node.js 24 dans les réglages du projet ;
+7. configurer puis vérifier les règles de limitation Vercel Firewall
    ci-dessous ;
+8. appliquer le schéma ou la migration PostgreSQL ;
 9. lancer le déploiement puis ouvrir `/statistiques` en HTTPS.
 
 La limitation distribuée doit être appliquée au niveau Vercel, car un compteur
@@ -141,8 +194,8 @@ recommandé, par adresse IP et avec une fenêtre fixe de 60 secondes :
 
 - `/api/address-suggestions` : 60 requêtes ;
 - `/api/delivery-zone` : 30 requêtes ;
-- `/statistiques` : 10 requêtes, afin de limiter aussi les essais
-  d’authentification.
+- `/statistiques/:path*` : 10 requêtes, afin de couvrir le tableau de bord,
+  l’administration des avis et les essais d’authentification.
 
 Commencez en mode journalisation, vérifiez les usages réels, puis activez le
 blocage ou le challenge avant l’ouverture publique. Les deux API refusent déjà

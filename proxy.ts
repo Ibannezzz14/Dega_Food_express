@@ -22,7 +22,7 @@ export function proxy(request: NextRequest) {
   const credentials = getStatsCredentials();
 
   if (!credentials) {
-    return new NextResponse("Statistiques privées non configurées.", {
+    return new NextResponse("Espace d’administration non configuré.", {
       status: 503,
       headers: privateHeaders,
     });
@@ -39,7 +39,7 @@ export function proxy(request: NextRequest) {
       headers: {
         ...privateHeaders,
         "WWW-Authenticate":
-          'Basic realm="Dega Food - Statistiques", charset="UTF-8"',
+          'Basic realm="Dega Food - Administration", charset="UTF-8"',
       },
     });
   }
