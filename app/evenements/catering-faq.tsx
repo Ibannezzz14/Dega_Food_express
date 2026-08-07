@@ -5,19 +5,25 @@ const faqItems = [
     id: "devis",
     question: "Comment le devis est-il établi ?",
     answer:
-      "Le devis est préparé après étude de la date, du lieu, du nombre de convives, des plats et des services souhaités. Le prix n’est pas standardisé.",
+      "Selon la date, le lieu, le nombre de convives, les plats et les services demandés.",
   },
   {
     id: "confirmation",
     question: "Quand la prestation est-elle confirmée ?",
     answer:
-      "La prestation est confirmée après l’échange avec l’équipe, la communication du devis et l’accord des deux parties. Le premier message WhatsApp ne constitue pas une confirmation.",
+      "Après validation du devis par les deux parties. Le message WhatsApp ne confirme pas la prestation.",
+  },
+  {
+    id: "zone",
+    question: "Le service traiteur est-il disponible dans toute la Suisse ?",
+    answer:
+      "Oui. Le lieu, le transport, le matériel, le personnel et les autres besoins sont étudiés dans le devis personnalisé.",
   },
   {
     id: "allergies",
     question: "Comment signaler une allergie ou une contrainte alimentaire ?",
     answer:
-      "Indiquez-la dans le champ Informations complémentaires. L’équipe vous précisera les possibilités, sans pouvoir garantir une absence totale de contamination croisée.",
+      "Indiquez-la dans « Informations complémentaires ». L’absence totale de contamination croisée ne peut pas être garantie.",
   },
 ] as const;
 

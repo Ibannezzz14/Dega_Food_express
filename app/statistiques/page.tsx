@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getOrderStatistics } from "@/lib/order-statistics";
 import {
@@ -7,6 +8,7 @@ import {
   STATISTICS_PERIODS,
 } from "@/lib/order-statistics-model";
 import { isStatsAuthorizationValid } from "@/lib/stats-auth";
+import { DELIVERY_SETTINGS } from "@/config/site-config";
 import styles from "./statistiques.module.css";
 
 export const dynamic = "force-dynamic";
@@ -35,15 +37,12 @@ const dateFormatter = new Intl.DateTimeFormat("fr-CH", {
 });
 
 const breakdownOrder = [
-  { region: "lausanne", fulfillment: "delivery" },
-  { region: "lausanne", fulfillment: "pickup" },
   { region: "lucens", fulfillment: "delivery" },
   { region: "lucens", fulfillment: "pickup" },
 ] as const;
 
 const regionLabels = {
-  lausanne: "Lausanne",
-  lucens: "Lucens",
+  lucens: DELIVERY_SETTINGS.label,
 } as const;
 
 const fulfillmentLabels = {
@@ -72,28 +71,28 @@ function DashboardIntro({
     <section className={styles.intro} aria-labelledby="statistics-title">
       <div className={styles.introInner}>
         <div className={styles.titleBlock}>
-          <p className={styles.eyebrow}>Tableau de bord privé</p>
           <h1 id="statistics-title">D’où viennent les demandes&nbsp;?</h1>
-          <p className={styles.introText}>
-            Suivez les passages validés vers WhatsApp par zone, mode de remise
-            et localité de livraison.
-          </p>
         </div>
 
-        <nav className={styles.periodNav} aria-label="Période d’analyse">
-          <span>Période</span>
-          <div className={styles.periodOptions}>
-            {STATISTICS_PERIODS.map((period) => (
-              <a
-                key={period}
-                href={`/statistiques?periode=${period}`}
-                aria-current={period === periodDays ? "page" : undefined}
-              >
-                {period === 365 ? "1 an" : `${period} j`}
-              </a>
-            ))}
-          </div>
-        </nav>
+        <div className={styles.introActions}>
+          <Link className={styles.reviewsAdminLink} href="/statistiques/avis">
+            Gérer les avis
+          </Link>
+          <nav className={styles.periodNav} aria-label="Période d’analyse">
+            <span>Période</span>
+            <div className={styles.periodOptions}>
+              {STATISTICS_PERIODS.map((period) => (
+                <a
+                  key={period}
+                  href={`/statistiques?periode=${period}`}
+                  aria-current={period === periodDays ? "page" : undefined}
+                >
+                  {period === 365 ? "1 an" : `${period} j`}
+                </a>
+              ))}
+            </div>
+          </nav>
+        </div>
       </div>
     </section>
   );
@@ -149,7 +148,7 @@ export default async function StatisticsPage({
 
   if (result.status !== "ready") {
     return (
-      <main id="contenu" className={styles.page}>
+      <main id="contenu" className={styles.page} tabIndex={-1}>
         <DashboardIntro periodDays={periodDays} />
         <div className={styles.content}>
           <ConfigurationState status={result.status} />
@@ -191,7 +190,7 @@ export default async function StatisticsPage({
   });
 
   return (
-    <main id="contenu" className={styles.page}>
+    <main id="contenu" className={styles.page} tabIndex={-1}>
       <DashboardIntro periodDays={periodDays} />
 
       <div className={styles.content}>
@@ -208,7 +207,6 @@ export default async function StatisticsPage({
             </svg>
           </span>
           <p>
-            <strong>Lecture à connaître.</strong>{" "}
             Un passage correspond à
             l’ouverture de WhatsApp après validation, pas à une commande
             confirmée. Seuls le NPA, la localité, la zone et le mode de remise
@@ -222,12 +220,7 @@ export default async function StatisticsPage({
               00
             </span>
             <div>
-              <p className={styles.stateLabel}>Aucune donnée sur la période</p>
               <h2 id="empty-title">Les prochains passages apparaîtront ici</h2>
-              <p>
-                Le suivi débute dès qu’un client valide sa demande et ouvre
-                WhatsApp depuis le site.
-              </p>
             </div>
           </section>
         ) : (
@@ -235,23 +228,17 @@ export default async function StatisticsPage({
             <section aria-labelledby="overview-title">
               <div className={styles.sectionHeading}>
                 <div>
-                  <p className={styles.sectionLabel}>Vue d’ensemble</p>
                   <h2 id="overview-title">Activité sur {periodDays} jours</h2>
                 </div>
-                <p>
-                  Les comparaisons ci-dessous portent sur les passages
-                  enregistrés pendant la période choisie.
-                </p>
               </div>
 
               <dl className={styles.metricsGrid}>
                 <div className={`${styles.metric} ${styles.metricPrimary}`}>
                   <dt>Passages vers WhatsApp</dt>
                   <dd>{formatCount(summary.handoffs)}</dd>
-                  <span>Demandes validées sur le site</span>
                 </div>
                 <div className={styles.metric}>
-                  <dt>Livraisons</dt>
+                  <dt>Demandes de livraison</dt>
                   <dd>{formatCount(summary.deliveryHandoffs)}</dd>
                   <span>{deliveryShare}% des passages</span>
                 </div>
@@ -270,24 +257,20 @@ export default async function StatisticsPage({
               >
                 <div className={styles.panelHeading}>
                   <div>
-                    <p className={styles.sectionLabel}>Géographie</p>
-                    <h2 id="locations-title">Principales localités livrées</h2>
+                    <h2 id="locations-title">Principales localités demandées</h2>
                   </div>
-                  {snapshot.locations.length > 0 ? (
-                    <span>Top {snapshot.locations.length}</span>
-                  ) : null}
                 </div>
 
                 {snapshot.locations.length > 0 ? (
                   <div
                     className={styles.tableViewport}
                     role="region"
-                    aria-label="Classement des localités livrées"
+                    aria-label="Classement des localités demandées"
                     tabIndex={0}
                   >
                     <table className={styles.locationsTable}>
                       <caption className="sr-only">
-                        Localités de livraison classées par nombre de passages
+                        Localités demandées classées par nombre de passages
                         vers WhatsApp
                       </caption>
                       <thead>
@@ -329,7 +312,6 @@ export default async function StatisticsPage({
               >
                 <div className={styles.panelHeading}>
                   <div>
-                    <p className={styles.sectionLabel}>Répartition</p>
                     <h2 id="breakdown-title">Zone et mode de remise</h2>
                   </div>
                 </div>
@@ -373,12 +355,10 @@ export default async function StatisticsPage({
             >
               <div className={styles.panelHeading}>
                 <div>
-                  <p className={styles.sectionLabel}>Rythme récent</p>
                   <h2 id="trend-title">
                     Tendance sur {snapshot.trend.length} jours
                   </h2>
                 </div>
-                <span>Jour par jour</span>
               </div>
 
               <div

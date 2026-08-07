@@ -1,34 +1,59 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRightIcon, PhoneIcon } from "@/components/icons";
-import { CONTACT_DIRECTORY } from "@/data/contact";
+import Image from "next/image";
+import {
+  ArrowRightIcon,
+  InstagramIcon,
+  MessageIcon,
+} from "@/components/shared/icons";
+import {
+  CATERING_CONTACT,
+  CATERING_AREA_SETTINGS,
+  CATERING_WHATSAPP_HREF,
+  DELIVERY_SETTINGS,
+  INSTAGRAM,
+  ORDER_CONTACT,
+  ORDER_WHATSAPP_HREF,
+  SITE_CONFIG,
+} from "@/config/site-config";
 import { createPageMetadata } from "@/lib/page-metadata";
 import styles from "./contact.module.css";
 
 /*
  * THESIS: Faire du contact un annuaire immédiat, sans décor ni discours commercial.
  * OWN-WORLD: Deux bandes vert nuit et ivoire, filets fins, numéros typographiques et actions nettes.
- * STORY: Comprendre qui appeler, choisir sa région, lancer l’appel ou rejoindre le devis traiteur.
+ * STORY: Comprendre qui appeler, lancer une commande ou préparer un devis traiteur.
  * FIRST VIEWPORT: Une introduction courte précède deux lignes de contact qui portent toute la page.
  * FORM: Table d’appel, troisième structure retenue, composition linéaire — seed 80878522.
  */
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contact | Dega Food Express",
-  description:
-    "Contactez Dega Food Express à Lausanne ou Lucens. Le contact de Genève sera bientôt disponible.",
+  description: `Commandez Dega Food Express au ${ORDER_CONTACT.displayPhone}. ${DELIVERY_SETTINGS.availabilityMessage}. Service traiteur dans toute la Suisse au ${CATERING_CONTACT.displayPhone}.`,
   path: "/contact",
 });
 
 export default function ContactPage() {
   return (
-    <main id="contenu" className={styles.page} data-page="contact">
+    <main
+      id="contenu"
+      className={styles.page}
+      data-page="contact"
+      tabIndex={-1}
+    >
       <section className={styles.introBand} aria-labelledby="contact-title">
+        <Image
+          className={styles.introBackdrop}
+          src={SITE_CONFIG.images.hospitalityBackdrop}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+        />
         <div className={`${styles.contactShell} ${styles.introInner}`}>
           <h1 id="contact-title">Nous contacter</h1>
-          <p>
-            Pour une question ou une commande, choisissez le contact de votre
-            région. Le contact de Genève sera bientôt disponible.
+          <p className={styles.introText}>
+            Pour une commande, une livraison ou un événement, choisissez le
+            contact correspondant.
           </p>
         </div>
       </section>
@@ -39,53 +64,77 @@ export default function ContactPage() {
       >
         <div className={`${styles.contactShell} ${styles.directoryInner}`}>
           <h2 className="sr-only" id="contact-directory-title">
-            Contacts par région
+            Numéros utiles
           </h2>
 
           <address className={styles.contactList}>
-            {CONTACT_DIRECTORY.map((contact) => {
-              if (contact.availability === "coming_soon") {
-                return (
-                  <div
-                    className={`${styles.contactRow} ${styles.contactRowUnavailable}`}
-                    key={contact.id}
-                  >
-                    <span className={styles.contactArea}>{contact.area}</span>
-                    <strong className={styles.contactAvailability}>
-                      {contact.availabilityLabel}
-                    </strong>
-                    <span className={styles.soonAction}>Bientôt</span>
-                  </div>
-                );
-              }
+            <a
+              className={`${styles.contactRow} ${styles.contactRowPrimary}`}
+              href={ORDER_WHATSAPP_HREF}
+              id={ORDER_CONTACT.id}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Commander ou demander une livraison à Lausanne, Lucens ou dans les environs sur WhatsApp au ${ORDER_CONTACT.displayPhone}`}
+            >
+              <span className={styles.contactArea}>
+                {ORDER_CONTACT.label}
+              </span>
+              <span className={styles.contactCopy}>
+                <strong className={styles.contactNumber}>
+                  {ORDER_CONTACT.displayPhone}
+                </strong>
+                <small className={styles.contactDescription}>
+                  {DELIVERY_SETTINGS.availabilityMessage}.
+                </small>
+              </span>
+              <span className={styles.callAction}>
+                <MessageIcon />
+                Écrire sur WhatsApp
+              </span>
+            </a>
 
-              return (
-                <a
-                  className={styles.contactRow}
-                  href={contact.phoneHref}
-                  key={contact.id}
-                  aria-label={`Appeler Dega Food Express à ${contact.area} au ${contact.displayPhone}`}
-                >
-                  <span className={styles.contactArea}>{contact.area}</span>
-                  <strong className={styles.contactNumber}>
-                    {contact.displayPhone}
-                  </strong>
-                  <span className={styles.callAction}>
-                    <PhoneIcon />
-                    Appeler
-                  </span>
-                </a>
-              );
-            })}
+            <a
+              className={styles.contactRow}
+              href={CATERING_WHATSAPP_HREF}
+              id={CATERING_CONTACT.id}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Demander un devis traiteur sur WhatsApp au ${CATERING_CONTACT.displayPhone}`}
+            >
+              <span className={styles.contactArea}>
+                {CATERING_CONTACT.label}
+              </span>
+              <span className={styles.contactCopy}>
+                <strong className={styles.contactNumber}>
+                  {CATERING_CONTACT.displayPhone}
+                </strong>
+                <small className={styles.contactDescription}>
+                  {CATERING_AREA_SETTINGS.label}
+                </small>
+              </span>
+              <span className={styles.callAction}>
+                <MessageIcon />
+                Écrire sur WhatsApp
+              </span>
+            </a>
           </address>
 
-          <div className={styles.cateringPrompt}>
-            <p>Vous organisez un événement&nbsp;?</p>
-            <Link className={styles.cateringLink} href="/evenements">
-              Demander un devis traiteur
-              <ArrowRightIcon />
-            </Link>
-          </div>
+          <a
+            className={styles.instagramCard}
+            href={INSTAGRAM.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <InstagramIcon />
+            <span>
+              <strong>Instagram</strong>
+              <small>{INSTAGRAM.handle}</small>
+              <span className="sr-only">
+                {" "}(s’ouvre dans un nouvel onglet)
+              </span>
+            </span>
+            <ArrowRightIcon />
+          </a>
         </div>
       </section>
     </main>

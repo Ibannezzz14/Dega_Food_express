@@ -1,28 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/shared/icons";
 import styles from "./presentation.module.css";
 
 const values = [
   {
-    title: "La passion",
+    title: "Cuisiner avec attention",
     description:
-      "Le plaisir de cuisiner avec attention et de transmettre des saveurs qui leur tiennent à cœur.",
+      "Préparer chaque commande avec le même soin qu’un repas destiné à leurs proches.",
   },
   {
-    title: "La convivialité",
+    title: "Réunir autour du repas",
     description:
-      "Des plats généreux, pensés pour rapprocher les personnes et accompagner les moments partagés.",
+      "Proposer des plats faits pour les repas quotidiens comme pour les grandes tablées.",
   },
   {
-    title: "L’authenticité",
+    title: "Faire vivre les recettes ivoiriennes",
     description:
-      "Des recettes qui mettent à l’honneur les goûts et les traditions de la cuisine ivoirienne.",
+      "Partager les goûts et les préparations qui relient leur cuisine à la Côte d’Ivoire.",
   },
   {
-    title: "La qualité",
+    title: "Préparer sur commande",
     description:
-      "Des ingrédients choisis avec soin et des préparations réalisées avec exigence.",
+      "Adapter les plats et les quantités à la commande ou aux besoins de l’événement.",
   },
 ] as const;
 
@@ -34,8 +34,8 @@ export default function PresentationStory() {
           <div className={styles.heroCopy}>
             <h1 id="story-title">Notre histoire</h1>
             <p className={styles.heroIntro}>
-              Une passion commune pour une cuisine généreuse, vivante et
-              profondément ivoirienne.
+              Marie-José et Geneviève partagent les recettes ivoiriennes
+              qu’elles aiment cuisiner pour leurs proches.
             </p>
           </div>
 
@@ -68,10 +68,8 @@ export default function PresentationStory() {
             leurs recettes et réunir les personnes autour de plats généreux.
           </p>
           <p>
-            Elles ont choisi de transformer cette passion commune en un
-            service de traiteur, avec une envie simple&nbsp;: faire découvrir
-            une cuisine africaine chaleureuse et mettre en valeur toute la
-            richesse de la cuisine ivoirienne.
+            Elles ont créé Dega Food Express pour proposer leurs plats sur
+            commande et accompagner les repas de famille comme les événements.
           </p>
         </div>
       </section>
@@ -87,27 +85,18 @@ export default function PresentationStory() {
         </div>
 
         <div className={styles.missionCopy}>
-          <h2 id="mission-title">Notre mission</h2>
-          <p className={styles.missionTitle}>
-            Partager des saveurs qui ont une histoire.
-          </p>
+          <h2 id="mission-title">Partager des saveurs qui ont une histoire.</h2>
           <p>
-            Dega Food Express propose des plats authentiques, savoureux et
-            préparés avec soin. Chaque recette est une façon de faire découvrir
-            les traditions, les parfums et la convivialité de la cuisine
-            ivoirienne.
-          </p>
-          <p>
-            Cette cuisine se veut généreuse et accessible à toutes celles et
-            ceux qui souhaitent retrouver ces saveurs ou simplement les
-            découvrir.
+            Dega Food Express prépare des plats ivoiriens sur commande. Chaque
+            recette transmet les goûts, les gestes et la convivialité de cette
+            cuisine.
           </p>
         </div>
       </section>
 
       <section className={styles.values} aria-labelledby="values-title">
         <header className={styles.valuesHeading}>
-          <h2 id="values-title">Des valeurs présentes dans chaque plat.</h2>
+          <h2 id="values-title">Ce qui guide notre cuisine.</h2>
         </header>
 
         <ul className={styles.valuesGrid}>
@@ -122,10 +111,10 @@ export default function PresentationStory() {
 
       <section className={styles.callToAction} aria-labelledby="cta-title">
         <div>
-          <h2 id="cta-title">Goûtez nos spécialités ivoiriennes.</h2>
+          <h2 id="cta-title">Choisissez votre prochain plat.</h2>
         </div>
         <Link href="/carte">
-          Découvrir notre menu
+          Voir la carte
           <ArrowRightIcon />
         </Link>
       </section>

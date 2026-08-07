@@ -6,7 +6,10 @@ const publicRoutes = [
   { path: "/carte", changeFrequency: "weekly", priority: 0.9 },
   { path: "/presentation", changeFrequency: "monthly", priority: 0.7 },
   { path: "/evenements", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/avis", changeFrequency: "weekly", priority: 0.7 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/confidentialite", changeFrequency: "yearly", priority: 0.2 },
+  { path: "/conditions", changeFrequency: "yearly", priority: 0.2 },
 ] as const satisfies ReadonlyArray<{
   path: `/${string}` | "/";
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];

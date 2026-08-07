@@ -3,9 +3,9 @@ import { createPageMetadata } from "@/lib/page-metadata";
 import PresentationStory from "./presentation-story";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Présentation | Dega Food Express",
+  title: "Notre histoire | Dega Food Express",
   description:
-    "Découvrez l’histoire de Marie-José et Geneviève, fondatrices de Dega Food Express, et leur passion pour la cuisine ivoirienne.",
+    "L’histoire de Marie-José et Geneviève, fondatrices de Dega Food Express, et de leur cuisine ivoirienne.",
   path: "/presentation",
   image: {
     url: "/images/menu/attieke-tilapia-proprietaire.webp",
@@ -17,7 +17,7 @@ export const metadata: Metadata = createPageMetadata({
 
 export default function PresentationPage() {
   return (
-    <main id="contenu">
+    <main id="contenu" tabIndex={-1}>
       <PresentationStory />
     </main>
   );

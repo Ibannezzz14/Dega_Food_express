@@ -1,31 +1,47 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/cormorant-garamond/wght.css";
-import "@fontsource-variable/instrument-sans/wght.css";
+import { Fraunces, Manrope } from "next/font/google";
+import {
+  ORDER_CONTACT,
+  SITE_CONFIG,
+} from "@/config/site-config";
 import { createPageMetadata } from "@/lib/page-metadata";
 import { siteUrl } from "@/lib/site-url";
-import SiteFooter from "./site-footer";
-import SiteHeader from "./site-header";
-import { OrderSessionProvider } from "./order-session";
+import SiteFooter from "@/components/layout/site-footer";
+import SiteHeader from "@/components/layout/site-header";
+import NavigationFocus from "@/components/layout/navigation-focus";
+import { OrderSessionProvider } from "@/components/order/order-session-provider";
 import "./globals.css";
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   ...createPageMetadata({
-    title:
-      "Dega Food Express | Cuisine ivoirienne à Lausanne, Lucens & Genève",
-    description:
-      "Composez votre commande de plats ivoiriens à Lausanne ou Lucens. Le contact de Genève sera bientôt disponible.",
+    title: "Dega Food Express | Cuisine ivoirienne à Lausanne et Lucens",
+    description: `Commandes et livraison à Lausanne, Lucens et dans les régions environnantes au ${ORDER_CONTACT.displayPhone}. Service traiteur dans toute la Suisse.`,
     path: "/",
   }),
   icons: {
-    icon: "/images/favicon.webp",
+    icon: SITE_CONFIG.brand.favicon,
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#063f33",
+  themeColor: "#071f1a",
 };
 
 export default function RootLayout({
@@ -34,12 +50,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" data-scroll-behavior="smooth">
+    <html
+      lang="fr"
+      data-scroll-behavior="smooth"
+      className={`${fraunces.variable} ${manrope.variable}`}
+    >
       <body id="top">
         <a className="skip-link" href="#contenu">
           Aller au contenu
         </a>
         <OrderSessionProvider>
+          <NavigationFocus />
           <SiteHeader />
           {children}
           <SiteFooter />

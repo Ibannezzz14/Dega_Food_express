@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/shared/icons";
 import styles from "./status-page.module.css";
 
 type ErrorPageProps = {
@@ -10,13 +10,9 @@ type ErrorPageProps = {
 
 export default function ErrorPage({ reset }: ErrorPageProps) {
   return (
-    <main className={styles.page} id="contenu">
+    <main className={styles.page} id="contenu" tabIndex={-1}>
       <div className={styles.card}>
         <h1>La page ne peut pas s’afficher pour le moment.</h1>
-        <p>
-          Réessayez maintenant. Si le problème persiste, revenez à l’accueil
-          pour poursuivre votre visite.
-        </p>
         <div className={styles.actions}>
           <button
             className={styles.primaryAction}

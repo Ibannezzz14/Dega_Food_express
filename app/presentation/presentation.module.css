@@ -1,12 +1,19 @@
 .story {
   overflow: clip;
-  background: #fbfcf9;
+  background: #f6f0e5;
   color: var(--ink);
 }
 
 .hero {
   padding: clamp(38px, 5vw, 72px) 0;
-  background: var(--forest-900);
+  background:
+    linear-gradient(
+      90deg,
+      rgb(13 58 49 / 42%) 0%,
+      rgb(13 58 49 / 55%) 58%,
+      rgb(13 58 49 / 68%) 100%
+    ),
+    url("/images/site/home-grunge-hero.webp") center right / cover;
   color: var(--cassava-50);
 }
 
@@ -29,7 +36,7 @@
   margin: 0;
   font-family: var(--font-editorial);
   font-size: clamp(4.2rem, 7vw, 6rem);
-  font-weight: 560;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 0.9;
 }
@@ -67,12 +74,11 @@
 
 .originHeading h2,
 .missionCopy h2,
-.missionTitle,
 .valuesHeading h2,
 .callToAction h2 {
   margin: 0;
   font-family: var(--font-editorial);
-  font-weight: 580;
+  font-weight: 600;
   letter-spacing: -0.035em;
 }
 
@@ -93,7 +99,7 @@
   color: var(--forest-900);
   font-family: var(--font-editorial);
   font-size: clamp(1.45rem, 2.2vw, 2rem);
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -158,21 +164,12 @@
 .missionCopy h2 {
   max-width: 610px;
   color: var(--plantain-300);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  line-height: 1.3;
-}
-
-.missionTitle {
-  max-width: 610px;
-  margin-top: 18px;
+  font-family: var(--font-editorial);
   font-size: clamp(2.9rem, 4.5vw, 4.35rem);
   line-height: 0.98;
 }
 
-.missionCopy > p:not(.missionTitle) {
+.missionCopy > p {
   max-width: 56ch;
   margin: 22px 0 0;
   color: #d8e3df;
@@ -220,7 +217,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-size: 1.08rem;
-  font-weight: 720;
+  font-weight: 700;
   letter-spacing: -0.015em;
 }
 
@@ -236,7 +233,9 @@
   justify-content: space-between;
   gap: 56px;
   padding: clamp(64px, 7vw, 90px) max(32px, calc((100vw - 1120px) / 2));
-  background: var(--plantain-400);
+  background:
+    linear-gradient(rgb(201 163 93 / 86%), rgb(201 163 93 / 86%)),
+    url("/images/site/home-grunge-paper.webp") center / cover;
   color: var(--forest-950);
 }
 
@@ -259,7 +258,7 @@
   border-radius: 7px;
   background: var(--forest-950);
   color: var(--cassava-50);
-  font-weight: 720;
+  font-weight: 700;
   text-decoration: none;
   transition:
     background-color 180ms ease-out,
@@ -316,6 +315,9 @@
   .hero {
     padding-top: 54px;
     padding-bottom: 0;
+    background:
+      linear-gradient(rgb(13 58 49 / 60%), rgb(13 58 49 / 60%)),
+      url("/images/site/home-grunge-hero.webp") center right / cover;
   }
 
   .heroInner {

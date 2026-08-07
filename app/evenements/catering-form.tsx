@@ -1,18 +1,13 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { ArrowRightIcon, MessageIcon } from "@/components/icons";
-import {
-  CONTACTS,
-  CONTACT_DIRECTORY,
-  type ContactId,
-} from "@/data/contact";
+import { ArrowRightIcon, MessageIcon } from "@/components/shared/icons";
+import { createCateringWhatsAppHref } from "@/config/site-config";
 import { menuItems } from "@/data/menu";
 import { buildCateringWhatsAppMessage } from "@/lib/catering-whatsapp";
 import styles from "./evenements.module.css";
 
 type FieldName =
-  | "contact"
   | "firstName"
   | "lastName"
   | "phone"
@@ -39,11 +34,9 @@ const errorOrder: readonly FieldName[] = [
   "guestCount",
   "dishes",
   "services",
-  "contact",
 ];
 
 const fieldTargets: Record<FieldName, string> = {
-  contact: "catering-contact-lausanne",
   firstName: "catering-first-name",
   lastName: "catering-last-name",
   phone: "catering-phone",
@@ -68,7 +61,10 @@ const eventTypes = [
 ] as const;
 
 const serviceOptions = [
-  { id: "delivery", label: "Livraison" },
+  {
+    id: "delivery",
+    label: "Livraison selon le lieu et le devis",
+  },
   { id: "setup", label: "Mise en place" },
   { id: "buffet", label: "Présentation en buffet" },
   { id: "onsite", label: "Service sur place" },
@@ -140,7 +136,6 @@ export default function CateringForm() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const contactId = readText(formData, "contact") as ContactId;
     const firstName = readText(formData, "firstName");
     const lastName = readText(formData, "lastName");
     const phone = readText(formData, "phone");
@@ -157,9 +152,6 @@ export default function CateringForm() {
     const services = formData
       .getAll("services")
       .map((value) => String(value));
-    const selectedContact = CONTACTS.find(
-      (contact) => contact.id === contactId,
-    );
     const nextErrors: FormErrors = {};
 
     if (!firstName) {
@@ -214,11 +206,7 @@ export default function CateringForm() {
         "Choisissez au moins un service ou l’option à définir.";
     }
 
-    if (!selectedContact) {
-      nextErrors.contact = "Choisissez le contact qui recevra votre demande.";
-    }
-
-    if (Object.keys(nextErrors).length > 0 || !selectedContact) {
+    if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       window.requestAnimationFrame(() => errorSummaryRef.current?.focus());
       return;
@@ -227,7 +215,6 @@ export default function CateringForm() {
     setErrors({});
 
     const whatsappMessage = buildCateringWhatsAppMessage({
-      contactArea: selectedContact.area,
       firstName,
       lastName,
       phone,
@@ -243,7 +230,7 @@ export default function CateringForm() {
       services,
       details: details || undefined,
     });
-    const whatsappUrl = `https://wa.me/${selectedContact.whatsAppPhone}?text=${encodeURIComponent(whatsappMessage)}`;
+    const whatsappUrl = createCateringWhatsAppHref(whatsappMessage);
 
     window.location.assign(whatsappUrl);
   }
@@ -252,10 +239,6 @@ export default function CateringForm() {
     <section className={styles.formPanel} aria-labelledby="catering-form-title">
       <div className={styles.formHeading}>
         <h2 id="catering-form-title">Préparez votre demande de devis.</h2>
-        <p>
-          Ces informations nous permettent d’étudier votre événement. Les
-          champs sont requis, sauf mention facultatif.
-        </p>
       </div>
 
       <form className={styles.cateringForm} noValidate onSubmit={handleSubmit}>
@@ -465,14 +448,14 @@ export default function CateringForm() {
             </div>
 
             <div className={styles.field}>
-              <label htmlFor="catering-location">Lieu</label>
+              <label htmlFor="catering-location">Lieu en Suisse</label>
               <input
                 id="catering-location"
                 name="location"
                 type="text"
                 autoComplete="address-level2"
                 maxLength={180}
-                placeholder="Ville et adresse si elle est connue"
+                placeholder="Ville, canton et adresse si elle est connue"
                 required
                 aria-invalid={Boolean(errors.location)}
                 aria-describedby={
@@ -619,66 +602,8 @@ export default function CateringForm() {
           </div>
         </fieldset>
 
-        <fieldset
-          className={`${styles.formSection} ${
-            errors.contact ? styles.fieldsetError : ""
-          }`}
-          aria-describedby={
-            errors.contact ? "catering-contact-error" : undefined
-          }
-        >
-          <legend>Région du contact WhatsApp</legend>
-          <div className={styles.formContactOptions}>
-            {CONTACT_DIRECTORY.map((contact) => {
-              if (contact.availability === "coming_soon") {
-                return (
-                  <div
-                    className={`${styles.contactOption} ${styles.contactOptionUnavailable}`}
-                    key={contact.id}
-                    aria-disabled="true"
-                  >
-                    <span className={styles.contactOptionCopy}>
-                      <strong>{contact.area}</strong>
-                      <span>{contact.availabilityLabel}</span>
-                    </span>
-                    <span className={styles.soonMark} aria-hidden="true">
-                      Bientôt
-                    </span>
-                  </div>
-                );
-              }
-
-              return (
-                <label className={styles.contactOption} key={contact.id}>
-                  <input
-                    id={`catering-contact-${contact.id}`}
-                    name="contact"
-                    type="radio"
-                    value={contact.id}
-                    required
-                    onChange={() => clearError("contact")}
-                  />
-                  <span className={styles.contactOptionCopy}>
-                    <strong>{contact.area}</strong>
-                    <span>{contact.displayPhone}</span>
-                  </span>
-                  <span className={styles.radioMark} aria-hidden="true" />
-                </label>
-              );
-            })}
-          </div>
-          {errors.contact ? (
-            <p className={styles.fieldError} id="catering-contact-error">
-              {errors.contact}
-            </p>
-          ) : null}
-        </fieldset>
-
         <div className={styles.submitArea}>
-          <p>
-            Aucun paiement n’est demandé. Vous pourrez relire le message avant
-            de l’envoyer.
-          </p>
+          <p>Aucun paiement n’est demandé.</p>
           <button className={styles.submitButton} type="submit">
             <MessageIcon />
             Continuer sur WhatsApp

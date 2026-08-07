@@ -1,5 +1,5 @@
 .page {
-  --catering-surface: #f7f7f2;
+  --catering-surface: #f6f0e5;
   --catering-paper: #fff;
   --catering-muted: #526760;
   --catering-line: #c8d1cd;
@@ -35,7 +35,14 @@
 
 .hero {
   padding: clamp(4rem, 7vw, 6.75rem) 0;
-  background: var(--forest-950);
+  background:
+    linear-gradient(
+      90deg,
+      rgb(5 30 24 / 42%) 0%,
+      rgb(5 30 24 / 58%) 54%,
+      rgb(5 30 24 / 72%) 100%
+    ),
+    url("/images/site/home-grunge-hero.webp") center right / cover;
   color: var(--cassava-50);
 }
 
@@ -74,6 +81,14 @@
   line-height: 1.7;
 }
 
+.heroArea {
+  max-width: 36rem;
+  margin-top: 1rem !important;
+  color: var(--plantain-300);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .heroActions {
   display: flex;
   flex-wrap: wrap;
@@ -90,7 +105,7 @@
   border: 1px solid transparent;
   border-radius: 0.45rem;
   font-size: 0.94rem;
-  font-weight: 720;
+  font-weight: 700;
   text-decoration: none;
   transition:
     background-color 160ms ease-out,
@@ -149,7 +164,7 @@
 
 .overview {
   padding: var(--catering-section-space) 0;
-  background: var(--catering-paper);
+  background: #f6f0e5;
 }
 
 .overviewInner {
@@ -186,7 +201,7 @@
 }
 
 .serviceList dt {
-  font-weight: 720;
+  font-weight: 700;
 }
 
 .serviceList dd {
@@ -196,8 +211,8 @@
 
 .process {
   padding: var(--catering-section-space) 0;
-  background: var(--forest-900);
-  color: var(--cassava-50);
+  background: #e7dbc4;
+  color: var(--forest-950);
 }
 
 .processHeading {
@@ -214,7 +229,7 @@
 
 .processHeading p {
   max-width: 30rem;
-  color: #c9d8d2;
+  color: var(--catering-muted);
   line-height: 1.7;
 }
 
@@ -223,7 +238,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 0;
   padding: 0;
-  border-block: 1px solid rgb(245 245 240 / 22%);
+  border-block: 1px solid rgb(13 58 49 / 24%);
   list-style: none;
 }
 
@@ -233,7 +248,7 @@
   gap: 1.25rem;
   min-height: 11rem;
   padding: 1.75rem;
-  border-left: 1px solid rgb(245 245 240 / 22%);
+  border-left: 1px solid rgb(13 58 49 / 24%);
 }
 
 .processList li:first-child {
@@ -246,11 +261,11 @@
 }
 
 .stepNumber {
-  color: var(--plantain-300);
-  font-family: var(--font-editorial);
+  color: var(--chili-600);
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-variant-numeric: tabular-nums;
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -260,7 +275,7 @@
 
 .processList p {
   margin-top: 0.75rem !important;
-  color: #c9d8d2;
+  color: var(--catering-muted);
   font-size: 0.92rem;
   line-height: 1.65;
 }
@@ -352,7 +367,7 @@
   color: var(--forest-950);
   font-family: var(--font-editorial);
   font-size: clamp(1.85rem, 3vw, 2.35rem);
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1.05;
 }
 
@@ -457,7 +472,7 @@
 .fieldError {
   margin-top: 0.5rem !important;
   color: #922e23;
-  font-weight: 660;
+  font-weight: 700;
 }
 
 .choiceGroup + .choiceGroup {
@@ -504,7 +519,7 @@
   color: #1d3730;
   cursor: pointer;
   font-size: 0.84rem;
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1.35;
   transition:
     background-color 150ms ease-out,
@@ -526,8 +541,7 @@
   outline-offset: 2px;
 }
 
-.checkOption input,
-.contactOption input {
+.checkOption input {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -566,95 +580,8 @@
   border-top: 1px solid #d9dfdc;
 }
 
-.fieldsetError .checkOption,
-.fieldsetError .contactOption {
+.fieldsetError .checkOption {
   border-color: #b6493c;
-}
-
-.formContactOptions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-}
-
-.contactOption {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
-  min-height: 4.75rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid #98aaa3;
-  border-radius: 0.45rem;
-  background: #fafbf8;
-  cursor: pointer;
-  transition:
-    background-color 150ms ease-out,
-    border-color 150ms ease-out;
-}
-
-.contactOption:hover {
-  border-color: var(--forest-800);
-  background: #fff;
-}
-
-.contactOption:has(input:checked) {
-  border-color: var(--forest-800);
-  background: #edf4f0;
-}
-
-.contactOptionUnavailable {
-  border-style: dashed;
-  background: #f0f2ee;
-  color: #526760;
-  cursor: not-allowed;
-}
-
-.contactOptionUnavailable:hover {
-  border-color: #98aaa3;
-  background: #f0f2ee;
-}
-
-.contactOption:has(input:focus-visible) {
-  outline: 3px solid var(--plantain-400);
-  outline-offset: 2px;
-}
-
-.contactOptionCopy {
-  display: grid;
-}
-
-.contactOptionCopy strong {
-  font-size: 0.92rem;
-}
-
-.contactOptionCopy span {
-  margin-top: 0.2rem;
-  color: var(--catering-muted);
-  font-size: 0.8rem;
-}
-
-.radioMark {
-  display: block;
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 1.5px solid #71877e;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 4px #fafbf8;
-}
-
-.soonMark {
-  color: var(--catering-muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.contactOption:has(input:checked) .radioMark {
-  border-color: var(--forest-800);
-  background: var(--forest-800);
-  box-shadow: inset 0 0 0 4px #edf4f0;
 }
 
 .submitArea {
@@ -685,7 +612,7 @@
   color: #fff;
   font: inherit;
   font-size: 0.9rem;
-  font-weight: 730;
+  font-weight: 700;
   cursor: pointer;
   transition:
     background-color 160ms ease-out,
@@ -710,7 +637,7 @@
 .faq {
   padding: var(--catering-section-space) 0;
   border-top: 1px solid var(--catering-line);
-  background: var(--catering-paper);
+  background: #f6f0e5;
 }
 
 .faqInner {
@@ -799,6 +726,85 @@
   line-height: 1.72;
 }
 
+.finalContacts {
+  padding: var(--catering-section-space) 0;
+  border-top: 1px solid #cfc3aa;
+  background:
+    linear-gradient(rgb(231 219 196 / 88%), rgb(231 219 196 / 88%)),
+    url("/images/site/home-grunge-paper.webp") center / cover;
+  color: var(--forest-950);
+}
+
+.finalContactsInner {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.finalContacts h2 {
+  max-width: 8ch;
+  font-size: clamp(2.75rem, 4.8vw, 4.5rem);
+}
+
+.finalContactList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  font-style: normal;
+}
+
+.finalContactCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  min-height: 9rem;
+  padding: 1.25rem;
+  border: 1px solid #aab8b2;
+  border-radius: 0.7rem;
+  background: rgb(255 255 255 / 96%);
+  color: var(--forest-950);
+  text-decoration: none;
+  transition:
+    border-color 160ms ease-out,
+    background-color 160ms ease-out;
+}
+
+.finalContactCard > svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--chili-600);
+}
+
+.finalContactCopy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.finalContactCopy > span {
+  color: var(--indigo-600);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.finalContactCard strong {
+  font-size: clamp(1.35rem, 2.3vw, 1.9rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+.finalContactCard:hover {
+  border-color: var(--plantain-300);
+  background: #fff;
+}
+
+.finalContactCard:focus-visible {
+  outline: 3px solid var(--plantain-300);
+  outline-offset: 4px;
+}
+
 @media (max-width: 64rem) {
   .heroInner {
     grid-template-columns: minmax(0, 0.9fr) minmax(21rem, 1.1fr);
@@ -821,11 +827,15 @@
 @media (max-width: 50rem) {
   .hero {
     padding: 4rem 0 2.5rem;
+    background:
+      linear-gradient(rgb(5 30 24 / 64%), rgb(5 30 24 / 64%)),
+      url("/images/site/home-grunge-hero.webp") 68% center / cover;
   }
 
   .heroInner,
   .overviewInner,
-  .faqInner {
+  .faqInner,
+  .finalContactsInner {
     grid-template-columns: 1fr;
   }
 
@@ -840,7 +850,8 @@
   }
 
   .overviewInner,
-  .faqInner {
+  .faqInner,
+  .finalContactsInner {
     gap: 2.75rem;
   }
 
@@ -882,7 +893,8 @@
   .overview,
   .process,
   .quoteSection,
-  .faq {
+  .faq,
+  .finalContacts {
     padding-block: 4.25rem;
   }
 
@@ -894,7 +906,7 @@
 
   .fieldGrid,
   .checkGrid,
-  .formContactOptions {
+  .finalContactList {
     grid-template-columns: 1fr;
   }
 
@@ -923,11 +935,11 @@
 @media (prefers-reduced-motion: reduce) {
   .primaryButton,
   .secondaryButton,
+  .finalContactCard,
   .field input,
   .field select,
   .field textarea,
   .checkOption,
-  .contactOption,
   .submitButton,
   .faqMarker::after {
     transition: none;

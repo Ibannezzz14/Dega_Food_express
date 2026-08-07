@@ -42,7 +42,7 @@
 
 .titleBlock h1 {
   margin: 9px 0 0;
-  font-family: var(--font-display);
+  font-family: var(--font-editorial);
   font-size: clamp(2.35rem, 4.4vw, 4rem);
   font-weight: 610;
   letter-spacing: -0.04em;
@@ -59,6 +59,31 @@
 
 .periodNav {
   flex: 0 0 auto;
+}
+
+.introActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: end;
+  gap: 18px;
+}
+
+.reviewsAdminLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 8px 13px;
+  border: 1px solid rgb(245 245 240 / 30%);
+  border-radius: 6px;
+  color: var(--cassava-50);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reviewsAdminLink:hover {
+  border-color: var(--plantain-300);
+  background: rgb(245 245 240 / 7%);
 }
 
 .periodNav > span {
@@ -169,7 +194,7 @@
 .stateCard h2,
 .emptyState h2 {
   margin: 5px 0 0;
-  font-family: var(--font-display);
+  font-family: var(--font-editorial);
   font-weight: 590;
   letter-spacing: -0.025em;
   line-height: 1.16;
@@ -540,6 +565,15 @@
 
   .periodNav {
     width: 100%;
+  }
+
+  .introActions {
+    display: grid;
+    width: 100%;
+  }
+
+  .reviewsAdminLink {
+    justify-content: center;
   }
 
   .periodOptions {

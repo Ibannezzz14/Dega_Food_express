@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
-import {
-  DELIVERY_ZONES,
-  isDeliveryRegionId,
-} from "@/data/delivery-zones";
+import { isDeliveryRegionId } from "@/data/delivery-zones";
 import {
   POSTAL_LOCALITY_LAYER,
   normalizeAddressQuery,
@@ -104,10 +101,7 @@ export async function POST(request: Request) {
   );
 
   if (field === "streetAddress") {
-    const enteredLocationHint = `${postalCode} ${city}`.trim();
-    const locationHint =
-      enteredLocationHint ||
-      (hasKnownRegion ? DELIVERY_ZONES[region].label : "");
+    const locationHint = `${postalCode} ${city}`.trim();
 
     searchUrl.searchParams.set(
       "searchText",

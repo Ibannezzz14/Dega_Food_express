@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import OrderExperience from "@/components/order/order-experience";
 import { isDeliveryRegionId } from "@/data/delivery-zones";
-import OrderExperience from "../order-experience";
 
 export default function CarteContent() {
   const searchParams = useSearchParams();

@@ -1,24 +1,21 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/shared/icons";
+import {
+  CATERING_AREA_SETTINGS,
+  CATERING_CONTACT,
+  ORDER_CONTACT,
+} from "@/config/site-config";
 import { createPageMetadata } from "@/lib/page-metadata";
 import CateringFaq from "./catering-faq";
 import CateringForm from "./catering-form";
 import styles from "./evenements.module.css";
 
-/*
- * THESIS: Présenter le traiteur comme un devis clair, pas comme un catalogue de promesses.
- * OWN-WORLD: Vert minéral, ivoire, laiton discret, cadres fins et photographie culinaire réelle.
- * STORY: Comprendre l’offre, connaître le déroulement, transmettre les informations utiles.
- * FIRST VIEWPORT: Promesse et action à gauche, plat servi à droite, sans badge ni décor superflu.
- * FORM: Dossier de réception, structure 7 attribuée par la graine cc7fa073, lecture linéaire.
- */
-
 export const metadata: Metadata = createPageMetadata({
-  title: "Service traiteur ivoirien | Dega Food Express",
+  title: "Traiteur ivoirien en Suisse | Dega Food Express",
   description:
-    "Présentez votre événement à Dega Food Express et demandez un devis traiteur établi selon les informations communiquées.",
+    "Demandez un devis personnalisé pour un service traiteur ivoirien disponible dans toute la Suisse.",
   path: "/evenements",
   image: {
     url: "/images/menu/alloco-poisson-braise-proprietaire.webp",
@@ -44,39 +41,40 @@ const serviceDetails = [
     description:
       "Le prix et les modalités sont communiqués avant toute confirmation.",
   },
+  {
+    title: "La zone",
+    description: `${CATERING_AREA_SETTINGS.availabilityMessage}. Le lieu et les besoins logistiques sont intégrés au devis.`,
+  },
 ] as const;
 
 const processSteps = [
   {
     title: "Vous présentez votre événement",
-    description:
-      "Date, lieu, nombre de convives, plats envisagés et services souhaités.",
   },
   {
     title: "Nous étudions la demande",
-    description:
-      "Marie-José et Geneviève échangent avec vous sur les possibilités.",
   },
   {
     title: "Vous recevez le devis",
-    description:
-      "La prestation est confirmée après validation du devis et des modalités.",
   },
 ] as const;
 
 export default function EventsPage() {
   return (
-    <main id="contenu" className={styles.page}>
+    <main id="contenu" className={styles.page} tabIndex={-1}>
       <section className={styles.hero} aria-labelledby="catering-title">
         <div className={styles.heroInner}>
           <div className={styles.heroCopy}>
             <h1 id="catering-title">
-              Un service traiteur pensé pour votre événement.
+              Un service traiteur pour votre événement.
             </h1>
             <p className={styles.heroText}>
               Repas de famille, cérémonie, association ou réception
-              professionnelle&nbsp;: nous préparons une proposition selon vos
-              besoins. Le devis est établi sur demande.
+              professionnelle&nbsp;: indiquez le lieu, la date et le nombre de
+              convives. Nous préparons le devis.
+            </p>
+            <p className={styles.heroArea}>
+              {CATERING_AREA_SETTINGS.availabilityMessage}.
             </p>
             <div className={styles.heroActions}>
               <a className={styles.primaryButton} href="#devis-traiteur">
@@ -84,7 +82,7 @@ export default function EventsPage() {
                 <ArrowRightIcon />
               </a>
               <Link className={styles.secondaryButton} href="/carte">
-                Consulter la carte
+                Voir la carte
               </Link>
             </div>
           </div>
@@ -105,13 +103,8 @@ export default function EventsPage() {
         <div className={styles.overviewInner}>
           <div className={styles.overviewCopy}>
             <h2 id="overview-title">
-              Une proposition adaptée à votre réception.
+              Ce que le devis précise.
             </h2>
-            <p>
-              Chaque demande est étudiée séparément. Indiquez-nous l’occasion,
-              la date, le lieu et le nombre de convives&nbsp;: nous échangeons
-              ensuite avec vous sur le menu et l’organisation.
-            </p>
           </div>
 
           <dl className={styles.serviceList}>
@@ -129,10 +122,6 @@ export default function EventsPage() {
         <div className={styles.sectionShell}>
           <header className={styles.processHeading}>
             <h2 id="process-title">Comment se prépare votre devis.</h2>
-            <p>
-              Trois étapes simples, de votre première demande à la
-              confirmation.
-            </p>
           </header>
 
           <ol className={styles.processList}>
@@ -143,7 +132,6 @@ export default function EventsPage() {
                 </span>
                 <div>
                   <h3>{step.title}</h3>
-                  <p>{step.description}</p>
                 </div>
               </li>
             ))}
@@ -164,13 +152,43 @@ export default function EventsPage() {
       <section className={styles.faq} aria-labelledby="faq-title">
         <div className={styles.faqInner}>
           <header className={styles.faqHeading}>
-            <h2 id="faq-title">Avant votre demande.</h2>
-            <p>
-              Les informations essentielles sur le devis, la confirmation et
-              les contraintes alimentaires.
-            </p>
+            <h2 id="faq-title">Questions fréquentes</h2>
           </header>
           <CateringFaq />
+        </div>
+      </section>
+
+      <section
+        className={styles.finalContacts}
+        aria-labelledby="catering-contacts-title"
+      >
+        <div className={`${styles.sectionShell} ${styles.finalContactsInner}`}>
+          <h2 id="catering-contacts-title">Contacts directs</h2>
+          <address className={styles.finalContactList}>
+            <a
+              className={styles.finalContactCard}
+              href={ORDER_CONTACT.phoneHref}
+              aria-label={`Appeler pour les commandes et la livraison au ${ORDER_CONTACT.displayPhone}`}
+            >
+              <span className={styles.finalContactCopy}>
+                <span>{ORDER_CONTACT.label}</span>
+                <strong>{ORDER_CONTACT.displayPhone}</strong>
+              </span>
+              <ArrowRightIcon />
+            </a>
+
+            <a
+              className={styles.finalContactCard}
+              href={CATERING_CONTACT.phoneHref}
+              aria-label={`Appeler le service traiteur au ${CATERING_CONTACT.displayPhone}`}
+            >
+              <span className={styles.finalContactCopy}>
+                <span>Service traiteur</span>
+                <strong>{CATERING_CONTACT.displayPhone}</strong>
+              </span>
+              <ArrowRightIcon />
+            </a>
+          </address>
         </div>
       </section>
     </main>
