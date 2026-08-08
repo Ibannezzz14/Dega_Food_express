@@ -9,8 +9,6 @@ import OrderStepsSection from "@/components/home/order-steps-section";
 import PresentationSection from "@/components/home/presentation-section";
 import ReviewsSection from "@/components/reviews/customer-reviews-section";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = createPageMetadata({
   title: "Dega Food Express | Cuisine ivoirienne à Lausanne et Lucens",
   description: `Commandes et livraison à Lausanne, Lucens et dans les régions environnantes au ${ORDER_CONTACT.displayPhone}. Service traiteur dans toute la Suisse.`,

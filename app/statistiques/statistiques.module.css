@@ -35,7 +35,7 @@
   color: var(--plantain-300);
   font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -44,7 +44,7 @@
   margin: 9px 0 0;
   font-family: var(--font-editorial);
   font-size: clamp(2.35rem, 4.4vw, 4rem);
-  font-weight: 610;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.02;
   text-wrap: balance;
@@ -195,7 +195,7 @@
 .emptyState h2 {
   margin: 5px 0 0;
   font-family: var(--font-editorial);
-  font-weight: 590;
+  font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.16;
 }
@@ -238,7 +238,7 @@
   margin: 13px 0 7px;
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 4vw, 3.65rem);
-  font-weight: 610;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1;
 }
@@ -345,7 +345,7 @@
 .locationsTable td:last-child {
   color: var(--forest-900);
   font-family: var(--font-display);
-  font-weight: 650;
+  font-weight: 600;
   text-align: right;
 }
 
@@ -380,7 +380,7 @@
 
 .breakdownMeta > span:last-child {
   font-family: var(--font-display);
-  font-weight: 650;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -449,7 +449,7 @@
   color: var(--forest-900);
   font-family: var(--font-display);
   font-size: 0.78rem;
-  font-weight: 650;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -531,7 +531,7 @@
   color: #d8ddd6;
   font-family: var(--font-display);
   font-size: clamp(4rem, 9vw, 6rem);
-  font-weight: 620;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 0.8;
 }

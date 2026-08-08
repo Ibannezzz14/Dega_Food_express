@@ -28,7 +28,7 @@ import styles from "./contact.module.css";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contact | Dega Food Express",
-  description: `Commandez Dega Food Express au ${ORDER_CONTACT.displayPhone}. ${DELIVERY_SETTINGS.availabilityMessage}. Service traiteur dans toute la Suisse au ${CATERING_CONTACT.displayPhone}.`,
+  description: `Commandes, livraison et service traiteur au ${ORDER_CONTACT.displayPhone}. ${DELIVERY_SETTINGS.availabilityMessage}. Le service traiteur est également joignable au ${CATERING_CONTACT.displayPhone}.`,
   path: "/contact",
 });
 
@@ -74,7 +74,7 @@ export default function ContactPage() {
               id={ORDER_CONTACT.id}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Commander ou demander une livraison à Lausanne, Lucens ou dans les environs sur WhatsApp au ${ORDER_CONTACT.displayPhone}`}
+              aria-label={`Commander, demander une livraison ou contacter le service traiteur sur WhatsApp au ${ORDER_CONTACT.displayPhone} (s’ouvre dans un nouvel onglet)`}
             >
               <span className={styles.contactArea}>
                 {ORDER_CONTACT.label}
@@ -99,7 +99,7 @@ export default function ContactPage() {
               id={CATERING_CONTACT.id}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Demander un devis traiteur sur WhatsApp au ${CATERING_CONTACT.displayPhone}`}
+              aria-label={`Demander un devis traiteur sur WhatsApp au ${CATERING_CONTACT.displayPhone} (s’ouvre dans un nouvel onglet)`}
             >
               <span className={styles.contactArea}>
                 {CATERING_CONTACT.label}

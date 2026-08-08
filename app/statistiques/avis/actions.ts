@@ -2,12 +2,13 @@
 
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import sharp from "sharp";
 import {
   createAdminCustomerReview,
   MAX_REVIEW_AVATAR_BYTES,
   moveAdminCustomerReview,
+  parseCustomerReviewId,
   REVIEW_AVATAR_MIME_TYPES,
   softDeleteAdminCustomerReview,
   updateAdminCustomerReview,
@@ -28,8 +29,7 @@ async function requireAdministrator() {
 }
 
 function parseReviewId(value: FormDataEntryValue | null) {
-  const id = String(value ?? "");
-  return /^\d{1,18}$/.test(id) ? id : null;
+  return parseCustomerReviewId(String(value ?? ""));
 }
 
 function hasSignature(
@@ -96,12 +96,12 @@ async function readAvatar(
       limitInputPixels: 16_000_000,
     })
       .rotate()
-      .resize(512, 512, {
+      .resize(192, 192, {
         fit: "cover",
         position: "attention",
         withoutEnlargement: true,
       })
-      .webp({ quality: 82 })
+      .webp({ quality: 80 })
       .toBuffer();
 
     if (
@@ -143,6 +143,7 @@ function validateForm(formData: FormData) {
 }
 
 function refreshReviewPages() {
+  updateTag("customer-reviews");
   revalidatePath("/");
   revalidatePath("/avis");
   revalidatePath("/statistiques/avis");

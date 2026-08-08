@@ -28,11 +28,10 @@ import {
 } from "@/lib/order-payment";
 import { trackOrderHandoff } from "@/lib/order-statistics";
 import { validateDeliveryZone } from "@/lib/validate-delivery-zone";
+import { createRequestId } from "@/lib/observability";
+import type { OrderActionState } from "@/lib/order-domain";
 
-export type OrderActionState = {
-  status: "idle" | "error";
-  message: string;
-};
+export type { OrderActionState } from "@/lib/order-domain";
 
 type OrderLine = {
   id: string;
@@ -64,6 +63,7 @@ export async function prepareWhatsAppOrder(
   _previousState: OrderActionState,
   formData: FormData,
 ): Promise<OrderActionState> {
+  const requestId = createRequestId();
   const regionId = String(formData.get("region") ?? "");
 
   if (!isDeliveryRegionId(regionId)) {
@@ -199,6 +199,7 @@ export async function prepareWhatsAppOrder(
       streetAddress,
       postalCode,
       city,
+      requestId,
     );
 
     if (zoneValidation.status === "not_found") {
@@ -212,7 +213,7 @@ export async function prepareWhatsAppOrder(
       return {
         status: "error",
         message:
-          "La zone de livraison ne peut pas être vérifiée actuellement. Réessayez.",
+          `La zone de livraison ne peut pas être vérifiée actuellement. Réessayez. Référence ${zoneValidation.reference ?? "NON-DISPONIBLE"}.`,
       };
     }
 

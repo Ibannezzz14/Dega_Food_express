@@ -18,7 +18,7 @@ export const metadata: Metadata = createPageMetadata({
     "Demandez un devis personnalisé pour un service traiteur ivoirien disponible dans toute la Suisse.",
   path: "/evenements",
   image: {
-    url: "/images/menu/alloco-poisson-braise-proprietaire.webp",
+    url: "/images/menu/alloco-poisson-braise-retouche.webp",
     width: 720,
     height: 720,
     alt: "Poisson braisé servi avec de l’alloco et des crudités",
@@ -89,11 +89,11 @@ export default function EventsPage() {
 
           <figure className={styles.heroVisual}>
             <Image
-              src="/images/menu/alloco-poisson-braise-proprietaire.webp"
+              src="/images/menu/alloco-poisson-braise-retouche.webp"
               alt="Poisson braisé et alloco présentés dans des barquettes"
               fill
               priority
-              sizes="(max-width: 800px) 100vw, 54vw"
+              sizes="(max-width: 896px) calc(100vw - 2rem), (max-width: 1280px) 54vw, 640px"
             />
           </figure>
         </div>
@@ -139,15 +139,14 @@ export default function EventsPage() {
         </div>
       </section>
 
-      <section
+      <div
         className={styles.quoteSection}
         id="devis-traiteur"
-        aria-labelledby="catering-form-title"
       >
         <div className={styles.quoteInner}>
           <CateringForm />
         </div>
-      </section>
+      </div>
 
       <section className={styles.faq} aria-labelledby="faq-title">
         <div className={styles.faqInner}>
@@ -168,7 +167,7 @@ export default function EventsPage() {
             <a
               className={styles.finalContactCard}
               href={ORDER_CONTACT.phoneHref}
-              aria-label={`Appeler pour les commandes et la livraison au ${ORDER_CONTACT.displayPhone}`}
+              aria-label={`Appeler pour les commandes, la livraison ou le service traiteur au ${ORDER_CONTACT.displayPhone}`}
             >
               <span className={styles.finalContactCopy}>
                 <span>{ORDER_CONTACT.label}</span>

@@ -4,18 +4,11 @@
   --catering-muted: #526760;
   --catering-line: #c8d1cd;
   --catering-section-space: clamp(4.5rem, 7vw, 6.75rem);
-  overflow: clip;
   background: var(--catering-surface);
   color: var(--ink);
 }
 
-.page h1,
-.page h2,
-.page h3,
-.page p,
-.page figure,
-.page dl,
-.page dd {
+.page :where(h1, h2, h3, p, figure, dl, dd) {
   margin: 0;
 }
 
@@ -51,7 +44,10 @@
 .sectionShell,
 .quoteInner,
 .faqInner {
-  width: min(calc(100% - clamp(2rem, 5vw, 3rem)), 76rem);
+  width: min(
+    var(--container-wide),
+    calc(100% - (2 * var(--page-gutter)))
+  );
   margin-inline: auto;
 }
 
@@ -75,7 +71,7 @@
 
 .heroText {
   max-width: 36rem;
-  margin-top: 1.75rem !important;
+  margin-top: 1.75rem;
   color: #cfddd8;
   font-size: clamp(1.03rem, 1.35vw, 1.15rem);
   line-height: 1.7;
@@ -83,7 +79,7 @@
 
 .heroArea {
   max-width: 36rem;
-  margin-top: 1rem !important;
+  margin-top: 1rem;
   color: var(--plantain-300);
   font-size: 0.9rem;
   font-weight: 700;
@@ -150,7 +146,6 @@
 .heroVisual {
   position: relative;
   aspect-ratio: 4 / 3;
-  min-height: 27rem;
   overflow: hidden;
   border: 1px solid rgb(245 245 240 / 16%);
   border-radius: 0.75rem;
@@ -181,13 +176,6 @@
   font-size: clamp(2.75rem, 4.8vw, 4.5rem);
 }
 
-.overviewCopy > p {
-  max-width: 38rem;
-  margin-top: 1.5rem !important;
-  color: var(--catering-muted);
-  line-height: 1.75;
-}
-
 .serviceList {
   border-top: 1px solid var(--catering-line);
 }
@@ -216,21 +204,11 @@
 }
 
 .processHeading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.58fr);
-  gap: clamp(2rem, 6vw, 5rem);
-  align-items: end;
   margin-bottom: clamp(2.5rem, 4vw, 3.25rem);
 }
 
 .processHeading h2 {
   max-width: 13ch;
-}
-
-.processHeading p {
-  max-width: 30rem;
-  color: var(--catering-muted);
-  line-height: 1.7;
 }
 
 .processList {
@@ -246,18 +224,12 @@
   display: grid;
   grid-template-columns: 2.25rem minmax(0, 1fr);
   gap: 1.25rem;
-  min-height: 11rem;
   padding: 1.75rem;
   border-left: 1px solid rgb(13 58 49 / 24%);
 }
 
 .processList li:first-child {
-  padding-left: 0;
   border-left: 0;
-}
-
-.processList li:last-child {
-  padding-right: 0;
 }
 
 .stepNumber {
@@ -273,15 +245,7 @@
   font-size: 1.04rem;
 }
 
-.processList p {
-  margin-top: 0.75rem !important;
-  color: var(--catering-muted);
-  font-size: 0.92rem;
-  line-height: 1.65;
-}
-
 .quoteSection {
-  scroll-margin-top: 6rem;
   padding: var(--catering-section-space) 0;
   background: var(--catering-surface);
 }
@@ -298,22 +262,12 @@
 }
 
 .formHeading {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(15rem, 0.88fr);
-  gap: clamp(1.75rem, 6vw, 4rem);
-  align-items: end;
   padding: clamp(2.25rem, 4.5vw, 3.5rem) var(--form-gutter);
   border-bottom: 1px solid var(--catering-line);
 }
 
 .formHeading h2 {
-  max-width: 12ch;
-}
-
-.formHeading > p {
-  max-width: 31rem;
-  color: var(--catering-muted);
-  line-height: 1.7;
+  max-width: 16ch;
 }
 
 .cateringForm {
@@ -465,12 +419,12 @@
 }
 
 .fieldHelp {
-  margin-top: 0.5rem !important;
+  margin-top: 0.5rem;
   color: #5f736c;
 }
 
 .fieldError {
-  margin-top: 0.5rem !important;
+  margin-top: 0.5rem;
   color: #922e23;
   font-weight: 700;
 }
@@ -580,8 +534,14 @@
   border-top: 1px solid #d9dfdc;
 }
 
-.fieldsetError .checkOption {
+.choiceGroupError .checkOption {
   border-color: #b6493c;
+}
+
+.choiceGroup:focus-visible {
+  border-radius: 0.25rem;
+  outline: 3px solid var(--plantain-400);
+  outline-offset: 6px;
 }
 
 .submitArea {
@@ -645,13 +605,6 @@
   grid-template-columns: minmax(17rem, 0.72fr) minmax(24rem, 1.28fr);
   gap: clamp(3rem, 7vw, 6rem);
   align-items: start;
-}
-
-.faqHeading p {
-  max-width: 32rem;
-  margin-top: 1.35rem !important;
-  color: var(--catering-muted);
-  line-height: 1.7;
 }
 
 .faqList {
@@ -815,16 +768,12 @@
     font-size: clamp(3.1rem, 6vw, 4.6rem);
   }
 
-  .heroVisual {
-    min-height: 0;
-  }
-
   .checkGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 50rem) {
+@media (max-width: 56rem) {
   .hero {
     padding: 4rem 0 2.5rem;
     background:
@@ -833,10 +782,12 @@
   }
 
   .heroInner,
-  .overviewInner,
-  .faqInner,
   .finalContactsInner {
     grid-template-columns: 1fr;
+  }
+
+  .heroInner {
+    gap: 2.5rem;
   }
 
   .hero h1 {
@@ -846,19 +797,22 @@
 
   .heroVisual {
     aspect-ratio: 16 / 10;
-    margin-top: 0.5rem;
   }
 
-  .overviewInner,
-  .faqInner,
   .finalContactsInner {
     gap: 2.75rem;
   }
+}
 
-  .processHeading,
-  .formHeading {
+@media (max-width: 50rem) {
+  .overviewInner,
+  .faqInner {
     grid-template-columns: 1fr;
-    align-items: start;
+  }
+
+  .overviewInner,
+  .faqInner {
+    gap: 2.75rem;
   }
 
   .processList {
@@ -869,8 +823,8 @@
   .processList li:first-child,
   .processList li:last-child {
     min-height: 0;
-    padding: 1.75rem 0;
-    border-top: 1px solid rgb(245 245 240 / 22%);
+    padding: 1.5rem 0;
+    border-top: 1px solid rgb(13 58 49 / 24%);
     border-left: 0;
   }
 
@@ -881,6 +835,10 @@
 }
 
 @media (max-width: 36rem) {
+  .heroInner {
+    gap: 2rem;
+  }
+
   .heroActions {
     width: 100%;
   }
@@ -919,7 +877,9 @@
     width: 100%;
   }
 
-  .faqInner {
+  .overviewInner,
+  .faqInner,
+  .finalContactsInner {
     gap: 2.25rem;
   }
 

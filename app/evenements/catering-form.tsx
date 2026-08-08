@@ -1,6 +1,11 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import {
+  useRef,
+  useState,
+  type FormEvent,
+  type MouseEvent,
+} from "react";
 import { ArrowRightIcon, MessageIcon } from "@/components/shared/icons";
 import { createCateringWhatsAppHref } from "@/config/site-config";
 import { menuItems } from "@/data/menu";
@@ -132,6 +137,26 @@ export default function CateringForm() {
     }
   }
 
+  function handleErrorLinkClick(
+    event: MouseEvent<HTMLAnchorElement>,
+    field: FieldName,
+  ) {
+    const errorTarget = document.getElementById(fieldTargets[field]);
+
+    if (!errorTarget) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const focusTarget =
+      field === "dishes" || field === "services"
+        ? errorTarget.querySelector<HTMLElement>('input[type="checkbox"]')
+        : errorTarget;
+
+    (focusTarget ?? errorTarget).focus();
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -253,7 +278,12 @@ export default function CateringForm() {
             <ul>
               {visibleErrors.map((field) => (
                 <li key={field}>
-                  <a href={`#${fieldTargets[field]}`}>{errors[field]}</a>
+                  <a
+                    href={`#${fieldTargets[field]}`}
+                    onClick={(event) => handleErrorLinkClick(event, field)}
+                  >
+                    {errors[field]}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -380,7 +410,7 @@ export default function CateringForm() {
                   handleEventTypeChange(event.currentTarget.value)
                 }
               >
-                <option value="">Sélectionnez un événement</option>
+                <option value="">Sélectionnez</option>
                 {eventTypes.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -455,7 +485,7 @@ export default function CateringForm() {
                 type="text"
                 autoComplete="address-level2"
                 maxLength={180}
-                placeholder="Ville, canton et adresse si elle est connue"
+                placeholder="Ville, canton, adresse (si connue)"
                 required
                 aria-invalid={Boolean(errors.location)}
                 aria-describedby={
@@ -502,20 +532,21 @@ export default function CateringForm() {
           </div>
         </fieldset>
 
-        <fieldset
-          className={`${styles.formSection} ${
-            errors.dishes || errors.services ? styles.fieldsetError : ""
-          }`}
-        >
+        <fieldset className={styles.formSection}>
           <legend>Votre prestation</legend>
 
           <div
-            className={styles.choiceGroup}
+            className={`${styles.choiceGroup} ${
+              errors.dishes ? styles.choiceGroupError : ""
+            }`}
             id="catering-dishes"
             role="group"
+            tabIndex={-1}
             aria-labelledby="catering-dishes-title"
             aria-describedby={
-              errors.dishes ? "catering-dishes-error" : "catering-dishes-help"
+              errors.dishes
+                ? "catering-dishes-help catering-dishes-error"
+                : "catering-dishes-help"
             }
           >
             <div className={styles.choiceHeading}>
@@ -546,13 +577,16 @@ export default function CateringForm() {
           </div>
 
           <div
-            className={styles.choiceGroup}
+            className={`${styles.choiceGroup} ${
+              errors.services ? styles.choiceGroupError : ""
+            }`}
             id="catering-services"
             role="group"
+            tabIndex={-1}
             aria-labelledby="catering-services-title"
             aria-describedby={
               errors.services
-                ? "catering-services-error"
+                ? "catering-services-help catering-services-error"
                 : "catering-services-help"
             }
           >

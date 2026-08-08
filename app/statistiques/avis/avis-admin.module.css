@@ -193,8 +193,8 @@
 }
 
 .field small {
-  color: #687b74;
-  font-size: 0.7rem;
+  color: #536760;
+  font-size: 0.75rem;
 }
 
 .messageField {
@@ -222,13 +222,15 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  font-weight: 650;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.2rem;
+  font-weight: 600;
 }
 
 .checkOptions input,
 .removeAvatar input {
-  width: 1rem;
-  min-height: 1rem;
+  width: 1.15rem;
+  min-height: 1.15rem;
   margin: 0;
   accent-color: var(--forest-800);
 }
@@ -309,8 +311,12 @@
   display: grid;
 }
 
-.cardIdentity strong {
+.cardIdentity h3 {
+  margin: 0;
   overflow-wrap: anywhere;
+  font-family: var(--font-manrope);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .cardIdentity small {

@@ -1,7 +1,11 @@
 import type { NextRequest } from "next/server";
-import { REVIEW_AVATAR_MIME_TYPES } from "@/lib/customer-reviews";
+import {
+  parseCustomerReviewId,
+  REVIEW_AVATAR_MIME_TYPES,
+} from "@/lib/customer-reviews";
 import { getAnalyticsDatabase } from "@/lib/postgres";
 import { isStatsAuthorizationValid } from "@/lib/stats-auth";
+import { createRequestId, logServerError } from "@/lib/observability";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +26,8 @@ export async function GET(
   }
 
   const { id } = await params;
-  if (!/^\d{1,18}$/.test(id)) {
+  const databaseId = parseCustomerReviewId(id);
+  if (!databaseId) {
     return new Response(null, { status: 404 });
   }
 
@@ -40,7 +45,7 @@ export async function GET(
     >`
       SELECT avatar_data, avatar_mime_type
       FROM customer_reviews
-      WHERE id = ${id}
+      WHERE id = ${databaseId}::bigint
         AND deleted_at IS NULL
         AND avatar_data IS NOT NULL
         AND avatar_mime_type IS NOT NULL
@@ -60,7 +65,12 @@ export async function GET(
         "X-Content-Type-Options": "nosniff",
       },
     });
-  } catch {
+  } catch (error) {
+    logServerError("review_avatar_database_failed", error, {
+      requestId: createRequestId(),
+      route: "/statistiques/avis/avatar/[id]",
+      operation: "read_admin_avatar",
+    });
     return new Response(null, { status: 404 });
   }
 }

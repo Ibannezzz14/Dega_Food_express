@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import ReviewCard from "@/components/reviews/review-card";
 import { SITE_CONFIG } from "@/config/site-config";
-import { getPublishedCustomerReviews } from "@/lib/customer-reviews";
+import { getCachedPublishedCustomerReviews } from "@/lib/customer-reviews";
 import { createPageMetadata } from "@/lib/page-metadata";
 import styles from "./avis.module.css";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Témoignages | Dega Food Express",
@@ -16,10 +14,14 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 export default async function ReviewsPage() {
-  const result = await getPublishedCustomerReviews(24);
+  const result = await getCachedPublishedCustomerReviews(24);
   const testimonials = result.reviews;
   const hasTestimonials =
     result.status === "ready" && testimonials.length > 0;
+  const emptyMessage =
+    result.status === "error"
+      ? `Les témoignages sont momentanément indisponibles. Référence ${result.reference}.`
+      : "Les témoignages arriveront bientôt.";
 
   return (
     <main id="contenu" className={styles.page} tabIndex={-1}>
@@ -38,7 +40,7 @@ export default async function ReviewsPage() {
           <p className={styles.heroText}>
             {hasTestimonials
               ? "Des messages reçus directement sur Instagram."
-              : "Les témoignages arriveront bientôt."}
+              : emptyMessage}
           </p>
         </div>
       </section>

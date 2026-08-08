@@ -100,8 +100,10 @@ function DashboardIntro({
 
 function ConfigurationState({
   status,
+  reference,
 }: {
   status: "unconfigured" | "error";
+  reference?: string;
 }) {
   const isUnconfigured = status === "unconfigured";
 
@@ -126,6 +128,9 @@ function ConfigurationState({
             ? "Ajoutez la variable DATABASE_URL à l’environnement du site. Le tableau commencera ensuite à agréger les nouveaux passages vers WhatsApp."
             : "La commande WhatsApp reste opérationnelle. Réessayez dans quelques instants pour consulter les données."}
         </p>
+        {!isUnconfigured && reference ? (
+          <p>Référence de l’erreur&nbsp;: {reference}</p>
+        ) : null}
       </div>
     </section>
   );
@@ -151,7 +156,10 @@ export default async function StatisticsPage({
       <main id="contenu" className={styles.page} tabIndex={-1}>
         <DashboardIntro periodDays={periodDays} />
         <div className={styles.content}>
-          <ConfigurationState status={result.status} />
+          <ConfigurationState
+            status={result.status}
+            reference={result.status === "error" ? result.reference : undefined}
+          />
         </div>
       </main>
     );

@@ -54,6 +54,9 @@ export default function PrivacyPage() {
                 rel="noopener noreferrer"
               >
                 Informations sur GeoAdmin
+                <span className="sr-only">
+                  {" "}(s’ouvre dans un nouvel onglet)
+                </span>
               </a>
             </li>
           </ul>

@@ -12,6 +12,10 @@ import {
   hasJsonContentType,
   readJsonObject,
 } from "@/lib/read-json-object";
+import {
+  createRequestId,
+  logServerError,
+} from "@/lib/observability";
 
 type AddressSearchField = "streetAddress" | "postalCode" | "city";
 
@@ -30,11 +34,13 @@ type GeoAdminResponse = {
 function noStoreJson(
   body: { suggestions: AddressLookupSuggestion[] },
   status = 200,
+  requestId = createRequestId(),
 ) {
   return NextResponse.json(body, {
     status,
     headers: {
       "Cache-Control": "no-store",
+      "X-Request-Id": requestId,
     },
   });
 }
@@ -48,8 +54,11 @@ function isAddressSearchField(value: unknown): value is AddressSearchField {
 }
 
 export async function POST(request: Request) {
+  const requestId = createRequestId();
+  const startedAt = Date.now();
+
   if (!hasJsonContentType(request)) {
-    return noStoreJson({ suggestions: [] }, 415);
+    return noStoreJson({ suggestions: [] }, 415, requestId);
   }
 
   const body = await readJsonObject(request);
@@ -57,12 +66,13 @@ export async function POST(request: Request) {
     return noStoreJson(
       { suggestions: [] },
       body.error === "too_large" ? 413 : 400,
+      requestId,
     );
   }
   const payload: AddressSuggestionRequest = body.value;
 
   if (payload.field !== undefined && !isAddressSearchField(payload.field)) {
-    return noStoreJson({ suggestions: [] }, 400);
+    return noStoreJson({ suggestions: [] }, 400, requestId);
   }
 
   const field = isAddressSearchField(payload.field)
@@ -93,7 +103,7 @@ export async function POST(request: Request) {
     query.split(" ").length > 10 ||
     (region.length > 0 && !hasKnownRegion)
   ) {
-    return noStoreJson({ suggestions: [] }, 400);
+    return noStoreJson({ suggestions: [] }, 400, requestId);
   }
 
   const searchUrl = new URL(
@@ -136,7 +146,14 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      return noStoreJson({ suggestions: [] }, 503);
+      logServerError("geoadmin_suggestions_failed", new Error("upstream_status"), {
+        requestId,
+        route: "GeoAdmin/SearchServer",
+        operation: "address_suggestions",
+        statusCode: response.status,
+        durationMs: Date.now() - startedAt,
+      });
+      return noStoreJson({ suggestions: [] }, 503, requestId);
     }
 
     const geoAdminPayload = (await response.json()) as GeoAdminResponse;
@@ -217,8 +234,14 @@ export async function POST(request: Request) {
       })
       .slice(0, 6);
 
-    return noStoreJson({ suggestions });
-  } catch {
-    return noStoreJson({ suggestions: [] }, 503);
+    return noStoreJson({ suggestions }, 200, requestId);
+  } catch (error) {
+    logServerError("geoadmin_suggestions_failed", error, {
+      requestId,
+      route: "GeoAdmin/SearchServer",
+      operation: "address_suggestions",
+      durationMs: Date.now() - startedAt,
+    });
+    return noStoreJson({ suggestions: [] }, 503, requestId);
   }
 }

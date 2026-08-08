@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import OrderExperience from "@/components/order/order-experience";
 import { SITE_CONFIG } from "@/config/site-config";
+import { isDeliveryRegionId } from "@/data/delivery-zones";
 import { createPageMetadata } from "@/lib/page-metadata";
-import CarteContent from "./carte-content";
 
 export const metadata: Metadata = createPageMetadata({
   title: "La carte | Dega Food Express",
@@ -18,12 +17,30 @@ export const metadata: Metadata = createPageMetadata({
   },
 });
 
-export default function CartePage() {
+type CartePageProps = {
+  searchParams: Promise<{
+    mode?: string | string[];
+    zone?: string | string[];
+  }>;
+};
+
+function firstValue(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function CartePage({ searchParams }: CartePageProps) {
+  const params = await searchParams;
+  const zone = firstValue(params.zone);
+  const initialRegion = zone && isDeliveryRegionId(zone) ? zone : null;
+  const initialFulfillmentMethod =
+    firstValue(params.mode) === "livraison" ? "delivery" : null;
+
   return (
     <main id="contenu" tabIndex={-1}>
-      <Suspense fallback={<OrderExperience />}>
-        <CarteContent />
-      </Suspense>
+      <OrderExperience
+        initialFulfillmentMethod={initialFulfillmentMethod}
+        initialRegion={initialRegion}
+      />
     </main>
   );
 }

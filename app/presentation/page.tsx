@@ -5,7 +5,7 @@ import PresentationStory from "./presentation-story";
 export const metadata: Metadata = createPageMetadata({
   title: "Notre histoire | Dega Food Express",
   description:
-    "L’histoire de Marie-José et Geneviève, fondatrices de Dega Food Express, et de leur cuisine ivoirienne.",
+    "L’histoire de Geneviève et Marie-José, fondatrices de Dega Food Express, et de leur cuisine ivoirienne.",
   path: "/presentation",
   image: {
     url: "/images/menu/attieke-tilapia-proprietaire.webp",

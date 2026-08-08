@@ -4,6 +4,8 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import ConfirmDeleteButton from "@/components/admin/confirm-delete-button";
+import AdminSubmitButton from "@/components/admin/admin-submit-button";
+import AdminFeedback from "@/components/admin/admin-feedback";
 import { listAdminCustomerReviews } from "@/lib/customer-reviews";
 import { isStatsAuthorizationValid } from "@/lib/stats-auth";
 import {
@@ -89,7 +91,12 @@ export default async function ReviewsAdminPage({
           </div>
           <nav className={styles.adminNav} aria-label="Espace d’administration">
             <Link href="/statistiques">Statistiques</Link>
-            <Link href="/avis" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="/avis"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Voir la page publique (s’ouvre dans un nouvel onglet)"
+            >
               Voir la page publique
             </Link>
           </nav>
@@ -98,14 +105,18 @@ export default async function ReviewsAdminPage({
 
       <div className={styles.content}>
         {success ? (
-          <p className={styles.successMessage} role="status">
-            {success}
-          </p>
+          <AdminFeedback
+            className={styles.successMessage}
+            kind="success"
+            message={success}
+          />
         ) : null}
         {error ? (
-          <p className={styles.errorMessage} role="alert">
-            {error}
-          </p>
+          <AdminFeedback
+            className={styles.errorMessage}
+            kind="error"
+            message={error}
+          />
         ) : null}
 
         {result.status !== "ready" ? (
@@ -196,9 +207,12 @@ export default async function ReviewsAdminPage({
                       Mettre en avant
                     </label>
                   </div>
-                  <button className={styles.primaryButton} type="submit">
+                  <AdminSubmitButton
+                    className={styles.primaryButton}
+                    pendingLabel="Ajout…"
+                  >
                     Ajouter
-                  </button>
+                  </AdminSubmitButton>
                 </div>
               </form>
             </section>
@@ -218,7 +232,11 @@ export default async function ReviewsAdminPage({
               {result.reviews.length > 0 ? (
                 <ol className={styles.adminReviewList}>
                   {result.reviews.map((review, index) => (
-                    <li className={styles.adminReviewCard} key={review.id}>
+                    <li
+                      className={styles.adminReviewCard}
+                      key={review.id}
+                      aria-labelledby={`review-${review.id}-title`}
+                    >
                       <div className={styles.cardToolbar}>
                         <div className={styles.cardIdentity}>
                           {review.avatarUrl ? (
@@ -235,7 +253,9 @@ export default async function ReviewsAdminPage({
                             </span>
                           )}
                           <div>
-                            <strong>{review.displayName}</strong>
+                            <h3 id={`review-${review.id}-title`}>
+                              {review.displayName}
+                            </h3>
                             <small>{getVisibilityLabel(review)}</small>
                           </div>
                         </div>
@@ -244,24 +264,24 @@ export default async function ReviewsAdminPage({
                           <form action={moveReviewAction}>
                             <input name="id" type="hidden" value={review.id} />
                             <input name="direction" type="hidden" value="up" />
-                            <button
-                              type="submit"
+                            <AdminSubmitButton
                               disabled={index === 0}
-                              aria-label={`Monter le témoignage de ${review.displayName}`}
+                              ariaLabel={`Monter le témoignage de ${review.displayName}`}
+                              pendingLabel="…"
                             >
                               ↑
-                            </button>
+                            </AdminSubmitButton>
                           </form>
                           <form action={moveReviewAction}>
                             <input name="id" type="hidden" value={review.id} />
                             <input name="direction" type="hidden" value="down" />
-                            <button
-                              type="submit"
+                            <AdminSubmitButton
                               disabled={index === result.reviews.length - 1}
-                              aria-label={`Descendre le témoignage de ${review.displayName}`}
+                              ariaLabel={`Descendre le témoignage de ${review.displayName}`}
+                              pendingLabel="…"
                             >
                               ↓
-                            </button>
+                            </AdminSubmitButton>
                           </form>
                         </div>
                       </div>
@@ -358,15 +378,22 @@ export default async function ReviewsAdminPage({
                               Mettre en avant
                             </label>
                           </div>
-                          <button className={styles.secondaryButton} type="submit">
+                          <AdminSubmitButton
+                            className={styles.secondaryButton}
+                            pendingLabel="Enregistrement…"
+                            ariaLabel={`Enregistrer le témoignage de ${review.displayName}`}
+                          >
                             Enregistrer
-                          </button>
+                          </AdminSubmitButton>
                         </div>
                       </form>
 
                       <form className={styles.deleteForm} action={deleteReviewAction}>
                         <input name="id" type="hidden" value={review.id} />
-                        <ConfirmDeleteButton className={styles.deleteButton} />
+                        <ConfirmDeleteButton
+                          className={styles.deleteButton}
+                          displayName={review.displayName}
+                        />
                       </form>
                     </li>
                   ))}

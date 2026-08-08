@@ -34,14 +34,14 @@ export default function PresentationStory() {
           <div className={styles.heroCopy}>
             <h1 id="story-title">Notre histoire</h1>
             <p className={styles.heroIntro}>
-              Marie-José et Geneviève partagent les recettes ivoiriennes
+              Geneviève et Marie-José partagent les recettes ivoiriennes
               qu’elles aiment cuisiner pour leurs proches.
             </p>
           </div>
 
           <figure className={styles.heroVisual}>
             <Image
-              src="/images/menu/alloco-agneau-choukouya-proprietaire.webp"
+              src="/images/menu/alloco-agneau-choukouya-retouche.webp"
               alt="Alloco servi avec de l’agneau choukouya et des crudités"
               fill
               priority
@@ -55,16 +55,16 @@ export default function PresentationStory() {
         <div className={styles.originHeading}>
           <h2 id="origin-title">Deux femmes réunies par la cuisine.</h2>
           <p className={styles.founderNames}>
-            Marie-José
+            Geneviève
             <span aria-hidden="true">&</span>
             <span className="sr-only"> et </span>
-            Geneviève
+            Marie-José
           </p>
         </div>
 
         <div className={styles.originCopy}>
           <p>
-            Depuis toujours, Marie-José et Geneviève aiment cuisiner, partager
+            Depuis toujours, Geneviève et Marie-José aiment cuisiner, partager
             leurs recettes et réunir les personnes autour de plats généreux.
           </p>
           <p>
@@ -77,7 +77,7 @@ export default function PresentationStory() {
       <section className={styles.mission} aria-labelledby="mission-title">
         <div className={styles.missionVisual}>
           <Image
-            src="/images/menu/alloco-poulet-choukouya-proprietaire.webp"
+            src="/images/menu/alloco-poulet-choukouya-retouche.webp"
             alt="Alloco servi avec du poulet choukouya et des crudités"
             fill
             sizes="(max-width: 900px) 100vw, 46vw"
