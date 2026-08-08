@@ -99,7 +99,7 @@ export const menuItems: readonly MenuItem[] = [
     name: "Alloco poisson braisé",
     price: 25,
     category: "plats",
-    image: "/images/menu/alloco-poisson-braise-proprietaire.webp",
+    image: "/images/menu/alloco-poisson-braise-retouche.webp",
     imageAlt: "Poisson braisé servi avec de l’alloco et des crudités",
   },
   {
@@ -107,7 +107,7 @@ export const menuItems: readonly MenuItem[] = [
     name: "Alloco poulet choukouya",
     price: 25,
     category: "plats",
-    image: "/images/menu/alloco-poulet-choukouya-proprietaire.webp",
+    image: "/images/menu/alloco-poulet-choukouya-retouche.webp",
     imageAlt:
       "Alloco servi avec du poulet choukouya aux oignons et des crudités",
   },
@@ -116,7 +116,7 @@ export const menuItems: readonly MenuItem[] = [
     name: "Alloco agneau choukouya",
     price: 25,
     category: "plats",
-    image: "/images/menu/alloco-agneau-choukouya-proprietaire.webp",
+    image: "/images/menu/alloco-agneau-choukouya-retouche.webp",
     imageAlt:
       "Alloco servi avec de l’agneau choukouya, de l’attiéké et des crudités",
   },
@@ -142,8 +142,9 @@ export const menuItems: readonly MenuItem[] = [
     name: "Dégué",
     price: 6,
     category: "desserts",
-    image: "/images/menu/deguee-proprietaire.webp",
-    imageAlt: "Coupe de dégué au lait fermenté et aux grains de mil",
+    image: "/images/menu/degue-retouche.webp",
+    imageAlt:
+      "Coupe de dégué aux grains de mil, garnie de fraises et de myrtilles",
   },
   {
     id: "bissap-33",

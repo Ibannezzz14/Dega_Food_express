@@ -49,6 +49,7 @@ export type DeliveryZoneResult =
     }
   | {
       status: "service_error";
+      reference?: string;
     };
 
 export type Coordinates = {

@@ -1,15 +1,12 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export default function NavigationFocus() {
   const pathname = usePathname();
-  const router = useRouter();
   const previousPathnameRef = useRef(pathname);
   const shouldResetScrollRef = useRef(false);
-  const isNavigatingRef = useRef(false);
-  const cancelPendingNavigationRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     function rememberInternalNavigation(event: MouseEvent) {
@@ -50,69 +47,14 @@ export default function NavigationFocus() {
 
       shouldResetScrollRef.current = changesPage;
 
-      if (
-        !changesPage ||
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      if (isNavigatingRef.current) {
-        return;
-      }
-
-      const currentPage = document.querySelector<HTMLElement>(".page-transition");
-
-      if (!currentPage) {
-        router.push(`${destination.pathname}${destination.search}`);
-        return;
-      }
-
-      isNavigatingRef.current = true;
-      currentPage.classList.add("page-transition--leaving");
-
-      let hasNavigated = false;
-      const targetHref = `${destination.pathname}${destination.search}`;
-
-      function navigate() {
-        if (hasNavigated) {
-          return;
-        }
-
-        hasNavigated = true;
-        cancelPendingNavigationRef.current?.();
-        cancelPendingNavigationRef.current = null;
-        router.push(targetHref);
-      }
-
-      function handleExitEnd(animationEvent: AnimationEvent) {
-        if (
-          animationEvent.target === currentPage &&
-          animationEvent.animationName === "page-exit"
-        ) {
-          navigate();
-        }
-      }
-
-      const fallbackTimer = window.setTimeout(navigate, 180);
-
-      currentPage.addEventListener("animationend", handleExitEnd);
-      cancelPendingNavigationRef.current = () => {
-        window.clearTimeout(fallbackTimer);
-        currentPage.removeEventListener("animationend", handleExitEnd);
-      };
     }
 
     document.addEventListener("click", rememberInternalNavigation, true);
 
     return () => {
       document.removeEventListener("click", rememberInternalNavigation, true);
-      cancelPendingNavigationRef.current?.();
-      cancelPendingNavigationRef.current = null;
     };
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     if (previousPathnameRef.current === pathname) {
@@ -120,7 +62,6 @@ export default function NavigationFocus() {
     }
 
     previousPathnameRef.current = pathname;
-    isNavigatingRef.current = false;
     const shouldResetScroll = shouldResetScrollRef.current;
     shouldResetScrollRef.current = false;
 

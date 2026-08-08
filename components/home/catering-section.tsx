@@ -26,7 +26,7 @@ export default function CateringSection() {
       <div className={styles.inner}>
         <figure className={styles.visual}>
           <Image
-            src="/images/menu/alloco-poisson-braise-proprietaire.webp"
+            src="/images/menu/alloco-poisson-braise-retouche.webp"
             alt="Poisson braisé servi avec de l’alloco et des crudités"
             fill
             sizes="(max-width: 800px) 100vw, 46vw"
@@ -47,14 +47,11 @@ export default function CateringSection() {
 
           <div className={styles.routePanel}>
             <p>{CATERING_AREA_SETTINGS.availabilityMessage}</p>
-            <ol aria-label={CATERING_AREA_SETTINGS.routeLabel}>
+            <ul aria-label={CATERING_AREA_SETTINGS.routeLabel}>
               {CATERING_AREA_SETTINGS.locations.map((location) => (
-                <li key={location}>
-                  <span aria-hidden="true" />
-                  <strong>{location}</strong>
-                </li>
+                <li key={location}>{location}</li>
               ))}
-            </ol>
+            </ul>
           </div>
 
           <p className={styles.deliveryNote}>

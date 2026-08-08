@@ -19,7 +19,7 @@ import {
   getDeliveryPaymentMethodLabel,
   type DeliveryPaymentMethod,
 } from "@/lib/order-payment";
-import type { OrderActionState } from "@/app/carte/order-actions";
+import type { OrderActionState } from "@/lib/order-domain";
 import type { FulfillmentMethod } from "./order-session-provider";
 import styles from "./order-experience.module.css";
 

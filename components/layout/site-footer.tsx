@@ -72,7 +72,7 @@ export default function SiteFooter() {
                 href={ORDER_WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${ORDER_CONTACT.label} : ${ORDER_CONTACT.displayPhone}`}
+                aria-label={`${ORDER_CONTACT.label} : ${ORDER_CONTACT.displayPhone} (s’ouvre dans un nouvel onglet)`}
               >
                 <span className={styles.phoneIcon}>
                   <MessageIcon />
@@ -92,7 +92,7 @@ export default function SiteFooter() {
                 href={CATERING_WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${CATERING_CONTACT.label} : ${CATERING_CONTACT.displayPhone}`}
+                aria-label={`${CATERING_CONTACT.label} : ${CATERING_CONTACT.displayPhone} (s’ouvre dans un nouvel onglet)`}
               >
                 <span className={styles.phoneIcon}>
                   <MessageIcon />
@@ -132,10 +132,6 @@ export default function SiteFooter() {
                 {" "}
                 (s’ouvre dans un nouvel onglet)
               </span>
-            </a>
-            <a className={styles.backToTop} href="#top">
-              Retour en haut
-              <ArrowRightIcon />
             </a>
           </div>
         </div>

@@ -8,6 +8,7 @@ import {
 } from "@/app/carte/order-actions";
 import {
   DELIVERY_ZONES,
+  isDeliveryRegionId,
   type DeliveryZoneResult,
   type RegionId,
 } from "@/data/delivery-zones";
@@ -58,6 +59,39 @@ type ZoneCheckState =
   | { status: "idle" | "checking" }
   | DeliveryZoneResult;
 
+function isDeliveryZoneResult(value: unknown): value is DeliveryZoneResult {
+  if (!value || typeof value !== "object" || !("status" in value)) {
+    return false;
+  }
+
+  const result = value as {
+    status?: unknown;
+    region?: unknown;
+    distanceKm?: unknown;
+    reference?: unknown;
+  };
+
+  if (result.status === "not_found") {
+    return true;
+  }
+
+  if (result.status === "service_error") {
+    return (
+      result.reference === undefined ||
+      (typeof result.reference === "string" && result.reference.length <= 24)
+    );
+  }
+
+  return (
+    (result.status === "eligible" || result.status === "on_request") &&
+    typeof result.region === "string" &&
+    isDeliveryRegionId(result.region) &&
+    typeof result.distanceKm === "number" &&
+    Number.isFinite(result.distanceKm) &&
+    result.distanceKm >= 0
+  );
+}
+
 type OrderExperienceProps = {
   initialFulfillmentMethod?: FulfillmentMethod | null;
   initialRegion?: RegionId | null;
@@ -98,9 +132,9 @@ export default function OrderExperience({
     setQuantities,
   } = useOrderSession();
   const fulfillmentMethod =
-    storedFulfillmentMethod ?? initialFulfillmentMethod;
+    initialFulfillmentMethod ?? storedFulfillmentMethod;
   const region =
-    storedRegion ?? initialRegion ?? DELIVERY_SETTINGS.regionId;
+    initialRegion ?? storedRegion ?? DELIVERY_SETTINGS.regionId;
   const [streetAddress, setStreetAddress] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [city, setCity] = useState("");
@@ -218,7 +252,14 @@ export default function OrderExperience({
           }),
           signal: controller.signal,
         });
-        const result = (await response.json()) as DeliveryZoneResult;
+        const result: unknown = await response.json();
+
+        if (
+          !isDeliveryZoneResult(result) ||
+          (!response.ok && response.status !== 400 && response.status !== 503)
+        ) {
+          throw new Error("Delivery zone unavailable");
+        }
 
         if (!controller.signal.aborted) {
           setZoneCheck(result);
@@ -505,7 +546,7 @@ export default function OrderExperience({
                     {zoneCheck.status === "not_found" &&
                       "Vérifiez la rue, le NPA et la localité."}
                     {zoneCheck.status === "service_error" &&
-                      "La vérification est momentanément indisponible."}
+                      `La vérification est momentanément indisponible.${zoneCheck.reference ? ` Référence ${zoneCheck.reference}.` : ""}`}
                   </span>
 
                   {zoneCheck.status === "service_error" && (
@@ -754,7 +795,7 @@ export default function OrderExperience({
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={`Demander le prix de ${item.name} sur WhatsApp au ${ORDER_CONTACT.displayPhone}`}
+                        aria-label={`Demander le prix de ${item.name} sur WhatsApp au ${ORDER_CONTACT.displayPhone} (s’ouvre dans un nouvel onglet)`}
                       >
                         <MessageIcon />
                         Demander

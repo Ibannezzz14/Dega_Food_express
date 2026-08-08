@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { ArrowRightIcon } from "@/components/shared/icons";
-import { getPublishedCustomerReviews } from "@/lib/customer-reviews";
+import { getCachedPublishedCustomerReviews } from "@/lib/customer-reviews";
 import ReviewCard from "./review-card";
 import styles from "./customer-reviews.module.css";
 
 export default async function ReviewsSection() {
-  const result = await getPublishedCustomerReviews(3);
+  const result = await getCachedPublishedCustomerReviews(3);
   const reviews = result.reviews;
   const hasReviews = result.status === "ready" && reviews.length > 0;
+  const availabilityMessage =
+    result.status === "error"
+      ? `Les témoignages sont momentanément indisponibles. Référence ${result.reference}.`
+      : "Les témoignages arriveront bientôt.";
 
   return (
     <section className={styles.section} id="avis" aria-labelledby="reviews-title">
@@ -18,7 +22,7 @@ export default async function ReviewsSection() {
             <h2 id="reviews-title">Témoignages de nos clients.</h2>
             {!hasReviews ? (
               <p className={styles.comingSoon}>
-                Les témoignages arriveront bientôt.
+                {availabilityMessage}
               </p>
             ) : null}
           </div>

@@ -29,7 +29,8 @@ function createSwissPhone(internationalPhone: `41${string}`): SwissPhone {
   };
 }
 
-// Pour changer un numéro, modifiez uniquement la valeur correspondante ici.
+// Le 076 gère les commandes, la livraison et peut aussi recevoir le traiteur.
+// Le 078 reste le contact dédié au formulaire de devis traiteur.
 const ORDER_PHONE = createSwissPhone("41766036011");
 const CATERING_PHONE = createSwissPhone("41782654081");
 // Clé technique historique conservée pour les liens et statistiques existants.
@@ -90,10 +91,10 @@ export const SITE_CONFIG = {
   contacts: {
     orders: {
       id: "orders",
-      label: "Commandes & livraison",
+      label: "Commandes & service traiteur",
       ...ORDER_PHONE,
       whatsappMessage:
-        "Bonjour Dega Food Express, je souhaite passer une commande.",
+        "Bonjour Dega Food Express, je souhaite vous contacter pour une commande, une livraison ou le service traiteur.",
     },
     catering: {
       id: "catering",
