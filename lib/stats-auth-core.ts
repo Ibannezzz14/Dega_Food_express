@@ -1,3 +1,5 @@
+import { createHash, timingSafeEqual } from "node:crypto";
+
 export type StatsCredentials = {
   username: string;
   password: string;
@@ -30,15 +32,10 @@ export function createStatsCredentials(
 }
 
 function constantTimeEqual(left: string, right: string) {
-  const length = Math.max(left.length, right.length);
-  let difference = left.length ^ right.length;
+  const leftDigest = createHash("sha256").update(left, "utf8").digest();
+  const rightDigest = createHash("sha256").update(right, "utf8").digest();
 
-  for (let index = 0; index < length; index += 1) {
-    difference |=
-      (left.charCodeAt(index) || 0) ^ (right.charCodeAt(index) || 0);
-  }
-
-  return difference === 0;
+  return timingSafeEqual(leftDigest, rightDigest);
 }
 
 export function validateStatsAuthorization(

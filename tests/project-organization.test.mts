@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import test from "node:test";
 
@@ -8,6 +8,7 @@ const photoWorkspace = resolve(
   projectRoot,
   "PHOTOS-DEGA-FOOD-A-INTEGRER",
 );
+const retouchWorkspace = resolve(projectRoot, "Photos à retoucher");
 
 test("le dossier photo sert uniquement de boîte de dépôt", () => {
   assert.ok(existsSync(resolve(photoWorkspace, "README.md")));
@@ -32,24 +33,29 @@ test("le dossier photo sert uniquement de boîte de dépôt", () => {
   }
 });
 
-test("les originaux ne sont jamais exposés directement dans public/images", () => {
+test("les originaux restent locaux et ne sont jamais exposés dans public/images", () => {
   const publicImageRoot = resolve(projectRoot, "public/images");
   const rootFiles = readdirSync(publicImageRoot, { withFileTypes: true })
     .filter((entry) => entry.isFile())
     .map((entry) => entry.name);
+  const gitignore = readFileSync(resolve(projectRoot, ".gitignore"), "utf8");
 
   assert.deepEqual(rootFiles, []);
+  assert.ok(gitignore.includes("assets/source-images/"));
+  assert.ok(gitignore.includes("Photos à retoucher/"));
+});
 
-  for (const source of [
-    "aller-retour-source.png",
-    "pastel-source.jpeg",
-    "foutou-sauce-graine-source.jpg",
-  ]) {
-    assert.ok(existsSync(resolve(projectRoot, "assets/source-images/raw", source)));
+test("les prises brutes restent dans un dossier local ignoré par Git", () => {
+  const gitignore = readFileSync(resolve(projectRoot, ".gitignore"), "utf8");
+
+  assert.ok(gitignore.includes("Photos à retoucher/"));
+
+  if (existsSync(retouchWorkspace)) {
+    assert.ok(existsSync(resolve(retouchWorkspace, "README.md")));
   }
 });
 
-test("les anciens fonds sont archivés hors du dossier public", () => {
+test("les anciens fonds ne sont plus publiés", () => {
   const archivedBackgrounds = [
     "activity-route-textile.webp",
     "hero-textile-ivoirien.webp",
@@ -61,15 +67,6 @@ test("les anciens fonds sont archivés hors du dossier public", () => {
     assert.equal(
       existsSync(resolve(projectRoot, "public/images/site", filename)),
       false,
-    );
-    assert.ok(
-      existsSync(
-        resolve(
-          projectRoot,
-          "assets/source-images/legacy/public-images/site",
-          filename,
-        ),
-      ),
     );
   }
 });

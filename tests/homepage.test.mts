@@ -41,6 +41,10 @@ const heroStyleSource = readFileSync(
   resolve(projectRoot, "components/home/home-hero.module.css"),
   "utf8",
 );
+const cateringStyleSource = readFileSync(
+  resolve(projectRoot, "components/home/catering-section.module.css"),
+  "utf8",
+);
 const homepageSources = [
   heroSource,
   gallerySource,
@@ -149,7 +153,7 @@ test("le plat signature reprend le nouvel attiéké tilapia fourni", () => {
 test("les visuels de l’accueil sont réels et correctement associés", () => {
   assert.ok(
     homepageSources.includes(
-      "/images/menu/alloco-poisson-braise-proprietaire.webp",
+      "/images/menu/alloco-poisson-braise-retouche.webp",
     ),
   );
   assert.ok(homepageSources.includes("/images/menu/foutou-sauce-graine.webp"));
@@ -158,7 +162,8 @@ test("les visuels de l’accueil sont réels et correctement associés", () => {
 
 test("la présentation reprend les faits réels sur les fondatrices", () => {
   assert.ok(presentationSource.includes("Une cuisine née du partage"));
-  assert.ok(presentationSource.includes("Marie-José et Geneviève"));
+  assert.ok(presentationSource.includes("Geneviève et Marie-José"));
+  assert.ok(!presentationSource.includes("Marie-José et Geneviève"));
 });
 
 test("le parcours de commande décrit les trois actions réelles", () => {
@@ -193,6 +198,15 @@ test("un seul bloc traiteur distingue la couverture nationale de la livraison r�
   );
   assert.ok(cateringSource.includes("CATERING_AREA_SETTINGS"));
   assert.ok(cateringSource.includes("CATERING_AREA_SETTINGS.locations"));
+  assert.ok(cateringSource.includes("<ul"));
+  assert.equal(cateringSource.includes('<span aria-hidden="true" />'), false);
+  assert.equal(cateringSource.includes("<strong>{location}</strong>"), false);
+  assert.equal(
+    cateringStyleSource.includes(".routePanel li:not(:last-child)::after"),
+    false,
+  );
+  assert.equal(cateringStyleSource.includes(".routePanel li > span"), false);
+  assert.equal(cateringStyleSource.includes(".routePanel li strong"), false);
   assert.ok(cateringSource.includes("DELIVERY_SETTINGS.selectionLabel"));
   assert.ok(cateringSource.includes("Commandes & livraison"));
   assert.ok(cateringSource.includes('href="/evenements"'));

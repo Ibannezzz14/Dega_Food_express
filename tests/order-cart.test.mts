@@ -16,8 +16,8 @@ const actionSource = readFileSync(
   resolve(projectRoot, "app/carte/order-actions.ts"),
   "utf8",
 );
-const carteContentSource = readFileSync(
-  resolve(projectRoot, "app/carte/carte-content.tsx"),
+const cartePageSource = readFileSync(
+  resolve(projectRoot, "app/carte/page.tsx"),
   "utf8",
 );
 const experienceStyleSource = readFileSync(
@@ -65,8 +65,12 @@ test("les demandes de prix passent par le numéro unique de commande", () => {
 });
 
 test("un lien direct peut ouvrir la carte avec la livraison présélectionnée", () => {
-  assert.ok(carteContentSource.includes('searchParams.get("mode")'));
-  assert.ok(carteContentSource.includes('"livraison"'));
+  assert.ok(cartePageSource.includes("await searchParams"));
+  assert.ok(cartePageSource.includes("firstValue(params.mode)"));
+  assert.ok(cartePageSource.includes('=== "livraison"'));
+  assert.ok(cartePageSource.includes("isDeliveryRegionId(zone)"));
+  assert.ok(cartePageSource.includes("initialFulfillmentMethod={initialFulfillmentMethod}"));
+  assert.ok(cartePageSource.includes("initialRegion={initialRegion}"));
   assert.ok(experienceSource.includes("initialFulfillmentMethod"));
   assert.ok(experienceSource.includes("DELIVERY_PAYMENT_METHODS"));
 });

@@ -14,8 +14,8 @@ const beignetsImage = "/images/menu/beignets-proprietaire.webp";
 const suppliedAttiekeTilapiaImage =
   "/images/menu/attieke-tilapia-proprietaire.webp";
 const suppliedAllocoPoissonImage =
-  "/images/menu/alloco-poisson-braise-proprietaire.webp";
-const suppliedDessertImage = "/images/menu/deguee-proprietaire.webp";
+  "/images/menu/alloco-poisson-braise-retouche.webp";
+const suppliedDessertImage = "/images/menu/degue-retouche.webp";
 const suppliedPlacaliImage =
   "/images/menu/placali-sauce-kope-proprietaire.webp";
 const suppliedMainDishImages = {
@@ -24,9 +24,9 @@ const suppliedMainDishImages = {
   "attieke-agneau-choukouya":
     "/images/menu/attieke-agneau-choukouya-proprietaire.webp",
   "alloco-poulet-choukouya":
-    "/images/menu/alloco-poulet-choukouya-proprietaire.webp",
+    "/images/menu/alloco-poulet-choukouya-retouche.webp",
   "alloco-agneau-choukouya":
-    "/images/menu/alloco-agneau-choukouya-proprietaire.webp",
+    "/images/menu/alloco-agneau-choukouya-retouche.webp",
 } as const;
 
 const verifiedDrinkImages = {

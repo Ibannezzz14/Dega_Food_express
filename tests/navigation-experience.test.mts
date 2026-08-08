@@ -16,22 +16,18 @@ const navigationFocus = read("components/layout/navigation-focus.tsx");
 const header = read("components/layout/site-header.tsx");
 const headerCss = read("components/layout/site-header.module.css");
 
-test("la transition orchestre une sortie courte puis une entrée fluide", () => {
+test("la transition conserve une entrée fluide sans animation de sortie bloquante", () => {
   assert.match(template, /className="page-transition"/);
-  assert.match(globals, /--motion-page:\s*320ms/);
-  assert.match(globals, /--motion-fast:\s*130ms/);
+  assert.match(globals, /--motion-base:\s*180ms/);
   assert.match(
     globals,
-    /animation:\s*page-enter var\(--motion-page\) var\(--ease-out\)/,
+    /animation:\s*page-enter var\(--motion-base\) var\(--ease-out\)/,
   );
-  assert.match(
-    globals,
-    /animation:\s*page-exit var\(--motion-fast\) var\(--ease-in\)/,
-  );
-  assert.match(globals, /opacity:\s*0\.52/);
-  assert.match(globals, /translateY\(10px\) scale\(0\.997\)/);
-  assert.match(globals, /translateY\(-4px\) scale\(0\.998\)/);
+  assert.match(globals, /opacity:\s*0\.92/);
+  assert.match(globals, /translateY\(6px\)/);
   assert.match(globals, /to\s*\{[\s\S]*?opacity:\s*1;[\s\S]*?transform:\s*none;/);
+  assert.doesNotMatch(globals, /@keyframes page-exit/);
+  assert.doesNotMatch(globals, /page-transition--leaving/);
   assert.match(
     globals,
     /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.page-transition\s*\{[\s\S]*?animation:\s*none;[\s\S]*?transform:\s*none;/,
@@ -45,14 +41,18 @@ test("la transition orchestre une sortie courte puis une entrée fluide", () => 
   assert.ok(contentPosition >= 0 && contentPosition < footerPosition);
 });
 
-test("un clic interne attend la sortie sans bloquer le mouvement réduit", () => {
-  assert.match(navigationFocus, /useRouter\(\)/);
-  assert.match(navigationFocus, /event\.preventDefault\(\)/);
-  assert.match(navigationFocus, /page-transition--leaving/);
-  assert.match(navigationFocus, /animationEvent\.animationName === "page-exit"/);
-  assert.match(navigationFocus, /window\.setTimeout\(navigate, 180\)/);
-  assert.match(navigationFocus, /router\.push\(targetHref\)/);
-  assert.match(navigationFocus, /prefers-reduced-motion: reduce/);
+test("un clic interne est observé sans retarder la navigation native", () => {
+  assert.match(navigationFocus, /document\.addEventListener\("click", rememberInternalNavigation, true\)/);
+  assert.match(navigationFocus, /event\.defaultPrevented/);
+  assert.match(navigationFocus, /event\.metaKey/);
+  assert.match(navigationFocus, /link\.hasAttribute\("download"\)/);
+  assert.match(navigationFocus, /linkTarget && linkTarget !== "_self"/);
+  assert.match(navigationFocus, /destination\.origin === window\.location\.origin/);
+  assert.match(navigationFocus, /destination\.hash\.length === 0/);
+  assert.match(navigationFocus, /shouldResetScrollRef\.current = changesPage/);
+  assert.doesNotMatch(navigationFocus, /event\.preventDefault\(\)/);
+  assert.doesNotMatch(navigationFocus, /useRouter\(\)/);
+  assert.doesNotMatch(navigationFocus, /window\.setTimeout/);
 });
 
 test("les catégories de la carte ont une transition visible et réduisible", () => {

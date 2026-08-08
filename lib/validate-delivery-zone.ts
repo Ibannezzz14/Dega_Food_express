@@ -9,6 +9,11 @@ import {
   findMatchingGeoAdminAddress,
   type GeoAdminAddressResult,
 } from "@/lib/address-suggestions";
+import {
+  createRequestId,
+  formatPublicErrorReference,
+  logServerError,
+} from "@/lib/observability";
 
 type GeoAdminResponse = {
   results?: GeoAdminAddressResult[];
@@ -19,7 +24,9 @@ export async function validateDeliveryZone(
   streetAddress: string,
   postalCode: string,
   city: string,
+  requestId = createRequestId(),
 ): Promise<DeliveryZoneResult> {
+  const startedAt = Date.now();
   const searchUrl = new URL(
     "https://api3.geo.admin.ch/rest/services/api/SearchServer",
   );
@@ -42,7 +49,17 @@ export async function validateDeliveryZone(
     });
 
     if (!response.ok) {
-      return { status: "service_error" };
+      logServerError("geoadmin_delivery_failed", new Error("upstream_status"), {
+        requestId,
+        route: "GeoAdmin/SearchServer",
+        operation: "delivery_validation",
+        statusCode: response.status,
+        durationMs: Date.now() - startedAt,
+      });
+      return {
+        status: "service_error",
+        reference: formatPublicErrorReference(requestId),
+      };
     }
 
     const payload = (await response.json()) as GeoAdminResponse;
@@ -60,7 +77,16 @@ export async function validateDeliveryZone(
     }
 
     return resolveDeliveryZone(region, matchingAddress.coordinates);
-  } catch {
-    return { status: "service_error" };
+  } catch (error) {
+    logServerError("geoadmin_delivery_failed", error, {
+      requestId,
+      route: "GeoAdmin/SearchServer",
+      operation: "delivery_validation",
+      durationMs: Date.now() - startedAt,
+    });
+    return {
+      status: "service_error",
+      reference: formatPublicErrorReference(requestId),
+    };
   }
 }

@@ -16,6 +16,10 @@ const cateringPageSource = readFileSync(
   resolve(projectRoot, "app/evenements/page.tsx"),
   "utf8",
 );
+const cateringCss = readFileSync(
+  resolve(projectRoot, "app/evenements/evenements.module.css"),
+  "utf8",
+);
 
 test("les demandes traiteur utilisent leur numéro WhatsApp dédié", () => {
   assert.ok(cateringFormSource.includes("createCateringWhatsAppHref"));
@@ -36,10 +40,64 @@ test("la fin de la page traiteur affiche directement les deux numéros", () => {
   assert.ok(cateringPageSource.includes("ORDER_CONTACT.label"));
   assert.ok(cateringPageSource.includes("Service traiteur"));
   assert.ok(
+    cateringPageSource.includes(
+      "les commandes, la livraison ou le service traiteur",
+    ),
+  );
+  assert.ok(
     cateringPageSource.includes("CATERING_AREA_SETTINGS.availabilityMessage"),
   );
   assert.equal(cateringPageSource.includes("DELIVERY_SETTINGS"), false);
   assert.equal(cateringPageSource.includes("ORDER_WHATSAPP_HREF"), false);
+});
+
+test("la mise en page traiteur garde ses protections responsive", () => {
+  assert.ok(cateringCss.includes("var(--container-wide)"));
+  assert.match(cateringCss, /@media \(max-width: 56rem\)/);
+  assert.doesNotMatch(cateringCss, /!important|width:\s*100vw/);
+  assert.doesNotMatch(cateringCss, /min-height:\s*27rem|scroll-margin-top/);
+  assert.ok(
+    cateringFormSource.includes(
+      'placeholder="Ville, canton, adresse (si connue)"',
+    ),
+  );
+});
+
+test("chaque erreur de prestation reste limitée à son propre groupe", () => {
+  assert.ok(
+    cateringFormSource.includes(
+      'errors.dishes ? styles.choiceGroupError : ""',
+    ),
+  );
+  assert.ok(
+    cateringFormSource.includes(
+      'errors.services ? styles.choiceGroupError : ""',
+    ),
+  );
+  assert.ok(cateringCss.includes(".choiceGroupError .checkOption"));
+  assert.ok(
+    cateringFormSource.includes(
+      '"catering-dishes-help catering-dishes-error"',
+    ),
+  );
+  assert.ok(
+    cateringFormSource.includes(
+      '"catering-services-help catering-services-error"',
+    ),
+  );
+  assert.equal(cateringFormSource.includes("styles.fieldsetError"), false);
+  assert.equal(cateringCss.includes(".fieldsetError"), false);
+});
+
+test("les liens du résumé déplacent le focus vers le contrôle en erreur", () => {
+  assert.ok(cateringFormSource.includes("handleErrorLinkClick(event, field)"));
+  assert.ok(cateringFormSource.includes("document.getElementById(fieldTargets[field])"));
+  assert.ok(
+    cateringFormSource.includes(
+      'errorTarget.querySelector<HTMLElement>(\'input[type="checkbox"]\')',
+    ),
+  );
+  assert.ok(cateringFormSource.includes("(focusTarget ?? errorTarget).focus()"));
 });
 
 test("formatSwissDate converts an ISO date to the Swiss display format", () => {

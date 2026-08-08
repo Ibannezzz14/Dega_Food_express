@@ -8,6 +8,11 @@ import {
   type StatisticsPeriod,
 } from "@/lib/order-statistics-model";
 import { getAnalyticsDatabase } from "@/lib/postgres";
+import {
+  createRequestId,
+  formatPublicErrorReference,
+  logServerError,
+} from "@/lib/observability";
 
 export type OrderHandoffInput = {
   region: RegionId;
@@ -65,20 +70,7 @@ export type OrderStatisticsSnapshot = {
 export type OrderStatisticsResult =
   | { status: "ready"; snapshot: OrderStatisticsSnapshot }
   | { status: "unconfigured" }
-  | { status: "error" };
-
-function analyticsErrorCode(error: unknown) {
-  if (
-    error &&
-    typeof error === "object" &&
-    "code" in error &&
-    typeof error.code === "string"
-  ) {
-    return error.code.slice(0, 24);
-  }
-
-  return "unknown";
-}
+  | { status: "error"; reference: string };
 
 export async function trackOrderHandoff(input: OrderHandoffInput) {
   const database = getAnalyticsDatabase();
@@ -132,9 +124,10 @@ export async function trackOrderHandoff(input: OrderHandoffInput) {
         city_label = EXCLUDED.city_label
     `;
   } catch (error) {
-    console.error(
-      `[order-statistics] write failed (${analyticsErrorCode(error)})`,
-    );
+    logServerError("order_statistics_database_failed", error, {
+      requestId: createRequestId(),
+      operation: "write",
+    });
   }
 }
 
@@ -255,9 +248,14 @@ export async function getOrderStatistics(
       },
     };
   } catch (error) {
-    console.error(
-      `[order-statistics] read failed (${analyticsErrorCode(error)})`,
-    );
-    return { status: "error" };
+    const requestId = createRequestId();
+    logServerError("order_statistics_database_failed", error, {
+      requestId,
+      operation: "read",
+    });
+    return {
+      status: "error",
+      reference: formatPublicErrorReference(requestId),
+    };
   }
 }

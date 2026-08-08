@@ -23,6 +23,9 @@ test("la page Contact présente les commandes et Instagram sans faux numéro", (
   assert.ok(pageSource.includes("DELIVERY_SETTINGS.availabilityMessage"));
   assert.ok(pageSource.includes("INSTAGRAM.href"));
   assert.ok(pageSource.includes("CATERING_AREA_SETTINGS.label"));
+  assert.ok(
+    pageSource.includes("Commander, demander une livraison ou contacter le service traiteur"),
+  );
   assert.equal(pageSource.includes("PAYMENT_CONTACT"), false);
   assert.equal(pageSource.includes("PAYMENT_PHONE_LABEL"), false);
   assert.equal(pageSource.includes('id="payment"'), false);

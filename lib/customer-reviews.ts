@@ -1,10 +1,16 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import type {
   AdminCustomerReviewInput,
   CustomerReviewRating,
 } from "@/lib/customer-review-admin-validation";
 import { getAnalyticsDatabase } from "@/lib/postgres";
+import {
+  createRequestId,
+  formatPublicErrorReference,
+  logServerError,
+} from "@/lib/observability";
 
 export type PublicCustomerReview = {
   id: string;
@@ -43,7 +49,7 @@ export type AdminReviewsResult =
 export type PublishedReviewsResult =
   | { status: "ready"; reviews: PublicCustomerReview[] }
   | { status: "unconfigured"; reviews: [] }
-  | { status: "error"; reviews: [] };
+  | { status: "error"; reviews: []; reference: string };
 
 export const REVIEW_AVATAR_MIME_TYPES = [
   "image/jpeg",
@@ -92,26 +98,17 @@ type AdminReviewRow = PublicReviewRow & {
 
 const MAX_DATABASE_ID = "9223372036854775807";
 
-function databaseErrorCode(error: unknown) {
-  if (
-    error &&
-    typeof error === "object" &&
-    "code" in error &&
-    typeof error.code === "string"
-  ) {
-    return error.code.slice(0, 24);
-  }
-
-  return "unknown";
-}
-
 function reportDatabaseError(operation: string, error: unknown) {
-  console.error(
-    `[customer-reviews] ${operation} failed (${databaseErrorCode(error)})`,
-  );
+  const requestId = createRequestId();
+  logServerError("customer_reviews_database_failed", error, {
+    requestId,
+    operation,
+  });
+
+  return formatPublicErrorReference(requestId);
 }
 
-function normalizeDatabaseId(value: string) {
+export function parseCustomerReviewId(value: string) {
   if (!/^\d{1,19}$/.test(value)) {
     return null;
   }
@@ -256,10 +253,19 @@ export async function getPublishedCustomerReviews(
 
     return { status: "ready", reviews: rows.map(mapPublicReview) };
   } catch (error) {
-    reportDatabaseError("public list", error);
-    return { status: "error", reviews: [] };
+    const reference = reportDatabaseError("public_list", error);
+    return { status: "error", reviews: [], reference };
   }
 }
+
+export const getCachedPublishedCustomerReviews = unstable_cache(
+  getPublishedCustomerReviews,
+  ["published-customer-reviews"],
+  {
+    revalidate: 60,
+    tags: ["customer-reviews"],
+  },
+);
 
 export async function listAdminCustomerReviews(): Promise<AdminReviewsResult> {
   const database = getAnalyticsDatabase();
@@ -293,11 +299,11 @@ export async function listAdminCustomerReviews(): Promise<AdminReviewsResult> {
 
     return { status: "ready", reviews: rows.map(mapAdminReview) };
   } catch (error) {
-    reportDatabaseError("admin list", error);
+    const reference = reportDatabaseError("admin_list", error);
     return {
       status: "error",
       reviews: [],
-      message: "Les témoignages ne peuvent pas être chargés actuellement.",
+      message: `Les témoignages ne peuvent pas être chargés actuellement. Référence ${reference}.`,
     };
   }
 }
@@ -367,10 +373,10 @@ export async function createAdminCustomerReview(
 
     return { ok: true };
   } catch (error) {
-    reportDatabaseError("create", error);
+    const reference = reportDatabaseError("create", error);
     return {
       ok: false,
-      message: "Le témoignage n’a pas pu être ajouté.",
+      message: `Le témoignage n’a pas pu être ajouté. Référence ${reference}.`,
     };
   }
 }
@@ -380,7 +386,7 @@ export async function updateAdminCustomerReview(
   input: AdminCustomerReviewInput,
   avatarUpdate: ReviewAvatarUpdate = { mode: "keep" },
 ): Promise<AdminReviewMutationResult> {
-  const databaseId = normalizeDatabaseId(id);
+  const databaseId = parseCustomerReviewId(id);
   if (!databaseId) {
     return { ok: false, message: "Le témoignage demandé est invalide." };
   }
@@ -462,10 +468,10 @@ export async function updateAdminCustomerReview(
 
     return { ok: true };
   } catch (error) {
-    reportDatabaseError("update", error);
+    const reference = reportDatabaseError("update", error);
     return {
       ok: false,
-      message: "Le témoignage n’a pas pu être modifié.",
+      message: `Le témoignage n’a pas pu être modifié. Référence ${reference}.`,
     };
   }
 }
@@ -474,7 +480,7 @@ export async function moveAdminCustomerReview(
   id: string,
   direction: ReviewMoveDirection,
 ): Promise<AdminReviewMutationResult> {
-  const databaseId = normalizeDatabaseId(id);
+  const databaseId = parseCustomerReviewId(id);
   if (!databaseId || (direction !== "up" && direction !== "down")) {
     return { ok: false, message: "Le déplacement demandé est invalide." };
   }
@@ -536,10 +542,10 @@ export async function moveAdminCustomerReview(
 
     return { ok: true };
   } catch (error) {
-    reportDatabaseError("reorder", error);
+    const reference = reportDatabaseError("reorder", error);
     return {
       ok: false,
-      message: "L’ordre des témoignages n’a pas pu être modifié.",
+      message: `L’ordre des témoignages n’a pas pu être modifié. Référence ${reference}.`,
     };
   }
 }
@@ -547,7 +553,7 @@ export async function moveAdminCustomerReview(
 export async function softDeleteAdminCustomerReview(
   id: string,
 ): Promise<AdminReviewMutationResult> {
-  const databaseId = normalizeDatabaseId(id);
+  const databaseId = parseCustomerReviewId(id);
   if (!databaseId) {
     return { ok: false, message: "Le témoignage demandé est invalide." };
   }
@@ -575,10 +581,10 @@ export async function softDeleteAdminCustomerReview(
 
     return { ok: true };
   } catch (error) {
-    reportDatabaseError("soft delete", error);
+    const reference = reportDatabaseError("soft_delete", error);
     return {
       ok: false,
-      message: "Le témoignage n’a pas pu être supprimé.",
+      message: `Le témoignage n’a pas pu être supprimé. Référence ${reference}.`,
     };
   }
 }
