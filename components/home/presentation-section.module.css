@@ -1,0 +1,78 @@
+.presentation {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+  gap: clamp(54px, 8vw, 120px);
+  align-items: center;
+  padding: var(--section-space) max(var(--page-gutter), calc((100vw - var(--container-wide)) / 2));
+  background: var(--surface-warm);
+  color: var(--text-main);
+}
+
+.presentationVisual {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  background: var(--forest-950);
+}
+
+.presentationVisual img {
+  object-fit: cover;
+  object-position: 50% 48%;
+}
+
+.presentationCopy {
+  max-width: 650px;
+}
+
+.presentationCopy h1,
+.presentationCopy h2 {
+  margin: 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(2.7rem, 4.8vw, 4.6rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.presentationIntro {
+  max-width: 58ch;
+  margin: 26px 0 0;
+  color: var(--text-muted);
+  font-size: 1.12rem;
+}
+
+@media (max-width: 900px) {
+  .presentation {
+    grid-template-columns: 1fr;
+    gap: 44px;
+    padding: 92px var(--page-gutter) 102px;
+  }
+
+  .presentationVisual {
+    aspect-ratio: 16 / 10;
+  }
+
+  .presentationCopy {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 760px) {
+  .presentation {
+    grid-template-columns: 1fr;
+    gap: 46px;
+    padding: 82px var(--page-gutter) 90px;
+  }
+
+  .presentationVisual {
+    aspect-ratio: 4 / 5;
+  }
+
+  .presentationCopy h1,
+  .presentationCopy h2 {
+    font-size: clamp(2.55rem, 12vw, 3.7rem);
+  }
+
+}

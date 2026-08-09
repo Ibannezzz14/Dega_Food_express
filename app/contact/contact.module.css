@@ -1,0 +1,345 @@
+.page {
+  --contact-surface: #f6f0e5;
+  --contact-paper: #fff;
+  --contact-muted: #526760;
+  --contact-line: #c8d1cd;
+  overflow: clip;
+  background: var(--contact-surface);
+  color: var(--ink);
+}
+
+.page h1,
+.page p {
+  margin: 0;
+}
+
+.contactShell {
+  width: min(calc(100% - clamp(2rem, 5vw, 3rem)), 76rem);
+  margin-inline: auto;
+}
+
+.introBand {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(4.5rem, 8vw, 7rem) 0;
+  background: var(--forest-950);
+  color: var(--cassava-50);
+}
+
+.introBand::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgb(5 30 24 / 46%) 0%,
+    rgb(5 30 24 / 30%) 54%,
+    rgb(5 30 24 / 14%) 100%
+  );
+  content: "";
+}
+
+.introBackdrop {
+  z-index: -2;
+  object-fit: cover;
+  object-position: center right;
+}
+
+.introInner {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.introInner h1 {
+  max-width: 8ch;
+  font-family: var(--font-editorial);
+  font-size: clamp(4rem, 7vw, 6rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.introText {
+  max-width: 46ch;
+  color: #d9e4df;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.directory {
+  padding: clamp(3.5rem, 6vw, 5.25rem) 0;
+  background: #f6f0e5;
+}
+
+.directoryInner {
+  max-width: 68rem;
+}
+
+.contactList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.25rem);
+  margin: 0;
+  font-style: normal;
+}
+
+.contactRowPrimary {
+  border-color: var(--forest-800);
+  box-shadow: inset 0 4px 0 var(--plantain-400);
+}
+
+.contactRow {
+  display: grid;
+  grid-template-areas:
+    "area action"
+    "number number";
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem 1rem;
+  align-items: start;
+  min-height: 11rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid #b8c5c0;
+  border-radius: 0.65rem;
+  background: var(--contact-paper);
+  color: var(--forest-950);
+  text-decoration: none;
+  transition:
+    background-color 160ms ease-out,
+    border-color 160ms ease-out,
+    color 160ms ease-out;
+}
+
+.contactArea {
+  grid-area: area;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.contactCopy {
+  display: grid;
+  grid-area: number;
+  align-self: end;
+  gap: 0.55rem;
+}
+
+.contactNumber {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.contactDescription {
+  max-width: 34ch;
+  color: var(--contact-muted);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.callAction {
+  grid-area: action;
+  display: inline-flex;
+  min-width: 6.85rem;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--forest-900);
+  border-radius: 0.4rem;
+  background: var(--forest-900);
+  color: var(--cassava-50);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition:
+    background-color 160ms ease-out,
+    color 160ms ease-out,
+    transform 120ms ease-out;
+}
+
+.callAction svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.contactRow:hover {
+  border-color: var(--forest-800);
+  background: #f0f4f0;
+}
+
+.contactRow:hover .callAction {
+  border-color: var(--plantain-400);
+  background: var(--plantain-400);
+  color: var(--forest-950);
+}
+
+.contactRow:active .callAction {
+  transform: translateY(1px);
+}
+
+.contactRow:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid var(--plantain-400);
+  outline-offset: 3px;
+}
+
+.instagramCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin-top: clamp(1rem, 2vw, 1.35rem);
+  padding: 1.15rem 1.35rem;
+  border: 1px solid #b8c5c0;
+  border-radius: 0.65rem;
+  background: var(--contact-paper);
+  color: var(--forest-950);
+  text-decoration: none;
+  transition:
+    background-color 160ms ease-out,
+    border-color 160ms ease-out;
+}
+
+.instagramCard > svg:first-child {
+  width: 1.6rem;
+  height: 1.6rem;
+  color: var(--chili-600);
+}
+
+.instagramCard > svg:last-child {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.instagramCard span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.instagramCard strong {
+  font-size: 1rem;
+}
+
+.instagramCard small {
+  color: var(--contact-muted);
+  font-size: 0.85rem;
+}
+
+.instagramCard:hover {
+  border-color: var(--chili-600);
+  background: #fff9f4;
+}
+
+@media (max-width: 48rem) {
+  .introBand {
+    padding: 4.5rem 0;
+  }
+
+  .introInner {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .introInner h1 {
+    max-width: 9ch;
+    font-size: clamp(3.6rem, 12vw, 5rem);
+  }
+
+  .directory {
+    padding: 3.5rem 0 4.25rem;
+  }
+
+  .contactRow {
+    min-height: 10.25rem;
+    padding: 1.5rem;
+  }
+
+  .contactNumber {
+    font-size: clamp(1.85rem, 5vw, 2.3rem);
+  }
+}
+
+@media (max-width: 42rem) {
+  .contactList {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 30rem) {
+  .introBand {
+    padding: 3.75rem 0;
+  }
+
+  .introInner h1 {
+    font-size: clamp(3.25rem, 15vw, 4.15rem);
+  }
+
+  .introBand::after {
+    background: linear-gradient(
+      90deg,
+      rgb(5 30 24 / 60%),
+      rgb(5 30 24 / 44%)
+    );
+  }
+
+  .introBackdrop {
+    object-position: 68% center;
+  }
+
+  .directory {
+    padding: 3rem 0 3.75rem;
+  }
+
+  .contactRow {
+    min-height: 9.75rem;
+    padding: 1.25rem;
+  }
+
+  .contactNumber {
+    font-size: clamp(1.65rem, 9vw, 2rem);
+  }
+
+}
+
+@media (max-width: 22rem) {
+  .contactRow {
+    grid-template-areas:
+      "area"
+      "number"
+      "action";
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .callAction {
+    margin-top: 0.35rem;
+    justify-self: start;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contactRow,
+  .callAction,
+  .instagramCard {
+    transition: none;
+  }
+
+  .contactRow:active .callAction {
+    transform: none;
+  }
+}
