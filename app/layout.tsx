@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Bitter, Fraunces, Manrope } from "next/font/google";
 import {
   ORDER_CONTACT,
   SITE_CONFIG,
@@ -12,8 +12,8 @@ import NavigationFocus from "@/components/layout/navigation-focus";
 import { OrderSessionProvider } from "@/components/order/order-session-provider";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const bitter = Bitter({
+  variable: "--font-bitter",
   subsets: ["latin"],
   weight: ["600", "700"],
   display: "swap",
@@ -23,6 +23,13 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const frauncesAmpersand = Fraunces({
+  variable: "--font-ampersand",
+  subsets: ["latin"],
+  weight: "600",
   display: "swap",
 });
 
@@ -53,7 +60,7 @@ export default function RootLayout({
     <html
       lang="fr"
       data-scroll-behavior="smooth"
-      className={`${fraunces.variable} ${manrope.variable}`}
+      className={`${bitter.variable} ${manrope.variable} ${frauncesAmpersand.variable}`}
     >
       <body id="top">
         <a className="skip-link" href="#contenu">

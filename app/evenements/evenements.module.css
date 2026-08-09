@@ -315,19 +315,66 @@
   padding: 0.65rem 0.8rem;
 }
 
-/* iOS WebKit additionne encore le padding horizontal à width: 100% sur
-   certains champs date. Le padding est donc porté par leur valeur interne. */
-.field input[type="date"] {
-  padding-right: 0;
-  padding-left: 0;
+/* Le cadre porte le padding horizontal : le champ natif garde ainsi sa largeur
+   correcte sur iOS tout en restant visuellement aligné dans Chromium. */
+.dateControl {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 3.25rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0 0.8rem;
+  border: 1px solid #82988f;
+  border-radius: 0.45rem;
+  background: #fff;
+  transition:
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out;
 }
 
-.field input[type="date"]::-webkit-date-and-time-value {
+.dateControl input[type="date"] {
+  min-height: calc(3.25rem - 2px);
+  margin: 0;
+  padding-right: 0;
+  padding-left: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dateControl input[type="date"]::-webkit-date-and-time-value {
   min-width: 0;
   margin: 0;
-  padding-right: 0.8rem;
-  padding-left: 0.8rem;
+  padding: 0;
   text-align: left;
+}
+
+.dateControl:hover {
+  border-color: var(--forest-800);
+}
+
+.dateControl:focus-within {
+  border-color: var(--forest-800);
+  box-shadow: 0 0 0 3px rgb(24 82 71 / 16%);
+}
+
+.dateControl:has(input:focus-visible) {
+  outline: 3px solid var(--plantain-400);
+  outline-offset: 2px;
+}
+
+.dateControl:has(input[aria-invalid="true"]) {
+  border-color: #b6493c;
+}
+
+.dateControl input[type="date"]:hover,
+.dateControl input[type="date"]:focus,
+.dateControl input[type="date"]:focus-visible {
+  border-color: transparent;
+  outline: 0;
+  box-shadow: none;
 }
 
 .field select {
@@ -645,14 +692,15 @@
 
 .finalContactsInner {
   display: grid;
-  grid-template-columns: minmax(15rem, 0.55fr) minmax(0, 1.45fr);
-  gap: clamp(2.5rem, 6vw, 5rem);
+  grid-template-columns: minmax(19rem, 0.65fr) minmax(0, 1.35fr);
+  gap: clamp(2.5rem, 4vw, 4rem);
   align-items: start;
 }
 
 .finalContacts h2 {
-  max-width: 8ch;
-  font-size: clamp(2.75rem, 4.8vw, 4.5rem);
+  max-width: 9ch;
+  font-size: clamp(2.75rem, 4vw, 3.8rem);
+  line-height: 0.98;
 }
 
 .finalContactList {

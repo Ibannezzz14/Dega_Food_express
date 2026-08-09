@@ -43,13 +43,9 @@ export default function CateringSection() {
             vous.
           </p>
 
-          <div className={styles.routePanel}>
-            <ul aria-label={CATERING_AREA_SETTINGS.routeLabel}>
-              {CATERING_AREA_SETTINGS.locations.map((location) => (
-                <li key={location}>{location}</li>
-              ))}
-            </ul>
-          </div>
+          <p className={styles.coverage}>
+            {CATERING_AREA_SETTINGS.homepageLabel}
+          </p>
 
           <Link className={styles.action} href="/evenements">
             Demander un devis

@@ -459,17 +459,19 @@ export default function CateringForm() {
 
             <div className={styles.field}>
               <label htmlFor="catering-event-date">Date souhaitée</label>
-              <input
-                id="catering-event-date"
-                name="eventDate"
-                type="date"
-                required
-                aria-invalid={Boolean(errors.eventDate)}
-                aria-describedby={
-                  errors.eventDate ? "catering-event-date-error" : undefined
-                }
-                onChange={() => clearError("eventDate")}
-              />
+              <div className={styles.dateControl}>
+                <input
+                  id="catering-event-date"
+                  name="eventDate"
+                  type="date"
+                  required
+                  aria-invalid={Boolean(errors.eventDate)}
+                  aria-describedby={
+                    errors.eventDate ? "catering-event-date-error" : undefined
+                  }
+                  onChange={() => clearError("eventDate")}
+                />
+              </div>
               {errors.eventDate ? (
                 <p className={styles.fieldError} id="catering-event-date-error">
                   {errors.eventDate}

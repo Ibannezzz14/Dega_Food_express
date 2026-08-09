@@ -59,13 +59,8 @@ const DELIVERY_ANCHORS = [
 
 const CATERING_AREA = {
   label: "Toute la Suisse",
-  routeLabel: "Service traiteur dans toute la Suisse",
+  homepageLabel: "Dans toute la Suisse",
   nationwide: true,
-  locations: [
-    "Suisse romande",
-    "Suisse alémanique",
-    "Tessin",
-  ],
   availabilityMessage:
     "Service traiteur disponible dans toute la Suisse",
   summary:
@@ -126,13 +121,16 @@ export const SITE_CONFIG = {
   navigation: [
     { href: "/", label: "Accueil" },
     { href: "/presentation", label: "Notre histoire" },
+    { href: "/carte", label: "La carte" },
     { href: "/evenements", label: "Traiteur" },
+    { href: "/avis", label: "Témoignages" },
     { href: "/contact", label: "Contact" },
   ] satisfies readonly NavigationItem[],
   footerNavigation: [
     { href: "/", label: "Accueil" },
     { href: "/presentation", label: "Notre histoire" },
     { href: "/evenements", label: "Service traiteur" },
+    { href: "/avis", label: "Témoignages" },
     { href: "/contact", label: "Contact" },
   ] satisfies readonly NavigationItem[],
 } as const;

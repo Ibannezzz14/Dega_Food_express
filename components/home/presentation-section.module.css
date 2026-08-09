@@ -36,6 +36,16 @@
   text-wrap: balance;
 }
 
+.nameAmpersand {
+  color: var(--chili-600);
+  font-family: var(--font-ampersand), Georgia, serif;
+  font-size: 1.12em;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  vertical-align: -0.02em;
+}
+
 .presentationIntro {
   max-width: 58ch;
   margin: 26px 0 0;

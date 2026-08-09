@@ -78,23 +78,11 @@
   line-height: 1.7;
 }
 
-.routePanel {
-  margin-top: 2.1rem;
-}
-
-.routePanel ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem 1.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.routePanel li {
+.coverage {
+  margin: 2.1rem 0 0;
   color: #e6eeea;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   line-height: 1.55;
 }
 

@@ -18,7 +18,8 @@ export default function PresentationSection() {
       </div>
       <div className={styles.presentationCopy}>
         <h2 id="presentation-title">
-          Geneviève et Marie-José, derrière Dega Food Express.
+          Geneviève <span className={styles.nameAmpersand}>&amp;</span> Marie-José,
+          derrière Dega Food Express.
         </h2>
       </div>
     </section>
