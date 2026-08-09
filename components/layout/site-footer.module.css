@@ -60,33 +60,28 @@
   font-size: clamp(1.62rem, 2.35vw, 2.08rem);
 }
 
-.primaryAction {
+.menuAction {
   display: inline-flex;
+  min-height: 46px;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  min-width: 194px;
-  min-height: 48px;
-  margin-top: 28px;
-  padding: 11px 16px 11px 18px;
+  gap: 18px;
+  margin-top: 24px;
+  padding: 10px 15px;
   border: 1px solid var(--plantain-300);
   border-radius: var(--radius-action);
   background: var(--plantain-400);
   color: var(--forest-950);
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition:
-    background-color 180ms ease-out,
-    border-color 180ms ease-out;
+  transition: background-color 160ms ease-out;
 }
 
-.primaryAction:hover {
-  border-color: #eed4a3;
+.menuAction:hover {
   background: var(--plantain-300);
 }
 
-.primaryAction svg {
+.menuAction svg {
   width: 18px;
   height: 18px;
 }
@@ -279,8 +274,8 @@
   color: var(--plantain-300);
 }
 
-.primaryAction:focus-visible,
 .contactCard:focus-visible,
+.menuAction:focus-visible,
 .footerNavigation a:focus-visible,
 .legalLink:focus-visible,
 .instagramLink:focus-visible {
@@ -313,10 +308,6 @@
 
   .brandColumn {
     grid-column: auto;
-  }
-
-  .primaryAction {
-    width: 100%;
   }
 
   .footerNavigation ul {
@@ -372,9 +363,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .primaryAction,
   .footerNavigation a,
   .footerNavigation a::before,
+  .menuAction,
   .contactCard,
   .contactArrow {
     transition: none;
@@ -395,6 +386,10 @@
 }
 
 :global(body:has(main[data-page="contact"])) .contactColumn {
+  display: none;
+}
+
+:global(body:has(main[data-page="carte"])) .menuAction {
   display: none;
 }
 

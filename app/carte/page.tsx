@@ -36,7 +36,7 @@ export default async function CartePage({ searchParams }: CartePageProps) {
     firstValue(params.mode) === "livraison" ? "delivery" : null;
 
   return (
-    <main id="contenu" tabIndex={-1}>
+    <main id="contenu" data-page="carte" tabIndex={-1}>
       <OrderExperience
         initialFulfillmentMethod={initialFulfillmentMethod}
         initialRegion={initialRegion}

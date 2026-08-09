@@ -296,6 +296,8 @@
 .field select,
 .field textarea {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   margin-top: 0.5rem;
   border: 1px solid #82988f;
   border-radius: 0.45rem;
@@ -311,6 +313,21 @@
 .field select {
   min-height: 3.25rem;
   padding: 0.65rem 0.8rem;
+}
+
+/* iOS WebKit additionne encore le padding horizontal à width: 100% sur
+   certains champs date. Le padding est donc porté par leur valeur interne. */
+.field input[type="date"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.field input[type="date"]::-webkit-date-and-time-value {
+  min-width: 0;
+  margin: 0;
+  padding-right: 0.8rem;
+  padding-left: 0.8rem;
+  text-align: left;
 }
 
 .field select {

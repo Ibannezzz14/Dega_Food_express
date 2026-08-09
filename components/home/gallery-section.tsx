@@ -1,19 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRightIcon } from "@/components/shared/icons";
 import styles from "./gallery-section.module.css";
 
 export default function GallerySection() {
   return (
     <section className={styles.gallery} id="galerie" aria-labelledby="gallery-title">
       <header className={styles.galleryHeader}>
-        <div>
-          <h2 id="gallery-title">Quelques plats de la carte.</h2>
-        </div>
-        <Link href="/carte">
-          Voir la carte
-          <ArrowRightIcon />
-        </Link>
+        <h2 id="gallery-title">Quelques plats de la carte.</h2>
       </header>
       <div className={styles.galleryGrid}>
         <figure className={styles.galleryTall}>

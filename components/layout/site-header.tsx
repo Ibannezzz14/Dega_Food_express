@@ -126,14 +126,6 @@ export default function SiteHeader() {
         </nav>
 
         <div className={styles.headerActions}>
-          <Link
-            className={styles.orderNavLink}
-            href="/carte"
-            onClick={closeMenu}
-          >
-            Voir la carte
-            <ArrowRightIcon />
-          </Link>
           <button
             ref={menuButtonRef}
             type="button"

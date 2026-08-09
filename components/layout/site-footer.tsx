@@ -39,7 +39,7 @@ export default function SiteFooter() {
                 <h2 id="footer-brand-title">{SITE_CONFIG.brand.name}</h2>
               </div>
             </div>
-            <Link className={styles.primaryAction} href="/carte">
+            <Link className={styles.menuAction} href="/carte">
               Voir la carte
               <ArrowRightIcon />
             </Link>
